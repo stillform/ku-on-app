@@ -86,16 +86,17 @@
     transform:translateX(-50%);
   }
   nav{display:flex; gap:4px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:999px; padding:4px; flex-wrap:wrap;}
-  nav button{
+  nav a{
     font-family:'Inter',sans-serif;
     font-size:13px; font-weight:500;
     color:var(--muted);
     background:transparent; border:none; border-radius:999px;
     padding:8px 16px; cursor:pointer;
     transition:background .3s ease, color .3s ease;
+    text-decoration:none;
   }
-  nav button.active{ background:var(--amber); color:#2a1c08; }
-  nav button:not(.active):hover{ color:var(--foam); }
+  nav a.active{ background:var(--amber); color:#2a1c08; }
+  nav a:not(.active):hover{ color:var(--foam); }
 
   main{flex:1; position:relative; display:flex; align-items:center; justify-content:center; padding:20px;}
   .view{ width:100%; max-width:560px; display:none; }
@@ -558,10 +559,10 @@
 <header>
   <div class="brand">k<span class="macron-u">u</span>-on<span>.</span></div>
   <nav>
-    <button class="active" data-view="breathe">Breathe</button>
-    <button data-view="ground">Ground</button>
-    <button data-view="settle">Settle</button>
-    <button data-view="about">About</button>
+    <a href="#breathe" class="active" data-view="breathe">Breathe</a>
+    <a href="#ground" data-view="ground">Ground</a>
+    <a href="#settle" data-view="settle">Settle</a>
+    <a href="#about" data-view="about">About</a>
   </nav>
 </header>
 
@@ -697,18 +698,51 @@
 <footer>Not a substitute for professional care. If you're in crisis, please reach out to a crisis line or someone you trust.</footer>
 
 <script>
-  // ---------- NAVIGATION ----------
-  const navButtons = document.querySelectorAll('nav button');
+  // ---------- HASH-BASED ROUTING ----------
+  const navLinks = document.querySelectorAll('nav a');
   const views = document.querySelectorAll('.view');
-  navButtons.forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      navButtons.forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      views.forEach(v=>v.classList.remove('active'));
-      document.getElementById('view-'+btn.dataset.view).classList.add('active');
-      if(btn.dataset.view !== 'breathe' && running) endSession('nav');
-      if(btn.dataset.view === 'about') renderAboutPage();
+  let currentView = 'breathe';
+
+  function navigateTo(view) {
+    // Update active states
+    navLinks.forEach(link => {
+      link.classList.toggle('active', link.dataset.view === view);
     });
+    
+    // Show the view
+    views.forEach(v => {
+      v.classList.toggle('active', v.id === 'view-' + view);
+    });
+    
+    currentView = view;
+    
+    // Stop breathing if switching away from breathe
+    if (view !== 'breathe' && running) endSession('nav');
+    
+    // Render About page content if needed
+    if (view === 'about') renderAboutPage();
+  }
+
+  // Handle navigation clicks
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const view = link.dataset.view;
+      window.location.hash = view;
+      navigateTo(view);
+    });
+  });
+
+  // Handle hash changes (when user uses back/forward buttons)
+  window.addEventListener('hashchange', () => {
+    const view = window.location.hash.replace('#', '') || 'breathe';
+    navigateTo(view);
+  });
+
+  // Load the correct view on page load
+  window.addEventListener('load', () => {
+    const view = window.location.hash.replace('#', '') || 'breathe';
+    navigateTo(view);
   });
 
   // ---------- ABOUT PAGE: Load Markdown and Render ----------
