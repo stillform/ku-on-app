@@ -18,7 +18,6 @@ Anyone who needs a moment to breathe. No experience needed. Just you.
 
 ## A note on privacy
 Your sessions are stored only in your browser. No data is sent anywhere. This is your space.
-
 ---
 
 *"You showed up. That's all it takes."*
