@@ -16,7 +16,7 @@ Anyone who needs a moment to breathe. No experience needed. Just you.
 - **Ground**: A simple sensory exercise that gently pulls you back into the room
 - **Settle**: A slow body scan to help you release tension, bit by bit
 
-## A note on privacy
+### A note on privacy
 Your sessions are stored only in your browser. No data is sent anywhere. This is your space.
 ---
 
