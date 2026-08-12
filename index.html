@@ -437,7 +437,7 @@
   .audio-toggle.active{ color:var(--foam); border-color:rgba(232,165,89,0.4); background:rgba(232,165,89,0.06); }
   .audio-toggle:not(.active){ text-decoration:line-through; text-decoration-color:rgba(139,160,182,0.5); }
 
-  /* ---------- ABOUT PAGE ---------- */
+  /* ---------- ENHANCED ABOUT PAGE STYLES ---------- */
   .about-card {
     background:rgba(255,255,255,0.03);
     border:1px solid rgba(255,255,255,0.08);
@@ -462,31 +462,35 @@
   .about-card h2 {
     font-family:'Fraunces', serif;
     font-weight:450;
-    font-size:20px;
+    font-size:22px;
     color:var(--amber);
-    margin-top:24px;
-    margin-bottom:8px;
+    margin-top:28px;
+    margin-bottom:10px;
+    letter-spacing:0.02em;
   }
   .about-card h2:first-of-type {
     margin-top:0;
   }
   .about-card p {
+    font-family:'Inter', sans-serif;
+    font-size:15px;
+    line-height:1.8;
     color:var(--foam);
-    font-size:14px;
-    line-height:1.7;
-    margin-bottom:12px;
+    margin-bottom:14px;
   }
   .about-card ul {
     list-style:none;
     padding:0;
-    margin:8px 0 16px 0;
+    margin:10px 0 18px 0;
   }
   .about-card ul li {
+    font-family:'Inter', sans-serif;
+    font-size:15px;
+    line-height:1.8;
     color:var(--foam);
-    font-size:14px;
-    line-height:1.7;
-    padding-left:20px;
+    padding-left:24px;
     position:relative;
+    margin-bottom:4px;
   }
   .about-card ul li::before {
     content:"—";
@@ -497,16 +501,17 @@
   .about-card .divider {
     border:0;
     height:1px;
-    background:rgba(255,255,255,0.08);
-    margin:20px 0;
+    background:rgba(255,255,255,0.1);
+    margin:28px 0;
   }
   .about-card .closing-quote {
     font-family:'Fraunces', serif;
-    font-size:18px;
+    font-size:20px;
     text-align:center;
     color:var(--amber);
-    margin-top:24px;
-    opacity:0.8;
+    margin-top:28px;
+    opacity:0.85;
+    font-style:italic;
   }
 
   .card-title{
@@ -704,26 +709,17 @@
   let currentView = 'breathe';
 
   function navigateTo(view) {
-    // Update active states
     navLinks.forEach(link => {
       link.classList.toggle('active', link.dataset.view === view);
     });
-    
-    // Show the view
     views.forEach(v => {
       v.classList.toggle('active', v.id === 'view-' + view);
     });
-    
     currentView = view;
-    
-    // Stop breathing if switching away from breathe
     if (view !== 'breathe' && running) endSession('nav');
-    
-    // Render About page content if needed
     if (view === 'about') renderAboutPage();
   }
 
-  // Handle navigation clicks
   navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
@@ -733,19 +729,17 @@
     });
   });
 
-  // Handle hash changes (when user uses back/forward buttons)
   window.addEventListener('hashchange', () => {
     const view = window.location.hash.replace('#', '') || 'breathe';
     navigateTo(view);
   });
 
-  // Load the correct view on page load
   window.addEventListener('load', () => {
     const view = window.location.hash.replace('#', '') || 'breathe';
     navigateTo(view);
   });
 
-  // ---------- ABOUT PAGE: Load Markdown and Render ----------
+  // ---------- IMPROVED ABOUT PAGE: Load Markdown and Render ----------
   async function renderAboutPage() {
     const bodyEl = document.getElementById('aboutBody');
     const titleEl = document.getElementById('aboutTitle');
@@ -792,24 +786,67 @@
     return { frontmatter, content };
   }
 
+  // IMPROVED MARKDOWN RENDERER
   function renderMarkdown(md) {
     let html = md;
+    
+    // Headers: ## Header (with space)
     html = html.replace(/^### (.*)$/gm, '<h3>$1</h3>');
     html = html.replace(/^## (.*)$/gm, '<h2>$1</h2>');
     html = html.replace(/^# (.*)$/gm, '<h1>$1</h1>');
+    
+    // Bold: **text**
     html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Italic: *text*
     html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    
+    // Lists: - item (with space after dash)
     html = html.replace(/^- (.*)$/gm, '<li>$1</li>');
-    html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
-    const paragraphs = html.split('\n\n');
-    html = paragraphs.map(p => {
-      if (p.trim().startsWith('<h') || p.trim().startsWith('<ul') || p.trim().startsWith('<li') || p.trim().startsWith('<hr')) {
-        return p;
+    // Wrap consecutive list items in <ul>
+    html = html.replace(/(<li>.*<\/li>\s*)+/g, (match) => {
+      return '<ul>' + match.trim() + '</ul>';
+    });
+    
+    // Horizontal rules: --- on its own line
+    html = html.replace(/^---$/gm, '<hr class="divider">');
+    
+    // Paragraphs: split by blank lines, but keep headers and lists intact
+    const lines = html.split('\n');
+    let result = [];
+    let inList = false;
+    let paragraphBuffer = [];
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      
+      if (line === '') {
+        if (paragraphBuffer.length > 0) {
+          result.push('<p>' + paragraphBuffer.join(' ') + '</p>');
+          paragraphBuffer = [];
+        }
+        continue;
       }
-      return `<p>${p.trim()}</p>`;
-    }).join('');
-    html = html.replace(/<p>---<\/p>/g, '<hr class="divider">');
+      
+      if (line.startsWith('<h') || line.startsWith('<ul') || line.startsWith('<hr')) {
+        if (paragraphBuffer.length > 0) {
+          result.push('<p>' + paragraphBuffer.join(' ') + '</p>');
+          paragraphBuffer = [];
+        }
+        result.push(line);
+        continue;
+      }
+      
+      paragraphBuffer.push(line);
+    }
+    
+    if (paragraphBuffer.length > 0) {
+      result.push('<p>' + paragraphBuffer.join(' ') + '</p>');
+    }
+    
+    html = result.join('\n');
     html = html.replace(/<p><\/p>/g, '');
+    
     return html;
   }
 
