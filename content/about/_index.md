@@ -11,9 +11,7 @@ kū-on is that space. It's a reminder that you don't have to have it all figured
 ## Who This Is For
 Anyone who needs a moment to breathe. No experience needed. Just you.
 
-Here's what that looks like in practice.
-
-## How It Works
+## Here's what that looks like in practice
 - **Breathe**: Gentle guidance, soft sounds, and a quiet place to land
 - **Ground**: A simple sensory exercise that gently pulls you back into the room
 - **Settle**: A slow body scan to help you release tension, bit by bit
