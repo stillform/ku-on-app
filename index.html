@@ -762,6 +762,71 @@
     .about-closing{margin:0 0 54px;padding:54px 22px;border-radius:25px}
   }
 
+  /* Approved About-page refresh, scoped to the existing live component. */
+  #view-about{max-width:1180px}
+  body[data-view="about"]{background:#171a18}
+  .about-page{--about-page:#171a18;--about-surface:#202420;--about-ink:#e7e9e3;--about-muted:#a9b0aa;--about-sage:#a9c5b7;--about-line:rgba(231,233,227,.14);color:var(--about-ink)}
+  .about-eyebrow{margin:0 0 18px;color:var(--about-sage);font-weight:600}
+  .about-page h2{max-width:650px;margin:0;font-size:clamp(36px,5vw,54px);color:var(--about-ink)}
+  .about-hero{border-color:var(--about-line);background:linear-gradient(145deg,#26322c,#18201c)}
+  .about-hero h1{margin:0 0 22px;color:var(--about-ink)}
+  .about-hero-copy>p{max-width:550px;color:var(--about-muted)}
+  .about-hero-promises{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:32px;color:var(--about-ink);font-size:12.5px}
+  .about-hero-promises span::before{display:inline-block;width:7px;height:7px;margin-right:9px;border:1px solid var(--about-sage);border-radius:50%;content:""}
+
+  .about-section{padding:92px 52px;border-bottom:1px solid var(--about-line)}
+  .about-section.is-surface{background:var(--about-surface)}
+  .about-intro-grid{display:grid;grid-template-columns:minmax(240px,.72fr) minmax(0,1.28fr);gap:72px}
+  .about-body{max-width:680px;color:var(--about-muted);font-size:16px;line-height:1.72}
+  .about-body p{margin:0 0 20px}.about-body p:last-child{margin-bottom:0}
+  .about-body strong{color:var(--about-ink);font-weight:500}
+  .about-tool-list{margin-top:54px;border-top:1px solid var(--about-line)}
+  .about-tool{display:grid;grid-template-columns:44px 150px minmax(0,1fr);gap:18px;align-items:baseline;padding:21px 0;border-bottom:1px solid var(--about-line)}
+  .about-tool-num{color:var(--about-sage);font-size:10.5px;letter-spacing:.12em}
+  .about-tool h3{margin:0;font-family:'Newsreader',serif;font-size:24px;font-weight:400;color:var(--about-ink)}
+  .about-tool p{margin:0;color:var(--about-muted);font-size:13.5px;line-height:1.55}
+
+  .about-origin-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(260px,.65fr);gap:84px;align-items:start}
+  .about-origin-quote{margin:0;font-family:'Newsreader',serif;font-size:clamp(28px,3vw,40px);font-weight:400;line-height:1.34;letter-spacing:-.025em;color:var(--about-ink)}
+  .about-origin-note{padding-top:8px;color:var(--about-muted);font-size:15px;line-height:1.72}
+  .about-origin-note strong{display:block;margin-bottom:10px;color:var(--about-ink);font-size:11px;letter-spacing:.13em;text-transform:uppercase}
+
+  .about-principles{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:48px;background:var(--about-line);border:1px solid var(--about-line)}
+  .about-principle{min-height:220px;padding:30px;background:var(--about-page)}
+  .about-principle h3{margin:0 0 16px;font-family:'Newsreader',serif;font-size:25px;font-weight:400;color:var(--about-ink)}
+  .about-principle p{margin:0;color:var(--about-muted);font-size:13.5px;line-height:1.65}
+
+  .about-name.about-section{grid-template-columns:minmax(220px,.7fr) minmax(0,1.3fr);gap:80px;align-items:start}
+  .about-name-mark{display:block;min-height:0;padding:6px 0 0;border:0;border-radius:0;background:none;text-align:left}
+  .about-name-mark strong{font-size:clamp(70px,10vw,120px);letter-spacing:-.04em;line-height:.88;color:var(--about-ink)}
+  .about-name-mark span{margin-top:24px;color:var(--about-muted);letter-spacing:.14em}
+  .about-name-copy .about-body{margin-top:20px}
+  .about-character-notes{gap:18px;margin-top:30px;padding:0;border:0}
+  .about-character{display:block;min-height:132px;padding:22px;border:1px solid var(--about-line)}
+  .about-character b{display:block;margin-bottom:9px;font-size:32px;color:var(--about-ink)}
+  .about-character em{color:var(--about-sage)}
+  .about-character span{display:block;margin-top:12px;color:var(--about-muted)}
+  .about-name-closing{margin-top:24px}
+
+  .about-closing{margin:0;padding:92px 28px 96px;border-radius:0;background:radial-gradient(circle at 50% 115%,rgba(169,197,183,.13),transparent 45%),var(--about-surface)}
+  .about-closing p{color:var(--about-muted)}
+  .about-closing a{border:1px solid var(--about-sage);background:var(--about-sage);color:#17201c;transition:background .25s ease,color .25s ease,transform .25s ease}
+  .about-closing a:hover{background:transparent;color:var(--about-ink);transform:translateY(-1px)}
+  .about-closing a:focus-visible{outline:2px solid var(--about-ink);outline-offset:4px}
+
+  @media(max-width:760px){
+    .about-section{padding:66px 10px}
+    .about-intro-grid,.about-origin-grid,.about-name.about-section{grid-template-columns:1fr;gap:32px}
+    .about-tool{grid-template-columns:32px 105px minmax(0,1fr);gap:10px}
+    .about-tool h3{font-size:20px}
+    .about-principles{grid-template-columns:1fr}
+    .about-principle{min-height:0}
+    .about-name-mark{padding:0}
+    .about-character-notes{grid-template-columns:1fr}
+    .about-closing{margin:0;padding:72px 22px 78px;border-radius:0}
+  }
+  @media(max-width:520px){.about-tool{grid-template-columns:30px minmax(0,1fr)}.about-tool p{grid-column:2}}
+
   .card-title{
     font-family:'Fraunces', serif; font-weight:450; font-size:26px; margin-bottom:6px;
   }
@@ -1206,9 +1271,9 @@
       <section class="about-hero">
         <div class="about-hero-copy">
           <div class="about-eyebrow">About kū-on</div>
-          <h1>A little space between feeling and next.</h1>
-          <p>kū-on is a quiet set of tools for moments when something feels too loud. It can help you breathe, ground, release, or simply pause.</p>
-          <div class="about-hero-note"><span aria-hidden="true"></span>Nothing to maintain. Nothing to get right.</div>
+          <h1>A little quiet when you need it.</h1>
+          <p>kū-on is a private set of short exercises for moments when anxiety, shame, anger, resentment, or overwhelm feels hard to hold. Breathe, ground, release tension, or take one small step through what is happening.</p>
+          <div class="about-hero-promises"><span>No account</span><span>Nothing to maintain</span><span>Nothing to get right</span></div>
         </div>
         <div class="about-hero-field" aria-hidden="true">
           <div class="about-haze"></div>
@@ -1222,70 +1287,61 @@
         </div>
       </section>
 
-      <section class="about-name">
-        <div class="about-name-mark" aria-label="空穏, pronounced kū-on">
-          <strong>空穏</strong>
-          <span>pronounced kū-on</span>
+      <section class="about-section is-surface" aria-labelledby="about-tools-heading">
+        <div class="about-intro-grid">
+          <div><div class="about-eyebrow">For the moment you’re in</div><h2 id="about-tools-heading">Begin wherever you are.</h2></div>
+          <div class="about-body">
+            <p>If you know what might help, go straight there. If you do not, choose what feels loudest and kū-on will offer one small place to start.</p>
+            <p><strong>Use one exercise or stay a little longer. Everything after the first step is optional.</strong></p>
+          </div>
         </div>
+        <div class="about-tool-list" aria-label="Ways kū-on can help">
+          <article class="about-tool"><span class="about-tool-num">01</span><h3>Right now</h3><p>Choose what feels loudest and begin with a quick reset.</p></article>
+          <article class="about-tool"><span class="about-tool-num">02</span><h3>Breathe</h3><p>Follow a simple rhythm when your body is running fast.</p></article>
+          <article class="about-tool"><span class="about-tool-num">03</span><h3>Ground</h3><p>Bring your attention back to what is here around you.</p></article>
+          <article class="about-tool"><span class="about-tool-num">04</span><h3>Settle</h3><p>Release some of the tension your body is carrying.</p></article>
+          <article class="about-tool"><span class="about-tool-num">05</span><h3>Let go</h3><p>Put down what you are carrying in words that are never saved or sent.</p></article>
+          <article class="about-tool"><span class="about-tool-num">06</span><h3>Untangle</h3><p>Work gently through shame or guilt without turning yourself into the punishment.</p></article>
+        </div>
+      </section>
+
+      <section class="about-section" aria-labelledby="about-origin-heading">
+        <div class="about-eyebrow">Why it exists</div>
+        <div class="about-origin-grid">
+          <h2 class="about-origin-quote" id="about-origin-heading">“I made kū-on for the moments when I needed help before I could explain what was wrong.”</h2>
+          <div class="about-origin-note"><strong>A personal project</strong>I wanted something I could open immediately, use without preparation, and leave without turning it into another obligation. The aim is deliberately small: help make the next few minutes feel more manageable.</div>
+        </div>
+      </section>
+
+      <section class="about-section is-surface" aria-labelledby="about-expect-heading">
+        <div class="about-eyebrow">What you can expect</div>
+        <h2 id="about-expect-heading">Designed to ask very little of you.</h2>
+        <div class="about-principles">
+          <article class="about-principle"><h3>Open and begin</h3><p>No account or setup is required. You do not need to name the feeling perfectly before you start.</p></article>
+          <article class="about-principle"><h3>Private by default</h3><p>What you enter is not saved, uploaded, or sent by kū-on. Your difficult moments remain yours.</p></article>
+          <article class="about-principle"><h3>No performance</h3><p>No scores, streaks, or pressure to continue. Stopping after one breath is still using the app as intended.</p></article>
+        </div>
+      </section>
+
+      <section class="about-section about-name" aria-labelledby="about-name-heading">
+        <div class="about-name-mark" aria-label="空穏, kū-on, roughly koo-on"><strong>空穏</strong><span>kū-on · roughly “koo-on”</span></div>
         <div class="about-name-copy">
           <div class="about-eyebrow">The name</div>
-          <h2>Open space, held gently.</h2>
-          <p>kū-on is a coined name inspired by two Japanese characters. Together, they express the feeling the project hopes to create: a mind with a little more openness and calm.</p>
+          <h2 id="about-name-heading">A name for openness and calm.</h2>
+          <div class="about-body"><p>kū-on is a coined name, written symbolically as 空穏. It is not an established Japanese word. The characters were chosen for the ideas they hold here.</p></div>
           <div class="about-character-notes">
-            <div class="about-character"><b>空</b><em>kū</em><span>Sky, space, or emptiness</span></div>
-            <div class="about-character"><b>穏</b><em>on</em><span>Calm, gentle, or peaceful</span></div>
+            <div class="about-character"><b>空 <em>kū</em></b><span>Sky, space, or emptiness</span></div>
+            <div class="about-character"><b>穏 <em>on</em></b><span>Calm, gentle, or peaceful</span></div>
           </div>
-        </div>
-      </section>
-
-      <section class="about-origin">
-        <div>
-          <div class="about-eyebrow">Why it exists</div>
-          <h2>Made for the moments before words.</h2>
-        </div>
-        <div class="about-origin-copy">
-          <p>I made kū-on for the version of myself who needed help before I could explain what was wrong, and for friends who have known that feeling too.</p>
-          <p>The aim is deliberately small: make the next few minutes feel more manageable. Not a programme to keep up with. Not a promise to fix everything.</p>
-        </div>
-      </section>
-
-      <section class="about-expect">
-        <div class="about-expect-head">
-          <div>
-            <div class="about-eyebrow">What you can expect</div>
-            <h2>A little guidance, never a demand.</h2>
-          </div>
-          <p>kū-on makes the first step clear and keeps everything after it optional.</p>
-        </div>
-        <div class="about-expect-list">
-          <article class="about-expect-row">
-            <span class="about-expect-num">01</span>
-            <h3>Start where you are</h3>
-            <p>Choose what feels loudest, or go directly to an exercise you already know. You do not need to name the feeling perfectly.</p>
-          </article>
-          <article class="about-expect-row">
-            <span class="about-expect-num">02</span>
-            <h3>One small step is enough</h3>
-            <p>Follow a single breath, body, grounding, or reflection exercise. Stay only as long as it feels useful.</p>
-          </article>
-          <article class="about-expect-row">
-            <span class="about-expect-num">03</span>
-            <h3>Private by default</h3>
-            <p>No account is required, and reflections written in Let go are not saved by kū-on.</p>
-          </article>
-          <article class="about-expect-row">
-            <span class="about-expect-num">04</span>
-            <h3>No performance</h3>
-            <p>No streaks, scores, or pressure language. A shorter session is not a failed session.</p>
-          </article>
+          <div class="about-body about-name-closing"><p>Together, they point to the feeling behind the project: a little more room around whatever is happening.</p></div>
         </div>
       </section>
 
       <section class="about-closing">
-        <div class="about-eyebrow">For wherever you are</div>
+        <div class="about-eyebrow">Take only what helps</div>
         <h2>You do not have to solve everything right now.</h2>
-        <p>Finding one small thing that makes the next moment easier is enough.</p>
-        <a href="#now">Start with what feels loudest&nbsp; ›</a>
+        <p>Use one exercise, stay for a few minutes, or leave whenever you want.</p>
+        <a href="#now">Start with what feels loudest&nbsp;›</a>
       </section>
     </div>
   </section>
@@ -1293,7 +1349,7 @@
 
 <audio id="silentUnlock" loop playsinline webkit-playsinline="true" preload="auto" style="display:none" src="data:audio/wav;base64,UklGRoQJAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YWAJAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA="></audio>
 
-<footer>Not a substitute for professional care. If you're in crisis, please reach out to a crisis line or someone you trust.</footer>
+<footer>kū-on is not a substitute for professional care. If you are in immediate danger or crisis, contact local emergency services or a crisis line.</footer>
 
 <script>
   // ---------- HASH-BASED ROUTING ----------
