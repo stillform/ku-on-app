@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>kū-on | a quiet place to ride it out</title>
+<meta name="theme-color" content="#142a2d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="kū-on">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/kuon-app-icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/kuon-apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,560&family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400&display=swap" rel="stylesheet">
 <style>
@@ -112,7 +120,7 @@
 
   header{
     display:flex; align-items:center; justify-content:space-between;
-    padding:22px clamp(18px,4vw,44px) 10px;
+    padding:calc(22px + env(safe-area-inset-top,0px)) clamp(18px,4vw,44px) 10px;
     z-index:10;
     flex-wrap:wrap;
     gap:10px;
@@ -2855,6 +2863,13 @@
       }
     });
   });
+
+  // ---------- OFFLINE APP ----------
+  if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js');
+    });
+  }
 </script>
 </body>
 </html>

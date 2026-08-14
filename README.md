@@ -36,3 +36,9 @@ kū-on is a personal project for emotional self-support. It is not a substitute 
 Open the repository in [Pages CMS](https://pagescms.org/), choose an app section, edit its fields, and save. Pages CMS commits the matching JSON file to `main`; the existing GitHub Pages workflow then republishes the site.
 
 The app keeps its current built-in copy as a fallback. If an editable content file is missing or invalid, the page still renders instead of going blank.
+
+## Offline use
+
+After opening the live site online once, add kū-on to the device Home Screen. The app shell, editable copy, current shoreline audio, and breathing narration are then available without a connection. When online, CMS copy is checked for updates before the cached version is used.
+
+When adding or replacing a precached asset, update `PRECACHE_URLS` and increment `CACHE_VERSION` in `service-worker.js` so installed copies receive the new offline package.
