@@ -16,6 +16,17 @@
     --amber:#e8a559;
     --amber-dim:#7a5a35;
     --tide:#4a7a76;
+    --tide-dim:rgba(74,122,118,0.18);
+    --sage:#a9c191;
+    --sage-dim:rgba(169,193,145,0.18);
+    --lavender:#c3b3dd;
+    --lavender-dim:rgba(195,179,221,0.18);
+    --clay:#b8836a;
+    --clay-dim:rgba(184,131,106,0.18);
+    --breath:#8fa8c1;
+    --breath-dim:rgba(143,168,193,0.14);
+    --repair:#bda8b8;
+    --repair-dim:rgba(189,168,184,0.14);
     --radius:18px;
     --mode-light:#ffe8c2;
     --mode-glow:#e8a559;
@@ -27,6 +38,7 @@
     --mode-glow:#7c89d9;
     --mode-accent:#4a5a9e;
     --mode-deep:#1e2140;
+    --box-center-y:58%;
   }
   .scene.mode-release{
     --mode-light:#ffe3be;
@@ -85,20 +97,48 @@
     background:currentColor;
     transform:translateX(-50%);
   }
-  nav{display:flex; gap:4px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:999px; padding:4px; flex-wrap:wrap;}
+  header{ justify-content:center; padding-bottom:4px; }
+  nav{
+    position:fixed; left:50%; bottom:48px; transform:translateX(-50%);
+    z-index:30;
+    display:flex; gap:4px;
+    background:rgba(10,16,22,0.72);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,0.09);
+    border-radius:999px; padding:5px;
+    flex-wrap:nowrap;
+    max-width:94vw;
+    overflow-x:auto;
+    box-shadow:0 10px 34px rgba(0,0,0,0.35);
+  }
   nav a{
+    display:flex; align-items:center; gap:6px;
     font-family:'Inter',sans-serif;
-    font-size:13px; font-weight:500;
+    font-size:12.5px; font-weight:500;
     color:var(--muted);
     background:transparent; border:none; border-radius:999px;
-    padding:8px 16px; cursor:pointer;
-    transition:background .3s ease, color .3s ease;
+    padding:9px 15px; cursor:pointer;
+    transition:background .3s ease, color .3s ease, border-color .3s ease;
     text-decoration:none;
+    white-space:nowrap;
+    border:1px solid transparent;
   }
-  nav a.active{ background:var(--amber); color:#2a1c08; }
-  nav a:not(.active):hover{ color:var(--foam); }
+  nav a::before{
+    content:""; width:5px; height:5px; border-radius:50%;
+    background:currentColor; opacity:0.5; flex-shrink:0;
+  }
+  nav a:not(.active):hover{ color:var(--foam); border-color:rgba(255,255,255,0.14); background:rgba(255,255,255,0.04); }
+  nav a.active{ background:var(--tide); color:#08201d; }
+  body[data-view="now"] nav a.active{ background:var(--tide); color:#08201d; }
+  body[data-view="ground"] nav a.active{ background:var(--sage); color:#0d1b08; }
+  body[data-view="settle"] nav a.active{ background:var(--lavender); color:#1c1226; }
+  body[data-view="letgo"] nav a.active{ background:#c49a91; color:#241a1b; }
+  body[data-view="untangle"] nav a.active{ background:var(--repair); color:#241a22; }
+  body[data-view="breathe"] nav a.active{ background:var(--breath); color:#10202d; }
+  body[data-view="about"] nav a.active{ background:var(--muted); color:#10202d; }
 
-  main{flex:1; position:relative; display:flex; align-items:center; justify-content:center; padding:20px;}
+  main{flex:1; position:relative; display:flex; align-items:center; justify-content:center; padding:20px 20px 142px;}
   .view{ width:100%; max-width:560px; display:none; }
   .view.active{ display:block; animation:fadeIn .6s ease; }
   @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
@@ -330,10 +370,10 @@
   .box-guide.active{ opacity:1; }
   .box-corner-label{
     position:absolute;
-    font-size:9.5px; letter-spacing:0.06em; text-transform:uppercase;
-    color:color-mix(in srgb, var(--mode-light) 78%, transparent);
+    font-size:10.5px; letter-spacing:0.015em;
+    color:color-mix(in srgb, var(--mode-light) 68%, transparent);
     font-family:'Inter',sans-serif;
-    font-weight:500;
+    font-weight:400;
   }
   .box-corner-label.cl-top{ top:-16px; left:50%; transform:translateX(-50%); }
   .box-corner-label.cl-right{ right:-15px; top:50%; transform:translateY(-50%) rotate(90deg); }
@@ -369,7 +409,7 @@
     font-size:clamp(24px,5vw,32px);
     letter-spacing:0.02em;
   }
-  .phase-sub{ font-size:13px; color:var(--muted); margin-top:6px; letter-spacing:0.04em; text-transform:uppercase;}
+  .phase-sub{font-family:'Inter',sans-serif;font-size:12.5px;font-weight:400;line-height:1.45;color:var(--muted);margin-top:6px;letter-spacing:.01em}
 
   .closing-overlay{
     position:absolute; inset:0; z-index:8;
@@ -410,15 +450,15 @@
     background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.09);
     border-radius:10px; padding:8px 12px; cursor:pointer; transition:all .25s ease;
   }
-  .pattern-select button.active, .duration-select button.active{ border-color:var(--amber); color:var(--amber); background:rgba(232,165,89,0.08); }
+  .pattern-select button.active, .duration-select button.active{ border-color:var(--breath); color:var(--breath); background:var(--breath-dim); }
   .pattern-select button:disabled, .duration-select button:disabled{ opacity:0.35; cursor:not-allowed; }
   .start-row{ display:flex; justify-content:center; margin-top:4px; }
   .start-btn{
     font-family:'Inter',sans-serif; font-weight:600; font-size:14px;
-    background:var(--amber); color:#2a1c08; border:none;
+    background:var(--breath); color:#10202d; border:none;
     padding:12px 30px; border-radius:12px; cursor:pointer;
     transition:transform .2s ease, box-shadow .2s ease;
-    box-shadow:0 4px 18px rgba(232,165,89,0.25);
+    box-shadow:0 4px 18px rgba(143,168,193,0.24);
   }
   .start-btn:hover{ transform:translateY(-1px); }
   .start-btn:active{ transform:translateY(0); }
@@ -434,8 +474,202 @@
     padding:8px 16px; cursor:pointer; transition:all .25s ease;
   }
   .audio-toggle .audio-icon{ font-size:13px; filter:grayscale(1) opacity(0.6); transition:filter .25s ease; }
-  .audio-toggle.active{ color:var(--foam); border-color:rgba(232,165,89,0.4); background:rgba(232,165,89,0.06); }
+  .audio-toggle.active{ color:var(--foam); border-color:rgba(143,168,193,0.42); background:rgba(143,168,193,0.07); }
   .audio-toggle:not(.active){ text-decoration:line-through; text-decoration-color:rgba(139,160,182,0.5); }
+
+  /* ---------- FINAL BREATHE VISUAL SYSTEM ---------- */
+  .scene.mode-box .aurora-container,
+  .scene.mode-release .aurora-container,
+  .scene.mode-even .aurora-container,
+  .scene.mode-box .particles,
+  .scene.mode-release .particles,
+  .scene.mode-even .particles,
+  .scene.mode-box .sky-glow,
+  .scene.mode-release .sky-glow,
+  .scene.mode-even .sky-glow,
+  .scene.mode-release .waves,
+  .scene.mode-even .waves,
+  .scene.mode-release .horizon-line,
+  .scene.mode-even .horizon-line,
+  .scene.mode-release .disc,
+  .scene.mode-even .disc,
+  .scene.mode-release .ripples,
+  .scene.mode-even .ripples,
+  .scene .mist-ring{ display:none; }
+
+  .breath-copy{ opacity:1; transform:translateY(0); transition:opacity .28s ease,transform .42s cubic-bezier(.22,.61,.36,1); }
+  .breath-copy.phase-changing{ opacity:0; transform:translateY(4px); }
+
+  /* Box — one point continuously traces the four edges. */
+  .scene.mode-box .breath-copy{top:8%}
+  .scene.mode-box .box-guide{ left:50%; top:var(--box-center-y); width:132px; height:132px; border-radius:8px; }
+  .scene.mode-box .waves,.scene.mode-box .horizon-line{will-change:transform}
+  .scene.mode-box .disc{
+    display:block; width:9px; height:9px; border-radius:3px; z-index:5;
+    background:var(--tide); filter:none;
+    box-shadow:0 0 10px 2px rgba(74,122,118,.55);
+    transform:translate(-50%,-50%);
+  }
+
+  /* Release A — silky ambient diffusion plus the original dissolving circle. */
+  .release-ambient{ position:absolute; inset:-24%; z-index:1; pointer-events:none; overflow:hidden; opacity:0; transition:opacity .7s ease; }
+  .scene.mode-release .release-ambient{ opacity:.74; }
+  .release-silk{ position:absolute; inset:0; border-radius:44%; opacity:.46; filter:blur(54px) saturate(.86); will-change:transform,opacity,filter; transition:opacity 4s ease-in-out,filter 4s ease-in-out; }
+  .release-silk.s1{ background:radial-gradient(ellipse at 30% 45%,rgba(244,224,218,.24),rgba(196,154,145,.1) 38%,transparent 70%); animation:releaseSilkA 38s ease-in-out infinite alternate; }
+  .release-silk.s2{ background:radial-gradient(ellipse at 70% 58%,rgba(221,195,202,.18),rgba(151,151,181,.08) 42%,transparent 72%); animation:releaseSilkB 46s ease-in-out infinite alternate; }
+  .release-silk.s3{ background:linear-gradient(118deg,transparent 16%,rgba(244,224,218,.08) 43%,rgba(196,154,145,.12) 58%,transparent 82%); animation:releaseSilkC 52s ease-in-out infinite alternate; }
+  @keyframes releaseSilkA{ from{transform:translate3d(-5%,2%,0) scale(1.04) rotate(-3deg)} to{transform:translate3d(7%,-5%,0) scale(1.14) rotate(4deg)} }
+  @keyframes releaseSilkB{ from{transform:translate3d(5%,-4%,0) scale(1.1) rotate(3deg)} to{transform:translate3d(-7%,5%,0) scale(1.02) rotate(-5deg)} }
+  @keyframes releaseSilkC{ from{transform:translate3d(-6%,0,0) scale(1.08) rotate(-2deg)} to{transform:translate3d(6%,-3%,0) scale(1.18) rotate(4deg)} }
+  .release-ambient.stage-inhale .release-silk,.release-ambient.stage-hold .release-silk{ opacity:.72; filter:blur(48px) saturate(.92) brightness(1.14); }
+  .release-ambient.stage-hold .release-silk{ transition:none; }
+  .release-ambient.stage-exhale .release-silk{ opacity:.11; filter:blur(64px) saturate(.78) brightness(.9); transition:opacity 8s linear,filter 8s cubic-bezier(.4,0,.7,1); }
+  .release-glow-new{ position:absolute;left:50%;top:55%;width:180px;height:160px;transform:translate(-50%,-50%);z-index:2;border-radius:50%;background:radial-gradient(ellipse,rgba(250,232,226,.14),rgba(196,154,145,.055) 45%,transparent 72%);filter:blur(22px);opacity:0;transition:opacity 4s ease-in-out;pointer-events:none; }
+  .scene.mode-release .release-glow-new.active{ opacity:1; }
+  .release-core-ring{ position:absolute;left:50%;top:55%;width:40px;height:40px;transform:translate(-50%,-50%);z-index:4;border-radius:50%;border:1px solid #c49a91;box-shadow:0 0 12px 1px rgba(196,154,145,.42);filter:blur(5px);opacity:0;pointer-events:none; }
+  .release-center-dot{position:absolute;left:50%;top:55%;width:8px;height:8px;border-radius:50%;transform:translate(-50%,-50%);z-index:5;background:#c49a91;box-shadow:0 0 10px 2px rgba(196,154,145,.42);opacity:0;pointer-events:none;transition:opacity .4s ease}
+  .scene.mode-release .release-center-dot{opacity:1}
+  .release-mist-field{ position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden;opacity:0; }
+  .scene.mode-release .release-mist-field.active{ opacity:1; }
+  .release-cloud{ position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(244,224,218,.34),rgba(210,177,172,.22) 28%,rgba(196,154,145,.13) 48%,transparent 72%);filter:blur(18px);transform:translate(-50%,-50%) scale(.55);opacity:0;will-change:transform,opacity; }
+  .release-cloud.m1{width:150px;height:150px;left:43%;top:57%}.release-cloud.m2{width:210px;height:170px;left:57%;top:54%;filter:blur(24px)}
+  .release-cloud.m3{width:130px;height:130px;left:50%;top:67%;filter:blur(16px)}.release-cloud.m4{width:180px;height:150px;left:48%;top:43%;filter:blur(28px)}
+  .release-mist-field.stage-inhale .release-cloud,.release-mist-field.stage-hold .release-cloud{ opacity:.58;transform:translate(-50%,-50%) scale(1);transition:transform 4s ease-in-out,opacity 4s ease-in-out; }
+  .release-mist-field.stage-hold .release-cloud{ transition:none; }
+  .release-mist-field.stage-exhale .release-cloud{ opacity:0;transform:translate(-50%,-82%) scale(1.7);transition:transform 8s cubic-bezier(.4,0,.7,1),opacity 8s linear; }
+
+  /* Even — iridescent balanced light field with four sage guide points. */
+  .even-light-field{ position:absolute;inset:-22%;z-index:1;pointer-events:none;overflow:hidden;opacity:0;transition:opacity .7s ease; }
+  .scene.mode-even .even-light-field{ opacity:1; }
+  .balance-light{position:absolute;top:10%;bottom:2%;width:70%;border-radius:48%;opacity:.2;filter:blur(48px) saturate(.9);will-change:transform,opacity,filter;transition:transform 5s cubic-bezier(.37,0,.25,1),opacity 5s ease-in-out,filter 5s ease-in-out}
+  .balance-light.left{left:-33%;background:radial-gradient(ellipse at 72% 50%,rgba(117,151,190,.38),rgba(108,127,176,.12) 45%,transparent 74%);transform:translate3d(-7%,-1%,0) scale(.92);animation:balanceIdleLeft 19s ease-in-out infinite alternate}
+  .balance-light.right{right:-33%;background:radial-gradient(ellipse at 28% 50%,rgba(157,139,196,.31),rgba(112,139,183,.11) 45%,transparent 74%);transform:translate3d(7%,1%,0) scale(.92);animation:balanceIdleRight 23s ease-in-out infinite alternate}
+  .balance-ribbon{position:absolute;left:8%;right:8%;top:25%;height:55%;border-radius:50%;background:linear-gradient(112deg,transparent 15%,rgba(117,151,190,.04) 36%,rgba(169,147,201,.1) 51%,rgba(128,165,192,.045) 68%,transparent 86%);filter:blur(23px);opacity:.24;transform:rotate(-5deg) scale(.88);transition:opacity 5s ease-in-out,transform 5s cubic-bezier(.37,0,.25,1);animation:balanceRibbonIdle 28s ease-in-out infinite alternate}
+  .balance-seam{position:absolute;left:16%;right:16%;top:55%;height:1px;background:linear-gradient(90deg,transparent,rgba(165,189,208,.22),transparent);filter:blur(.5px);opacity:.24;transform:scaleX(.68);transition:opacity 5s ease-in-out,transform 5s cubic-bezier(.37,0,.25,1)}
+  .even-light-field.session-active .balance-light,.even-light-field.session-active .balance-ribbon{animation:none}
+  .even-light-field.breathe .balance-light.left{transform:translate3d(20%,-2%,0) scale(1.1);opacity:.48;filter:blur(43px) saturate(1)}
+  .even-light-field.breathe .balance-light.right{transform:translate3d(-20%,2%,0) scale(1.1);opacity:.48;filter:blur(43px) saturate(1)}
+  .even-light-field.breathe .balance-ribbon{opacity:.48;transform:rotate(2deg) scale(1.06)}
+  .even-light-field.breathe .balance-seam{opacity:.58;transform:scaleX(1)}
+  @keyframes balanceIdleLeft{from{transform:translate3d(-8%,-2%,0) scale(.92)}to{transform:translate3d(-2%,2%,0) scale(.99)}}
+  @keyframes balanceIdleRight{from{transform:translate3d(8%,2%,0) scale(.94)}to{transform:translate3d(2%,-2%,0) scale(1)}}
+  @keyframes balanceRibbonIdle{from{transform:rotate(-6deg) translateX(-2%) scale(.88)}to{transform:rotate(-2deg) translateX(3%) scale(.96)}}
+  .even-drift{position:absolute;left:50%;top:55%;width:0;height:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .6s ease}
+  .scene.mode-even .even-drift{opacity:1}
+  .even-drift-dot{position:absolute;left:0;top:0;width:8px;height:8px;border-radius:50%;background:#a9c191;box-shadow:0 0 9px 1px rgba(169,193,145,.5);transform:translate(-50%,-50%);transition:transform 5s ease-in-out}
+  .even-drift-dot.n{--dx:0px;--dy:-58px}.even-drift-dot.s{--dx:0px;--dy:58px}.even-drift-dot.e{--dx:58px;--dy:0px}.even-drift-dot.w{--dx:-58px;--dy:0px}
+  .even-drift.breathe .even-drift-dot{transform:translate(-50%,-50%) translate(var(--dx),var(--dy))}
+
+  /* ---------- COHESIVE RAPID-RELIEF FLOW ---------- */
+  .now-primary-state,.now-route-state{width:100%}
+  .now-route-toggle{width:100%;margin-top:32px;padding:14px 4px;border:0;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08);background:transparent;color:#a9bbc9;display:flex;align-items:center;justify-content:space-between;font:12.5px 'Inter',sans-serif;cursor:pointer;text-align:left}
+  .now-route-toggle span:last-child{color:var(--tide);font-size:17px;line-height:1}
+  .now-route-state{display:none;animation:fadeIn .45s ease}
+  .now-route-state.active{display:block}
+  .now-route-back{display:inline-block;margin-bottom:27px;padding:0;border:0;background:transparent;color:#79928f;font:11px 'Inter',sans-serif;cursor:pointer}
+  .now-route-title{font-family:'Fraunces',serif;font-size:27px;font-weight:450;line-height:1.25}
+  .now-route-sub{margin:9px auto 23px;color:var(--muted);font-size:12px;line-height:1.55}
+  .now-route-list{display:grid;gap:9px}
+  .now-route-list .now-tag-btn{min-height:52px;padding:12px 15px;display:flex;align-items:center;justify-content:space-between;text-align:left;line-height:1.3}
+  .now-route-list .now-tag-btn::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--tide);box-shadow:0 0 10px rgba(74,122,118,.45);flex:0 0 auto;margin-left:12px}
+  .now-heavy-links{margin-top:21px;color:var(--muted);font-size:11.5px;line-height:1.7}
+  .now-heavy-links span{display:block;margin-bottom:2px}
+  .now-secondary-link{display:inline;margin:0 3px;padding:0;background:none;border:0;color:var(--repair);font:500 11.5px 'Inter',sans-serif;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+  .now-step-stack{max-width:315px;margin:0 auto}
+  .now-step-kicker{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--tide);margin-bottom:13px}
+  .now-step-copy{font-family:'Fraunces',serif;font-size:21px;line-height:1.45;min-height:92px;display:flex;align-items:center;justify-content:center;transition:opacity .3s ease,transform .4s ease}
+  .now-step-copy.changing{opacity:0;transform:translateY(4px)}
+  .now-step-progress{display:flex;justify-content:center;gap:7px;margin:20px 0}
+  .now-step-progress i{width:5px;height:5px;border-radius:50%;background:rgba(139,160,182,.28);transition:background .4s ease,transform .4s ease}
+  .now-step-progress i.active{background:var(--tide);transform:scale(1.25)}
+  .now-follow{display:none;margin-top:18px;font-size:12px;color:var(--muted)}
+  .now-follow a{color:var(--tide);text-underline-offset:3px}
+
+  #view-breathe .scene{margin-bottom:16px}
+  #view-breathe .closing-chime-icon{color:var(--breath)}
+  .breath-controls{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.075);border-radius:18px;padding:15px 16px;gap:13px;transition:opacity .4s ease}
+  .pattern-select{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+  .pattern-select button{padding:11px 8px;border-radius:12px;line-height:1.25}
+  .pattern-select button small{display:block;font-size:9px;letter-spacing:.04em;margin-top:4px;opacity:.65;font-weight:400}
+  .session-settings{border-top:1px solid rgba(255,255,255,.065);padding-top:11px}
+  .session-settings summary{list-style:none;cursor:pointer;color:var(--muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+  .session-settings summary::-webkit-details-marker{display:none}
+  .session-settings summary::after{content:'+';float:right;color:var(--muted);font-size:15px;line-height:10px}
+  .session-settings[open] summary::after{content:'–'}
+  .session-settings-body{display:grid;gap:14px;padding-top:14px}
+  .session-settings .audio-controls{margin-top:0;justify-content:flex-start}
+  #view-breathe.session-active .breath-controls>.control-group,
+  #view-breathe.session-active .session-settings{display:none}
+  #view-breathe.session-active .breath-controls{background:transparent;border-color:transparent;padding-top:4px}
+  .cycle-count,.streak-line{display:none!important}
+
+  .ground-shell,.settle-step,.release-writing-card,.repair-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:30px 26px;text-align:center}
+  .ground-progress,.settle-dots{display:flex;justify-content:center;gap:7px;margin-bottom:24px}
+  .ground-progress i,.settle-dots i{width:6px;height:6px;border-radius:50%;background:rgba(139,160,182,.25);transition:background .35s ease,transform .35s ease}
+  .ground-progress i.active,.settle-dots i.active{background:var(--sage);transform:scale(1.25)}
+  .ground-count{font-family:'Fraunces',serif;font-size:42px;color:var(--sage);line-height:1;margin-bottom:12px}
+  .ground-label{font-family:'Fraunces',serif;font-size:21px;margin-bottom:9px}
+  .ground-hint{font-size:12.5px;color:var(--muted);line-height:1.55;min-height:42px}
+  .ground-optional{margin-top:18px}
+  .ground-optional summary{font-size:11px;color:var(--muted);cursor:pointer}
+  .ground-optional input{margin-top:10px;width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 12px;color:var(--foam);font:13px 'Inter',sans-serif}
+  .ground-actions{margin-top:22px;display:flex;justify-content:center;gap:10px}
+  .primary-soft{font:600 13px 'Inter',sans-serif;background:var(--foam);color:#16283b;border:0;border-radius:11px;padding:10px 20px;cursor:pointer}
+  .ground-finish{display:none;font-family:'Fraunces',serif;font-size:21px;line-height:1.45;padding:30px 0}
+
+  .settle-choices{display:flex;gap:9px;justify-content:center;margin-bottom:18px}
+  .settle-choice{font:500 12px 'Inter',sans-serif;color:var(--muted);background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.1);border-radius:11px;padding:9px 13px;cursor:pointer}
+  .settle-choice.active{color:var(--lavender);border-color:rgba(195,179,221,.45);background:rgba(195,179,221,.07)}
+  .settle-bar{display:none}
+  .settle-complete{display:none;font-family:'Fraunces',serif;font-size:20px;line-height:1.45;margin:14px 0 4px}
+
+  .release-writing-card{position:relative;overflow:hidden;text-align:left}
+  .release-privacy{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);margin-bottom:18px}
+  .release-privacy::before{content:'○';color:var(--clay)}
+  .release-settle-intro{text-align:center;padding:30px 12px 24px}
+  .release-settle-intro strong{display:block;font-family:'Fraunces',serif;font-size:22px;font-weight:450;margin-bottom:10px}
+  .release-settle-intro p{font-size:12.5px;line-height:1.6;color:var(--muted);max-width:370px;margin:0 auto 21px}
+  .release-prompt{font-family:'Fraunces',serif;font-size:20px;line-height:1.45;margin-bottom:15px}
+  .release-prompt small{display:block;font:12px 'Inter',sans-serif;color:var(--muted);margin-top:7px;line-height:1.5}
+  .release-textarea{width:100%;min-height:180px;resize:vertical;background:rgba(8,16,25,.42);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px;color:var(--foam);font:14px/1.65 'Inter',sans-serif;outline:none;transition:border-color .3s ease,opacity .8s ease,filter .8s ease,transform .8s ease}
+  .release-textarea:focus{border-color:rgba(196,154,145,.5)}
+  .release-textarea.releasing{opacity:0;filter:blur(12px);transform:translateY(-16px) scale(.98)}
+  .release-writing-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
+  .release-stop{font-size:11px;color:var(--muted);line-height:1.4;max-width:290px}
+  .release-stop a{color:var(--clay)}
+  .release-letter-btn{background:#c49a91;color:#241a1b;border:0;border-radius:11px;padding:10px 19px;font:600 13px 'Inter',sans-serif;cursor:pointer}
+  .release-letter-btn:disabled{opacity:.35;cursor:not-allowed}
+  .release-particles-new{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .release-word{position:absolute;color:rgba(244,224,218,.5);font-size:12px;animation:releaseWord 1.8s cubic-bezier(.22,.61,.36,1) forwards}
+  @keyframes releaseWord{from{opacity:.55;transform:translate3d(0,0,0) scale(1)}to{opacity:0;transform:translate3d(var(--rx),var(--ry),0) scale(.72);filter:blur(4px)}}
+  .release-writing-complete{display:none;text-align:center;padding:44px 10px 34px}
+  .release-writing-complete strong{display:block;font-family:'Fraunces',serif;font-size:23px;font-weight:450;margin-bottom:9px}
+  .release-writing-complete span{font-size:12px;color:var(--muted)}
+
+  /* Untangle — a short shame/guilt path that separates identity from action. */
+  .repair-card{position:relative;overflow:hidden}
+  .repair-card::before{content:'';position:absolute;inset:-45% 18% 45%;background:radial-gradient(ellipse,rgba(189,168,184,.12),transparent 70%);filter:blur(20px);pointer-events:none}
+  .repair-intro,.repair-flow{position:relative;z-index:1}
+  .repair-intro-copy{font-family:'Fraunces',serif;font-size:21px;line-height:1.45;max-width:390px;margin:4px auto 22px}
+  .repair-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .repair-choice{min-height:94px;padding:15px;border-radius:14px;border:1px solid rgba(189,168,184,.24);background:var(--repair-dim);color:var(--foam);font:500 13px/1.45 'Inter',sans-serif;cursor:pointer;transition:border-color .25s ease,background .25s ease,transform .25s ease}
+  .repair-choice small{display:block;margin-top:5px;color:var(--muted);font-size:10.5px;font-weight:400}
+  .repair-choice:hover,.repair-choice:focus-visible{border-color:rgba(189,168,184,.52);background:rgba(189,168,184,.2);outline:none;transform:translateY(-1px)}
+  .repair-caution{margin:18px auto 0;max-width:410px;color:var(--muted);font-size:11px;line-height:1.55}
+  .repair-flow{display:none;min-height:290px;flex-direction:column;align-items:center;justify-content:center}
+  .repair-kicker{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--repair);margin-bottom:13px}
+  .repair-step{font-family:'Fraunces',serif;font-size:23px;line-height:1.4;max-width:390px;transition:opacity .28s ease,transform .38s ease}
+  .repair-step.changing,.repair-hint.changing{opacity:0;transform:translateY(4px)}
+  .repair-hint{max-width:390px;min-height:48px;margin-top:11px;color:var(--muted);font-size:12.5px;line-height:1.6;transition:opacity .28s ease,transform .38s ease}
+  .repair-progress{display:flex;justify-content:center;gap:7px;margin:22px 0}
+  .repair-progress i{width:6px;height:6px;border-radius:50%;background:rgba(139,160,182,.25);transition:background .35s ease,transform .35s ease}
+  .repair-progress i.active{background:var(--repair);transform:scale(1.25)}
+  .repair-actions{display:flex;align-items:center;justify-content:center;gap:10px}
+  .repair-back,.repair-next{font:500 12px 'Inter',sans-serif;border-radius:11px;padding:10px 16px;cursor:pointer}
+  .repair-back{color:var(--muted);background:transparent;border:1px solid rgba(255,255,255,.11)}
+  .repair-next{color:#241a22;background:var(--repair);border:1px solid var(--repair)}
+  .repair-ground-link{text-align:center;margin-top:17px;color:var(--muted);font-size:11px;line-height:1.5}
+  .repair-ground-link a{color:var(--repair);text-underline-offset:3px}
 
   /* ---------- ABOUT PAGE - WIDER CONTAINER, MATCHES SITE STYLES ---------- */
   .about-card {
@@ -528,7 +762,7 @@
   }
   .sense-row:last-child{ border-bottom:1px solid rgba(255,255,255,0.08); }
   .sense-count{
-    font-family:'Fraunces', serif; font-size:22px; color:var(--amber);
+    font-family:'Fraunces', serif; font-size:22px; color:var(--sage);
     width:34px; flex-shrink:0; text-align:center; padding-top:6px;
   }
   .sense-body{ flex:1; }
@@ -538,7 +772,7 @@
     width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
     border-radius:10px; padding:10px 12px; color:var(--foam); font-family:'Inter',sans-serif; font-size:13.5px;
   }
-  .sense-input:focus{ outline:none; border-color:var(--amber); }
+  .sense-input:focus{ outline:none; border-color:var(--sage); }
   .ground-reset{
     margin-top:20px; font-size:12.5px; color:var(--muted); background:none; border:none;
     cursor:pointer; text-decoration:underline; text-underline-offset:3px;
@@ -548,10 +782,10 @@
     background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);
     border-radius:20px; padding:36px 30px; text-align:center;
   }
-  .settle-index{ font-size:12px; color:var(--amber); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:14px; }
+  .settle-index{ font-size:12px; color:var(--lavender); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:14px; }
   .settle-text{ font-family:'Fraunces', serif; font-size:22px; line-height:1.5; font-weight:450; min-height:90px; display:flex; align-items:center; justify-content:center; }
   .settle-bar{ height:3px; background:rgba(255,255,255,0.08); border-radius:2px; margin-top:26px; overflow:hidden; }
-  .settle-bar-fill{ height:100%; background:var(--amber); width:0%; transition:width linear; }
+  .settle-bar-fill{ height:100%; background:var(--lavender); width:0%; transition:width linear; }
   .settle-actions{ display:flex; justify-content:center; gap:12px; margin-top:22px; }
   .ghost-btn{
     font-family:'Inter',sans-serif; font-size:13px; color:var(--muted);
@@ -560,7 +794,100 @@
   }
   .ghost-btn:hover{ color:var(--foam); border-color:rgba(255,255,255,0.3); }
 
-  footer{ text-align:center; padding:18px; font-size:11.5px; color:rgba(139,160,182,0.6); }
+  footer{position:fixed;left:16px;right:16px;bottom:10px;z-index:25;text-align:center;padding:0;font-size:10.5px;line-height:1.35;color:rgba(139,160,182,.66);pointer-events:none;text-shadow:0 1px 8px rgba(5,12,19,.9)}
+
+  /* ---------- RIGHT NOW ---------- */
+  .now-stage{
+    position:relative;
+    width:100%;
+    min-height:clamp(410px,56vh,510px);
+    border-radius:24px;
+    overflow:hidden;
+    background:radial-gradient(ellipse at 50% 30%, var(--mid) 0%, var(--deep) 80%);
+    margin-bottom:24px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:38px 22px 30px;
+    text-align:center;
+  }
+  .now-stage svg.now-flow{ position:absolute; inset:0; width:100%; height:100%; z-index:0; }
+  .now-flowline{ fill:none; stroke:var(--tide); stroke-width:1; opacity:0.16; }
+  .now-flowline.fl1{ animation:nowDriftA 46s ease-in-out infinite; }
+  .now-flowline.fl2{ animation:nowDriftB 58s ease-in-out infinite; }
+  .now-flowline.fl3{ animation:nowDriftA 64s ease-in-out infinite reverse; }
+  .now-flowline.fl4{ animation:nowDriftB 52s ease-in-out infinite reverse; }
+  @keyframes nowDriftA{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(10px,-18px); } }
+  @keyframes nowDriftB{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(-12px,14px); } }
+
+  .now-mark{ font-family:'Fraunces',serif; font-size:13px; letter-spacing:0.1em; color:var(--muted); margin-bottom:30px; position:relative; z-index:1; }
+
+  .now-landing{ position:relative; z-index:1; width:100%; max-width:340px; }
+  .now-big-btn{
+    width:min(180px,52vw); height:min(180px,52vw);
+    border-radius:50%;
+    border:1px solid rgba(74,122,118,0.45);
+    background:radial-gradient(circle at 50% 38%, var(--tide-dim), transparent 72%);
+    color:var(--foam);
+    font-family:'Fraunces',serif; font-weight:450; font-size:19px;
+    cursor:pointer; margin:0 auto;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .2s ease, box-shadow .6s ease;
+    box-shadow:0 0 0 rgba(74,122,118,0.3);
+    animation:nowPulse 5s ease-in-out infinite;
+  }
+  .now-big-btn:active{ transform:scale(0.96); }
+  @keyframes nowPulse{
+    0%,100%{ box-shadow:0 0 0 0 rgba(74,122,118,0.25); }
+    50%{ box-shadow:0 0 30px 4px rgba(74,122,118,0.18); }
+  }
+  .now-sub{ margin-top:16px; font-size:12.5px; color:var(--muted); font-style:italic; }
+  .now-divider{ margin:30px 0 14px; font-size:11px; color:var(--muted); letter-spacing:0.05em; }
+  .now-tags{ display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+  .now-tag-btn{
+    padding:13px 8px; border-radius:13px;
+    border:1px solid rgba(255,255,255,0.09);
+    background:rgba(255,255,255,0.03);
+    color:var(--foam);
+    font-family:'Inter',sans-serif; font-size:13px;
+    cursor:pointer;
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .now-tag-btn[data-mode="angry"]{ border-color:rgba(184,131,106,0.28); background:var(--clay-dim); }
+  .now-tag-btn:hover, .now-tag-btn:focus-visible{ border-color:rgba(255,255,255,0.25); background:rgba(255,255,255,0.07); outline:none; }
+
+  .now-doorway{
+    display:block; margin-top:28px; font-size:12px; color:var(--muted); text-decoration:none;
+  }
+  .now-doorway b{ color:var(--tide); font-weight:500; border-bottom:1px solid rgba(74,122,118,0.4); }
+
+  .now-session{ display:none; position:relative; z-index:1; width:100%; max-width:340px; }
+  .now-session.active{ display:block; }
+
+  .now-orb{
+    width:150px; height:150px; margin:0 auto 22px; border-radius:50%;
+    background:radial-gradient(circle at 50% 38%, var(--tide-dim), transparent 75%);
+    border:1px solid rgba(74,122,118,0.45);
+    display:flex; align-items:center; justify-content:center;
+    transition:transform 1s ease;
+  }
+  .now-orb.anger{ background:radial-gradient(circle at 50% 38%, var(--clay-dim), transparent 75%); border-color:rgba(184,131,106,0.45); }
+  .now-cue{ font-family:'Fraunces',serif; font-size:18px; color:var(--foam); }
+  .now-cue-sub{ margin-top:8px; font-size:12px; color:var(--muted); }
+  .now-count{ margin-top:18px; font-size:11px; color:var(--muted); letter-spacing:0.05em; }
+  .now-phrase{ margin-top:22px; font-size:13px; font-style:italic; color:var(--muted); min-height:16px; transition:opacity .6s ease; }
+  .now-controls{ margin-top:26px; }
+  .now-ctrl-btn{
+    background:none; border:1px solid rgba(255,255,255,0.15); color:var(--muted);
+    font-family:'Inter',sans-serif; font-size:12px; padding:9px 16px;
+    border-radius:999px; cursor:pointer;
+  }
+  .now-ctrl-btn:hover{ color:var(--foam); border-color:rgba(255,255,255,0.3); }
+  @media (max-width:480px){
+    .scene.mode-box{--box-center-y:60%}
+    .scene.mode-box .breath-copy{top:7%}
+    nav{bottom:56px}
+    main{padding-bottom:158px}
+    footer{bottom:8px;font-size:9.5px;line-height:1.3}
+  }
 </style>
 </head>
 <body>
@@ -568,16 +895,93 @@
 <header>
   <div class="brand">k<span class="macron-u">u</span>-on<span>.</span></div>
   <nav>
-    <a href="#breathe" class="active" data-view="breathe">Breathe</a>
+    <a href="#now" class="active" data-view="now">Right now</a>
+    <a href="#breathe" data-view="breathe">Breathe</a>
     <a href="#ground" data-view="ground">Ground</a>
     <a href="#settle" data-view="settle">Settle</a>
+    <a href="#letgo" data-view="letgo">Let go</a>
+    <a href="#untangle" data-view="untangle">Untangle</a>
     <a href="#about" data-view="about">About</a>
   </nav>
 </header>
 
 <main>
+  <!-- RIGHT NOW -->
+  <section class="view active" id="view-now">
+    <div class="now-stage">
+      <svg class="now-flow" viewBox="0 0 400 320" preserveAspectRatio="none">
+        <path class="now-flowline fl1" d="M -20 90 C 90 60, 190 120, 420 80" />
+        <path class="now-flowline fl2" d="M -20 180 C 110 220, 210 150, 420 200" />
+        <path class="now-flowline fl3" d="M -20 250 C 100 220, 220 270, 420 240" />
+        <path class="now-flowline fl4" d="M -20 40 C 120 20, 200 60, 420 30" />
+      </svg>
+      <div class="now-mark">Right now</div>
+
+      <div class="now-landing" id="nowLanding">
+        <div class="now-primary-state" id="nowPrimaryState">
+          <button class="now-big-btn" id="nowBigBtn">Help me now</button>
+          <div class="now-sub">start a quick reset</div>
+          <button class="now-route-toggle" id="nowOpenRoutes" aria-expanded="false" aria-controls="nowRouteState">
+            <span>I know what’s loudest</span><span>›</span>
+          </button>
+        </div>
+        <div class="now-route-state" id="nowRouteState">
+          <button class="now-route-back" id="nowCloseRoutes">‹ back to quick reset</button>
+          <div class="now-route-title">What’s loudest?</div>
+          <div class="now-route-sub">Choose the closest thing.<br>It does not have to be exact.</div>
+          <div class="now-route-list">
+            <button class="now-tag-btn" data-mode="anxious">My body is panicking</button>
+            <button class="now-tag-btn" data-mode="spiral">My thoughts are looping</button>
+            <button class="now-tag-btn" data-mode="angry">Anger is surging</button>
+          </div>
+          <div class="now-heavy-links">
+            <span>Something heavier?</span>
+            <button class="now-secondary-link" data-mode="untangle">Shame or guilt</button>
+            <button class="now-secondary-link" data-mode="resentment">Resentment</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="now-session" id="now-sigh">
+        <div class="now-orb" id="nowOrb"><div class="now-cue" id="nowCue">ready</div></div>
+        <div class="now-cue-sub" id="nowCueSub"></div>
+        <div class="now-count" id="nowCount">0 cycles</div>
+        <div class="now-phrase" id="nowPhrase"></div>
+        <div class="now-controls"><button class="now-ctrl-btn" id="nowStopSigh">enough for now</button></div>
+      </div>
+
+      <div class="now-session" id="now-anger">
+        <div class="now-orb anger" id="nowAngerOrb"><div class="now-cue" id="nowAngerCue">clench</div></div>
+        <div class="now-cue-sub">fists, jaw, shoulders — as tight as you can</div>
+        <div class="now-count" id="nowAngerCount"></div>
+        <div class="now-phrase">this is a spike, not a forecast</div>
+        <div class="now-controls"><button class="now-ctrl-btn" id="nowStopAnger">enough for now</button></div>
+      </div>
+
+      <div class="now-session" id="now-unhook">
+        <div class="now-step-stack">
+          <div class="now-step-kicker">thoughts looping</div>
+          <div class="now-step-copy" id="nowUnhookCopy">Notice what your mind is doing. You do not have to argue with it.</div>
+          <div class="now-step-progress" id="nowUnhookProgress"></div>
+          <div class="now-follow" id="nowUnhookFollow">Want more time? <a href="#ground">Keep grounding →</a></div>
+          <div class="now-controls"><button class="now-ctrl-btn" id="nowStopUnhook">enough for now</button></div>
+        </div>
+      </div>
+
+      <div class="now-session" id="now-reset">
+        <div class="now-step-stack">
+          <div class="now-step-kicker">quick reset</div>
+          <div class="now-step-copy" id="nowResetCopy">Feel both feet making contact with the floor.</div>
+          <div class="now-step-progress" id="nowResetProgress"></div>
+          <div class="now-follow" id="nowResetFollow">Want another step? <a href="#breathe">Breathe</a> or <a href="#ground">Ground</a>.</div>
+          <div class="now-controls"><button class="now-ctrl-btn" id="nowStopReset">enough for now</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- BREATHE -->
-  <section class="view active" id="view-breathe">
+  <section class="view" id="view-breathe">
     <div class="scene mode-box" id="breathScene">
       <div class="aurora-container" id="auroraContainer">
         <div class="aurora-band"></div>
@@ -602,12 +1006,34 @@
         <div class="phase-word" id="phaseWord">Ready</div>
         <div class="phase-sub" id="phaseSub">Pick a rhythm, then begin</div>
       </div>
-      <div class="waves">
+      <div class="waves" id="boxWaves">
         <svg class="wave w1" viewBox="0 0 400 60" preserveAspectRatio="none"><path d="M0,30 Q50,10 100,30 T200,30 T300,30 T400,30" /></svg>
         <svg class="wave w2" viewBox="0 0 400 60" preserveAspectRatio="none"><path d="M0,30 Q50,50 100,30 T200,30 T300,30 T400,30" /></svg>
         <svg class="wave w3" viewBox="0 0 400 60" preserveAspectRatio="none"><path d="M0,30 Q50,15 100,30 T200,30 T300,30 T400,30" /></svg>
       </div>
-      <div class="horizon-line"></div>
+      <div class="horizon-line" id="boxHorizon"></div>
+
+      <div class="release-ambient" id="releaseAmbient" aria-hidden="true">
+        <div class="release-silk s1"></div>
+        <div class="release-silk s2"></div>
+        <div class="release-silk s3"></div>
+      </div>
+      <div class="release-glow-new" id="releaseGlowNew"></div>
+      <div class="release-mist-field" id="releaseMistField" aria-hidden="true">
+        <div class="release-cloud m1"></div><div class="release-cloud m2"></div>
+        <div class="release-cloud m3"></div><div class="release-cloud m4"></div>
+      </div>
+      <div class="release-core-ring" id="releaseCoreRing" aria-hidden="true"></div>
+      <div class="release-center-dot" aria-hidden="true"></div>
+
+      <div class="even-light-field" id="evenLightField" aria-hidden="true">
+        <div class="balance-light left"></div><div class="balance-light right"></div>
+        <div class="balance-ribbon"></div><div class="balance-seam"></div>
+      </div>
+      <div class="even-drift" id="evenDrift" aria-hidden="true">
+        <div class="even-drift-dot n"></div><div class="even-drift-dot s"></div>
+        <div class="even-drift-dot e"></div><div class="even-drift-dot w"></div>
+      </div>
 
       <div class="box-guide" id="boxGuide">
         <span class="box-corner-label cl-top">inhale</span>
@@ -637,30 +1063,31 @@
       <div class="control-group">
         <div class="control-label">Rhythm</div>
         <div class="pattern-select" id="patternSelect">
-          <button class="active" data-pattern="4-4-4-4" data-name="box">Box · 4-4-4-4</button>
-          <button data-pattern="4-7-8-0" data-name="release">Release · 4-7-8</button>
-          <button data-pattern="5-0-5-0" data-name="even">Even · 5-5</button>
+          <button class="active" data-pattern="4-4-4-4" data-name="box">Box<small>steady · 4-4-4-4</small></button>
+          <button data-pattern="4-7-8-0" data-name="release">Release<small>let go · 4-7-8</small></button>
+          <button data-pattern="5-0-5-0" data-name="even">Even<small>balance · 5-5</small></button>
         </div>
       </div>
-      <div class="control-group">
-        <div class="control-label">Session length</div>
-        <div class="duration-select" id="durationSelect">
-          <button data-mins="1">1 min · quick reset</button>
-          <button class="active" data-mins="3">3 min · settle in</button>
-          <button data-mins="5">5 min · deep calm</button>
+      <details class="session-settings">
+        <summary>Session settings</summary>
+        <div class="session-settings-body">
+          <div class="control-group">
+            <div class="control-label">Session length</div>
+            <div class="duration-select" id="durationSelect">
+              <button class="active" data-mins="1">1 min · quick reset</button>
+              <button data-mins="3">3 min · settle in</button>
+              <button data-mins="5">5 min · stay longer</button>
+            </div>
+          </div>
+          <div class="audio-controls">
+            <button class="audio-toggle active" id="musicToggle" aria-pressed="true"><span class="audio-icon">◌</span> Sound</button>
+            <button class="audio-toggle active" id="voiceToggle" aria-pressed="true"><span class="audio-icon">◦</span> Voice</button>
+          </div>
         </div>
-      </div>
+      </details>
       <div class="start-row">
         <button class="start-btn" id="startBtn">Begin</button>
       </div>
-    </div>
-    <div class="audio-controls">
-      <button class="audio-toggle active" id="musicToggle" aria-pressed="true">
-        <span class="audio-icon">🌊</span> Sound
-      </button>
-      <button class="audio-toggle active" id="voiceToggle" aria-pressed="true">
-        <span class="audio-icon">🗣</span> Voice
-      </button>
     </div>
     <div class="cycle-count" id="cycleCount">0 cycles this session</div>
     <div class="streak-line" id="streakLine"></div>
@@ -669,25 +1096,98 @@
   <!-- GROUND -->
   <section class="view" id="view-ground">
     <div class="card-title">5-4-3-2-1</div>
-    <div class="card-sub">Anxiety pulls you into your head. This pulls you back into the room. Work through each one — you don't have to get it perfect.</div>
-    <div id="senseList"></div>
-    <button class="ground-reset" id="groundReset">Clear and start over</button>
+    <div class="card-sub">Come back to the room one sense at a time. Nothing needs to be typed or remembered.</div>
+    <div class="ground-shell" id="groundShell">
+      <div class="ground-progress" id="groundProgress"></div>
+      <div id="groundStep">
+        <div class="ground-count" id="groundCount">5</div>
+        <div class="ground-label" id="groundLabel">Things you can see</div>
+        <div class="ground-hint" id="groundHint">Look around slowly. Small, ordinary details count.</div>
+        <details class="ground-optional"><summary>type something if it helps</summary><input id="groundInput" autocomplete="off" aria-label="Optional grounding note"></details>
+        <div class="ground-actions"><button class="primary-soft" id="groundNext">I noticed them</button></div>
+      </div>
+      <div class="ground-finish" id="groundFinish">You came back to the room.<br>That is enough for right now.</div>
+    </div>
+    <button class="ground-reset" id="groundReset">Start again</button>
   </section>
 
   <!-- SETTLE -->
   <section class="view" id="view-settle">
     <div class="card-title">Settle</div>
-    <div class="card-sub">A short pass through your body, one part at a time. Let each one go before moving on.</div>
+    <div class="card-sub">Release some of what your body is carrying. Choose the amount of time you have.</div>
     <div class="settle-step">
+      <div class="settle-choices" id="settleChoices">
+        <button class="settle-choice active" data-settle="quick">Quick · 30 sec</button>
+        <button class="settle-choice" data-settle="full">Full · 1 min</button>
+      </div>
+      <div class="settle-dots" id="settleDots"></div>
       <div class="settle-index" id="settleIndex">Step 1 of 8</div>
       <div class="settle-text" id="settleText">Find a position where you don't have to hold yourself up. Let your shoulders drop.</div>
       <div class="settle-bar"><div class="settle-bar-fill" id="settleBarFill"></div></div>
+      <div class="settle-complete" id="settleComplete">You gave your body a little less to hold.<br>That is real.</div>
       <div class="settle-actions">
         <button class="ghost-btn" id="settleStart">Start</button>
         <button class="ghost-btn" id="settleNext" style="display:none;">Next</button>
         <button class="ghost-btn" id="settleRestart" style="display:none;">Restart</button>
       </div>
     </div>
+  </section>
+
+  <!-- LET GO -->
+  <section class="view" id="view-letgo">
+    <div class="card-title">Let go</div>
+    <div class="card-sub">An unsent note for something you are still carrying. This is not forgiveness, and it does not excuse what happened.</div>
+    <div class="release-writing-card" id="releaseWritingCard">
+      <div class="release-privacy">Nothing is saved, uploaded or sent.</div>
+      <div class="release-settle-intro" id="releaseSettleIntro">
+        <strong>Come down one notch first.</strong>
+        <p>Feel your feet against the floor. Let your shoulders drop, then allow one slow exhale before you write.</p>
+        <button class="primary-soft" id="releaseBeginWriting">I’m ready to write</button>
+      </div>
+      <div id="releaseWritingForm" style="display:none">
+        <div class="release-prompt">Say what happened, what you felt, and what you needed.
+          <small>Try to describe rather than relive. You can stop at any moment.</small>
+        </div>
+        <textarea class="release-textarea" id="releaseTextarea" maxlength="1800" placeholder="What I needed you to understand was…"></textarea>
+        <div class="release-writing-actions">
+          <div class="release-stop">Feeling more activated? <a href="#ground">Come back to Ground</a>.</div>
+          <button class="release-letter-btn" id="releaseLetterBtn" disabled>Set it down</button>
+        </div>
+      </div>
+      <div class="release-writing-complete" id="releaseWritingComplete">
+        <strong>You set it down for now.</strong>
+        <span>It does not have to be solved tonight.</span>
+        <div style="margin-top:22px"><button class="ghost-btn" id="releaseAgain">Write another</button></div>
+      </div>
+      <div class="release-particles-new" id="releaseParticlesNew" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- UNTANGLE -->
+  <section class="view" id="view-untangle">
+    <div class="card-title">Untangle</div>
+    <div class="card-sub">A short path for shame or guilt. You can take responsibility without turning yourself into the punishment.</div>
+    <div class="repair-card">
+      <div class="repair-intro" id="repairIntro">
+        <div class="repair-intro-copy">Which thought feels closer right now?</div>
+        <div class="repair-choice-grid">
+          <button class="repair-choice" data-repair="shame">Something is wrong with me<small>start with shame</small></button>
+          <button class="repair-choice" data-repair="guilt">I did something I regret<small>start with guilt</small></button>
+        </div>
+        <div class="repair-caution">If guilt is being used to pressure, threaten or control you, pause before contacting anyone. Come back to your body first.</div>
+      </div>
+      <div class="repair-flow" id="repairFlow">
+        <div class="repair-kicker" id="repairKicker">shame</div>
+        <div class="repair-step" id="repairStep"></div>
+        <div class="repair-hint" id="repairHint"></div>
+        <div class="repair-progress" id="repairProgress"></div>
+        <div class="repair-actions">
+          <button class="repair-back" id="repairBack">choose again</button>
+          <button class="repair-next" id="repairNext">continue</button>
+        </div>
+      </div>
+    </div>
+    <div class="repair-ground-link">If this is making you feel more flooded, stop here and <a href="#ground">come back to Ground</a>.</div>
   </section>
 
   <!-- ABOUT -->
@@ -710,9 +1210,13 @@
   // ---------- HASH-BASED ROUTING ----------
   const navLinks = document.querySelectorAll('nav a');
   const views = document.querySelectorAll('.view');
-  let currentView = 'breathe';
+  let currentView = 'now';
 
   function navigateTo(view) {
+    if (view === 'repair') {
+      view = 'untangle';
+      history.replaceState(null, '', '#untangle');
+    }
     navLinks.forEach(link => {
       link.classList.toggle('active', link.dataset.view === view);
     });
@@ -720,7 +1224,11 @@
       v.classList.toggle('active', v.id === 'view-' + view);
     });
     currentView = view;
+    document.body.dataset.view = view;
     if (view !== 'breathe' && running) endSession('nav');
+    if (view !== 'now' && typeof stopNowSessions === 'function') stopNowSessions('nav');
+    if (view !== 'letgo' && typeof resetReleaseWriting === 'function') resetReleaseWriting();
+    if (view !== 'untangle' && typeof resetRepair === 'function') resetRepair();
     if (view === 'about') renderAboutPage();
   }
 
@@ -734,12 +1242,12 @@
   });
 
   window.addEventListener('hashchange', () => {
-    const view = window.location.hash.replace('#', '') || 'breathe';
+    const view = window.location.hash.replace('#', '') || 'now';
     navigateTo(view);
   });
 
   window.addEventListener('load', () => {
-    const view = window.location.hash.replace('#', '') || 'breathe';
+    const view = window.location.hash.replace('#', '') || 'now';
     navigateTo(view);
   });
 
@@ -866,34 +1374,44 @@
   const auroraContainer = document.getElementById('auroraContainer');
   const auroraHaze = document.getElementById('auroraHaze');
   const breathScene = document.getElementById('breathScene');
+  const breathView = document.getElementById('view-breathe');
   const closingOverlay = document.getElementById('closingOverlay');
   const closingLine = document.getElementById('closingLine');
   const boxGuide = document.getElementById('boxGuide');
+  const boxWaves = document.getElementById('boxWaves');
+  const boxHorizon = document.getElementById('boxHorizon');
   const mistRing = document.getElementById('mistRing');
   const mistRing2 = document.getElementById('mistRing2');
+  const releaseAmbient = document.getElementById('releaseAmbient');
+  const releaseGlowNew = document.getElementById('releaseGlowNew');
+  const releaseMistField = document.getElementById('releaseMistField');
+  const releaseCoreRing = document.getElementById('releaseCoreRing');
+  const evenLightField = document.getElementById('evenLightField');
+  const evenDrift = document.getElementById('evenDrift');
 
   let pattern = [4,4,4,4];
   let patternName = 'box';
   let running = false;
   let timer = null;
   let cycles = 0;
-  let sessionSeconds = 180;
+  let sessionSeconds = 60;
   let sessionStartTime = null;
   let closeTimer = null;
+  let copySwapTimer = null;
 
   const boxCorners = [
-    {left:'37%', top:'30%'},
-    {left:'63%', top:'30%'},
-    {left:'63%', top:'58%'},
-    {left:'37%', top:'58%'},
+    {left:'calc(50% - 66px)', top:'calc(var(--box-center-y) - 66px)'},
+    {left:'calc(50% + 66px)', top:'calc(var(--box-center-y) - 66px)'},
+    {left:'calc(50% + 66px)', top:'calc(var(--box-center-y) + 66px)'},
+    {left:'calc(50% - 66px)', top:'calc(var(--box-center-y) + 66px)'},
   ];
 
   const readyLines = [
     'Pick a rhythm, then begin',
     'No rush. Just breathe',
-    'Two minutes of nothing else',
+    'Nothing else needs your attention',
     'This part is just for you',
-    'Whenever you feel ready — not before'
+    'Whenever you feel ready'
   ];
   const closingLines = [
     'You showed up. That counts.',
@@ -904,6 +1422,24 @@
   ];
 
   function randomFrom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  function setPhaseCopy(name, sub, immediate=false){
+    clearTimeout(copySwapTimer);
+    if(immediate){
+      breathCopy.classList.remove('hidden','phase-changing');
+      phaseWord.textContent = name;
+      phaseSub.textContent = sub;
+      return;
+    }
+    if(phaseWord.textContent === name && phaseSub.textContent === sub && !breathCopy.classList.contains('phase-changing')) return;
+    breathCopy.classList.remove('hidden');
+    breathCopy.classList.add('phase-changing');
+    copySwapTimer = setTimeout(()=>{
+      phaseWord.textContent = name;
+      phaseSub.textContent = sub;
+      requestAnimationFrame(()=>requestAnimationFrame(()=>breathCopy.classList.remove('phase-changing')));
+    },280);
+  }
 
   // ---------- AUDIO VARIABLES ----------
   const musicToggle = document.getElementById('musicToggle');
@@ -951,6 +1487,7 @@
     breathScene.classList.remove('mode-box','mode-release','mode-even');
     breathScene.classList.add('mode-'+patternName);
     if(running){ endSession('manual'); startBreathing(); }
+    else resetToReadyVisuals();
   });
 
   durationSelect.addEventListener('click', (e)=>{
@@ -964,66 +1501,103 @@
     [...patternSelect.children, ...durationSelect.children].forEach(b => b.disabled = on);
   }
 
-  function setPhase(name, seconds, index){
-    phaseWord.textContent = name;
-    phaseSub.textContent = seconds > 0 ? seconds + ' seconds' : 'brief pause';
-    const dur = Math.max(seconds, 0.6) + 's';
+  function prepareReleaseCycle(){
+    releaseCoreRing.style.transition = 'none';
+    releaseCoreRing.style.width = '40px';
+    releaseCoreRing.style.height = '40px';
+    releaseCoreRing.style.opacity = '0';
+    releaseCoreRing.style.filter = 'blur(5px)';
+    releaseCoreRing.style.boxShadow = '0 0 12px 1px rgba(196,154,145,.42)';
+    void releaseCoreRing.offsetWidth;
+  }
+
+  function getBoxHighTideOffset(){
+    const visualBoxTop = boxGuide.offsetTop - boxGuide.offsetHeight / 2;
+    const highWaterTop = visualBoxTop - 18;
+    return Math.round(highWaterTop - boxHorizon.offsetTop);
+  }
+
+  function setPhase(seconds, index){
+    const dur = Math.max(seconds, .6);
 
     if(patternName === 'box'){
       const target = boxCorners[(index+1) % 4];
-      disc.style.transitionDuration = dur;
+      disc.style.transition = 'left '+dur+'s linear,top '+dur+'s linear,opacity .4s ease';
       disc.style.left = target.left;
       disc.style.top = target.top;
-      disc.style.width = '24px';
-      disc.style.height = '24px';
-      skyGlow.style.opacity = 0.14;
+      const tideY = (index === 0 || index === 1) ? getBoxHighTideOffset() : 0;
+      [boxWaves,boxHorizon].forEach(el=>{
+        el.style.transition = 'transform '+dur+'s ease-in-out';
+        el.style.transform = 'translateY('+tideY+'px)';
+      });
       return;
     }
 
     if(patternName === 'release'){
-      disc.style.left = '50%';
-      disc.style.transitionDuration = dur;
+      releaseAmbient.classList.remove('stage-inhale','stage-hold','stage-exhale');
+      releaseMistField.classList.remove('stage-inhale','stage-hold','stage-exhale');
       if(index === 0){
-        disc.style.top = '40%'; disc.style.width = '96px'; disc.style.height = '96px';
-        skyGlow.style.opacity = 0.85;
-        [mistRing, mistRing2].forEach(r=>{ r.style.transitionDuration='0.6s'; r.style.opacity=0; r.style.transform='translate(-50%,-50%) scale(1)'; });
-      } else if(index === 1){
-        disc.style.top = '40%'; disc.style.width = '104px'; disc.style.height = '104px';
-        skyGlow.style.opacity = 1;
-      } else if(index === 2){
-        disc.style.top = '60%'; disc.style.width = '46px'; disc.style.height = '46px';
-        skyGlow.style.opacity = 0.22;
-        mistRing.style.transitionDuration = dur;
-        mistRing2.style.transitionDuration = dur;
-        mistRing.style.opacity = 1; mistRing.style.transform = 'translate(-50%,-50%) scale(3.6)';
-        mistRing2.style.opacity = 1; mistRing2.style.transform = 'translate(-50%,-50%) scale(2.4)';
-        setTimeout(()=>{ mistRing.style.opacity = 0; mistRing2.style.opacity = 0; }, Math.max(seconds,1)*1000*0.85);
-      } else {
-        disc.style.top = '60%'; disc.style.width = '46px'; disc.style.height = '46px';
+        releaseAmbient.classList.add('stage-inhale');
+        releaseMistField.classList.add('active','stage-inhale');
+        releaseCoreRing.style.transition = 'width '+dur+'s cubic-bezier(.32,0,.22,1),height '+dur+'s cubic-bezier(.32,0,.22,1),opacity '+dur+'s ease-in-out,filter '+dur+'s ease-in-out';
+        releaseCoreRing.style.width='136px'; releaseCoreRing.style.height='136px';
+        releaseCoreRing.style.opacity='.42'; releaseCoreRing.style.filter='blur(1.5px)';
+        releaseGlowNew.style.transition='opacity '+dur+'s ease-in-out';
+        releaseGlowNew.classList.add('active');
+      }else if(index === 1){
+        releaseAmbient.classList.add('stage-hold');
+        releaseMistField.classList.add('active','stage-hold');
+        releaseCoreRing.style.transition='none';
+        releaseCoreRing.style.width='136px'; releaseCoreRing.style.height='136px';
+        releaseCoreRing.style.opacity='.42'; releaseCoreRing.style.filter='blur(1.5px)';
+      }else if(index === 2){
+        releaseAmbient.classList.add('stage-exhale');
+        releaseMistField.classList.add('active','stage-exhale');
+        releaseCoreRing.style.transition='opacity '+dur+'s linear,filter '+dur+'s cubic-bezier(.4,0,.7,1),box-shadow '+dur+'s linear';
+        releaseCoreRing.style.opacity='0'; releaseCoreRing.style.filter='blur(8px)';
+        releaseCoreRing.style.boxShadow='0 0 20px 2px rgba(196,154,145,.08)';
+        releaseGlowNew.style.transition='opacity '+dur+'s linear';
+        releaseGlowNew.classList.remove('active');
       }
       return;
     }
 
-    const configs = [
-      { top:'34%', glow:0.9, size:92 },
-      { top:'34%', glow:0.9, size:92 },
-      { top:'62%', glow:0.4, size:64 },
-      { top:'62%', glow:0.4, size:64 },
-    ];
-    const c = configs[index];
-    disc.style.left = '50%';
-    disc.style.transitionDuration = dur;
-    disc.style.top = c.top;
-    disc.style.width = c.size + 'px';
-    disc.style.height = c.size + 'px';
-    skyGlow.style.opacity = c.glow;
+    evenLightField.querySelectorAll('.balance-light,.balance-ribbon,.balance-seam').forEach(el=>el.style.transitionDuration=dur+'s');
+    evenDrift.querySelectorAll('.even-drift-dot').forEach(el=>el.style.transitionDuration=dur+'s');
+    if(index === 0){
+      if(!evenLightField.classList.contains('session-active')){
+        evenLightField.classList.add('session-active');
+        evenLightField.classList.remove('breathe');
+        evenDrift.classList.remove('breathe');
+        void evenLightField.offsetWidth;
+        requestAnimationFrame(()=>{
+          if(running && patternName === 'even'){
+            evenLightField.classList.add('breathe');
+            evenDrift.classList.add('breathe');
+          }
+        });
+      }else{
+        evenLightField.classList.add('breathe');
+        evenDrift.classList.add('breathe');
+      }
+    }else if(index === 2){
+      evenLightField.classList.remove('breathe');
+      evenDrift.classList.remove('breathe');
+    }
   }
 
   function runPhase(index){
     if(!running) return;
     const labels = ['Inhale','Hold','Exhale','Hold'];
     const seconds = pattern[index];
-    setPhase(labels[index], seconds, index);
+    if(patternName === 'even'){
+      if(index === 0) setPhaseCopy('Inhale','5 seconds');
+      else if(index === 1) setPhaseCopy('Exhale','5 seconds');
+      else if(index === 3) setPhaseCopy('Inhale','5 seconds');
+    }else{
+      setPhaseCopy(labels[index],seconds > 0 ? seconds+' seconds' : 'brief pause');
+    }
+    setPhase(seconds, index);
 
     try {
       if(audioCtx && waveGain) {
@@ -1049,12 +1623,13 @@
       console.warn('Audio ramp error:', e);
     }
 
-    if(index === 0){ speak(0); buzz(18); }
-    if(index === 2){ speak(2); buzz([12,40,12]); }
+    if(seconds > 0) speak(index);
+    if(index === 0) buzz(18);
+    if(index === 2) buzz([12,40,12]);
 
     const wait = seconds > 0 ? seconds : 0.8;
     timer = setTimeout(()=>{
-      const next = (index+1) % 4;
+      const next = patternName === 'release' && index === 2 ? 0 : (index+1) % 4;
       if(next === 0){
         cycles++;
         cycleCount.textContent = cycles + (cycles===1 ? ' cycle this session' : ' cycles this session');
@@ -1063,13 +1638,32 @@
           endSession('complete');
           return;
         }
+        if(patternName === 'release') prepareReleaseCycle();
       }
       runPhase(next);
     }, wait*1000);
   }
 
-  const inhalePhrases = ['Breathe in...', 'In, nice and slow...', 'Draw it in gently...', 'Inhale...', 'In...'];
-  const exhalePhrases = ['And let it go...', 'Breathe out...', 'Release...', 'Let go...', 'Out, slowly...'];
+  const narrationPhrases = {
+    box: [
+      ['Breathe in...', 'In, nice and slow...'],
+      ['Hold gently...', 'Stay here...'],
+      ['Breathe out...', 'Out, slowly...'],
+      ['Rest here...', 'Hold softly...']
+    ],
+    release: [
+      ['Draw it in gently...', 'Breathe in...'],
+      ['Hold, without strain...', 'Stay soft...'],
+      ['And let it all go...', 'Release, slowly...'],
+      []
+    ],
+    even: [
+      ['Breathe in, evenly...', 'In, nice and slow...'],
+      [],
+      ['Breathe out, evenly...', 'Out, nice and slow...'],
+      []
+    ]
+  };
 
   function pickVoice(){
     if(!('speechSynthesis' in window)) return;
@@ -1093,7 +1687,8 @@
 
   function speak(phaseIndex){
     if(!voiceOn || !('speechSynthesis' in window)) return;
-    const phrases = phaseIndex === 0 ? inhalePhrases : exhalePhrases;
+    const phrases = narrationPhrases[patternName]?.[phaseIndex] || [];
+    if(!phrases.length) return;
     const text = randomFrom(phrases);
     try {
       speechSynthesis.cancel();
@@ -1239,23 +1834,33 @@
       sessionStartTime = Date.now();
       startBtn.textContent = 'End session';
       toggleControlsDisabled(true);
-      breathCopy.classList.add('hidden');
+      breathCopy.classList.remove('hidden');
       auroraContainer.classList.add('active');
       auroraHaze.classList.add('active');
       breathScene.classList.add('active-session');
+      breathView.classList.add('session-active');
 
       if(patternName === 'box'){
         boxGuide.classList.add('active');
         disc.style.transitionDuration = '0s';
         disc.style.left = boxCorners[0].left;
         disc.style.top = boxCorners[0].top;
-        disc.style.width = '24px';
-        disc.style.height = '24px';
+        disc.style.width = '9px';
+        disc.style.height = '9px';
         skyGlow.style.opacity = 0.14;
+        [boxWaves,boxHorizon].forEach(el=>{
+          el.style.transition='none';
+          el.style.transform='translateY(0px)';
+        });
         void disc.offsetWidth;
+        void boxWaves.offsetWidth;
+      } else if(patternName === 'release') {
+        boxGuide.classList.remove('active');
+        prepareReleaseCycle();
       } else {
         boxGuide.classList.remove('active');
-        disc.style.left = '50%';
+        evenLightField.classList.remove('session-active','breathe');
+        evenDrift.classList.remove('breathe');
       }
 
       runPhase(0);
@@ -1267,10 +1872,11 @@
       sessionStartTime = Date.now();
       startBtn.textContent = 'End session';
       toggleControlsDisabled(true);
-      breathCopy.classList.add('hidden');
+      breathCopy.classList.remove('hidden');
       auroraContainer.classList.add('active');
       auroraHaze.classList.add('active');
       breathScene.classList.add('active-session');
+      breathView.classList.add('session-active');
       runPhase(0);
     }
   }
@@ -1283,7 +1889,13 @@
     auroraContainer.classList.remove('active');
     auroraHaze.classList.remove('active');
     breathScene.classList.remove('active-session');
+    breathView.classList.remove('session-active');
     boxGuide.classList.remove('active');
+    releaseAmbient.classList.remove('stage-inhale','stage-hold','stage-exhale');
+    releaseMistField.classList.remove('active','stage-inhale','stage-hold','stage-exhale');
+    releaseGlowNew.classList.remove('active');
+    evenLightField.classList.remove('session-active','breathe');
+    evenDrift.classList.remove('breathe');
     mistRing.style.opacity = 0;
     mistRing2.style.opacity = 0;
     toggleControlsDisabled(false);
@@ -1293,29 +1905,44 @@
 
     if(reason !== 'nav' && elapsedSec >= 5){
       showGentleClose(reason);
-      logSession();
     } else {
       resetToReadyVisuals();
     }
   }
 
   function resetToReadyVisuals(){
-    breathCopy.classList.remove('hidden');
-    phaseWord.textContent = 'Ready';
-    phaseSub.textContent = randomFrom(readyLines);
-    disc.style.transitionDuration = '1.2s';
-    disc.style.left = '50%';
-    disc.style.top = '62%';
-    disc.style.width = '64px';
-    disc.style.height = '64px';
-    skyGlow.style.opacity = 0.35;
+    setPhaseCopy('Ready',randomFrom(readyLines),true);
+    releaseAmbient.classList.remove('stage-inhale','stage-hold','stage-exhale');
+    releaseMistField.classList.remove('active','stage-inhale','stage-hold','stage-exhale');
+    releaseGlowNew.classList.remove('active');
+    evenLightField.classList.remove('session-active','breathe');
+    evenDrift.classList.remove('breathe');
+    if(patternName === 'box'){
+      disc.style.transition='left 1.2s ease,top 1.2s ease';
+      disc.style.left=boxCorners[0].left; disc.style.top=boxCorners[0].top;
+      disc.style.width='9px'; disc.style.height='9px';
+      [boxWaves,boxHorizon].forEach(el=>{
+        el.style.transition='transform 1.2s ease-in-out';
+        el.style.transform='translateY(0px)';
+      });
+    }else if(patternName === 'release'){
+      prepareReleaseCycle();
+    }
     cycleCount.textContent = '0 cycles this session';
   }
 
   function showGentleClose(){
     playChime();
     buzz([25, 60, 25]);
-    closingLine.textContent = randomFrom(closingLines);
+    const elapsed = (Date.now()-sessionStartTime)/1000;
+    const minutes = Math.max(1,Math.round(elapsed/60));
+    const timePhrase = elapsed < 50 ? 'for a few breaths' : `for ${minutes} ${minutes===1?'minute':'minutes'}`;
+    const specific = {
+      box:`You stayed with a steady rhythm ${timePhrase}.`,
+      release:`You gave yourself space to let some tension go ${timePhrase}.`,
+      even:`You followed an even breath ${timePhrase}.`
+    };
+    closingLine.textContent = specific[patternName] || randomFrom(closingLines);
     closingOverlay.classList.add('active');
     clearTimeout(closeTimer);
     closeTimer = setTimeout(()=>{
@@ -1336,112 +1963,112 @@
       console.error('Button handler error:', e);
     }
   });
+  resetToReadyVisuals();
 
-  // ---------- STREAK / HISTORY (localStorage) ----------
-  function logSession(){
-    try {
-      let log = [];
-      const stored = localStorage.getItem('kuon-session-log');
-      if (stored) {
-        try { log = JSON.parse(stored); } catch(e) { log = []; }
-        if (!Array.isArray(log)) log = [];
-      }
-      const cutoff = Date.now() - 60*24*3600*1000;
-      log = log.filter(t => typeof t === 'number' && t > cutoff);
-      log.push(Date.now());
-      localStorage.setItem('kuon-session-log', JSON.stringify(log));
-      updateStreakDisplay(log);
-    } catch(e) {
-      console.warn('Storage error:', e);
-    }
-  }
-
-  function updateStreakDisplay(log){
-    if (!Array.isArray(log)) return;
-    const weekAgo = Date.now() - 7*24*3600*1000;
-    const thisWeek = log.filter(t => t > weekAgo).length;
-    streakLine.textContent = thisWeek > 0
-      ? thisWeek + (thisWeek === 1 ? ' session this week' : ' sessions this week')
-      : '';
-  }
-
-  function loadStreakOnStart(){
-    try {
-      const stored = localStorage.getItem('kuon-session-log');
-      if (stored) {
-        const log = JSON.parse(stored);
-        if (Array.isArray(log)) updateStreakDisplay(log);
-      }
-    } catch(e) {}
-  }
-  loadStreakOnStart();
+  // No streaks or history: kū-on is for the moment, not for maintaining a score.
   resetToReadyVisuals();
 
   // ---------- GROUND ----------
   const senses = [
-    {n:5, label:'Things you can see', hint:'Look around and name them — even small details count.'},
-    {n:4, label:'Things you can touch', hint:'The texture of your sleeve, the chair, the floor under your feet.'},
-    {n:3, label:'Things you can hear', hint:'Near or far. Traffic, your own breathing, a hum.'},
-    {n:2, label:'Things you can smell', hint:'If nothing stands out, name two things you like the smell of.'},
-    {n:1, label:'Thing you can taste', hint:'Even just the inside of your mouth right now.'},
+    {n:5, label:'Things you can see', hint:'Look around slowly. Small, ordinary details count.'},
+    {n:4, label:'Things you can feel', hint:'Notice clothing, the chair, or your feet against the floor.'},
+    {n:3, label:'Things you can hear', hint:'Listen for sounds both close to you and farther away.'},
+    {n:2, label:'Things you can smell', hint:'If nothing stands out, remember two familiar smells.'},
+    {n:1, label:'Thing you can taste', hint:'Notice what is already there, or remember a familiar taste.'},
   ];
-  const senseList = document.getElementById('senseList');
-  senses.forEach((s,i)=>{
-    const row = document.createElement('div');
-    row.className = 'sense-row';
-    row.innerHTML = `
-      <div class="sense-count">${s.n}</div>
-      <div class="sense-body">
-        <div class="sense-label">${s.label}</div>
-        <div class="sense-hint">${s.hint}</div>
-        <input class="sense-input" data-idx="${i}" placeholder="Type what you notice, or just say it in your head..." />
-      </div>`;
-    senseList.appendChild(row);
+  const groundCount=document.getElementById('groundCount');
+  const groundLabel=document.getElementById('groundLabel');
+  const groundHint=document.getElementById('groundHint');
+  const groundInput=document.getElementById('groundInput');
+  const groundStep=document.getElementById('groundStep');
+  const groundFinish=document.getElementById('groundFinish');
+  const groundProgress=document.getElementById('groundProgress');
+  let groundIdx=0;
+  senses.forEach(()=>groundProgress.appendChild(document.createElement('i')));
+  function showGroundStep(index){
+    groundIdx=index;
+    groundStep.style.display='block';groundFinish.style.display='none';
+    const s=senses[index];groundCount.textContent=s.n;groundLabel.textContent=s.label;groundHint.textContent=s.hint;groundInput.value='';
+    [...groundProgress.children].forEach((dot,i)=>dot.classList.toggle('active',i===index));
+    document.querySelector('.ground-optional').removeAttribute('open');
+  }
+  document.getElementById('groundNext').addEventListener('click',()=>{
+    if(groundIdx<senses.length-1) showGroundStep(groundIdx+1);
+    else{groundStep.style.display='none';groundFinish.style.display='block';[...groundProgress.children].forEach(d=>d.classList.add('active'));buzz([14,45,14]);}
   });
-  document.getElementById('groundReset').addEventListener('click', ()=>{
-    document.querySelectorAll('.sense-input').forEach(inp=>inp.value='');
-  });
+  document.getElementById('groundReset').addEventListener('click',()=>showGroundStep(0));
+  showGroundStep(0);
 
   // ---------- SETTLE ----------
-  const settleSteps = [
+  const fullSettleSteps = [
     "Find a position where you don't have to hold yourself up. Let your shoulders drop.",
     "Notice your feet on the ground. Press them down gently, then let go.",
     "Clench your hands into fists for a moment. Then release, and feel the difference.",
     "Roll your shoulders up toward your ears. Hold. Then let them fall.",
     "Unclench your jaw. Let your tongue rest away from the roof of your mouth.",
     "Soften your forehead and the space between your eyebrows.",
-    "Take one slow breath, a little longer than feels necessary.",
+    "Take one slow breath. Let the exhale be a little longer, without forcing it.",
     "Notice you're still here, still breathing. That's enough for right now."
+  ];
+  const quickSettleSteps = [
+    "Feel both feet making contact with the floor.",
+    "Lift your shoulders gently. Let them drop as you breathe out.",
+    "Unclench your jaw and soften the space between your eyebrows.",
+    "Let one exhale run a little longer. Nothing else needs doing right now."
   ];
   let settleIdx = 0;
   let settleTimer = null;
+  let settleMode = 'quick';
+  let settleSteps = quickSettleSteps;
   const settleText = document.getElementById('settleText');
   const settleIndex = document.getElementById('settleIndex');
   const settleBarFill = document.getElementById('settleBarFill');
+  const settleDots = document.getElementById('settleDots');
+  const settleComplete = document.getElementById('settleComplete');
   const settleStart = document.getElementById('settleStart');
   const settleNext = document.getElementById('settleNext');
   const settleRestart = document.getElementById('settleRestart');
-  const STEP_SECONDS = 9;
+  let settleStepSeconds = 7.5;
+
+  function buildSettleDots(){
+    settleDots.innerHTML='';
+    settleSteps.forEach(()=>settleDots.appendChild(document.createElement('i')));
+  }
+
+  function resetSettle(){
+    clearTimeout(settleTimer);settleIdx=0;
+    settleComplete.style.display='none';settleText.style.display='flex';settleIndex.style.display='block';
+    settleStart.style.display='inline-block';settleNext.style.display='none';settleRestart.style.display='none';
+    settleText.textContent=settleSteps[0];settleIndex.textContent=`Step 1 of ${settleSteps.length}`;
+    buildSettleDots();[...settleDots.children].forEach((d,i)=>d.classList.toggle('active',i===0));
+  }
 
   function showSettleStep(i){
+    if(i>=settleSteps.length){
+      settleText.style.display='none';settleIndex.style.display='none';settleNext.style.display='none';settleRestart.style.display='inline-block';settleComplete.style.display='block';
+      [...settleDots.children].forEach(d=>d.classList.add('active'));buzz([14,45,14]);return;
+    }
     settleIdx = i;
     settleText.textContent = settleSteps[i];
     settleIndex.textContent = `Step ${i+1} of ${settleSteps.length}`;
+    [...settleDots.children].forEach((d,n)=>d.classList.toggle('active',n===i));
     settleBarFill.style.transitionDuration = '0s';
     settleBarFill.style.width = '0%';
     void settleBarFill.offsetWidth;
-    settleBarFill.style.transitionDuration = STEP_SECONDS + 's';
+    settleBarFill.style.transitionDuration = settleStepSeconds + 's';
     settleBarFill.style.width = '100%';
     clearTimeout(settleTimer);
     if(i < settleSteps.length - 1){
-      settleTimer = setTimeout(()=> showSettleStep(i+1), STEP_SECONDS*1000);
+      settleTimer = setTimeout(()=> showSettleStep(i+1), settleStepSeconds*1000);
     } else {
-      settleTimer = setTimeout(()=>{
-        settleNext.style.display='none';
-        settleRestart.style.display='inline-block';
-      }, STEP_SECONDS*1000);
+      settleTimer = setTimeout(()=>showSettleStep(i+1),settleStepSeconds*1000);
     }
   }
+  document.getElementById('settleChoices').addEventListener('click',e=>{
+    const btn=e.target.closest('[data-settle]');if(!btn)return;
+    document.querySelectorAll('.settle-choice').forEach(b=>b.classList.toggle('active',b===btn));
+    settleMode=btn.dataset.settle;settleSteps=settleMode==='quick'?quickSettleSteps:fullSettleSteps;settleStepSeconds=settleMode==='quick'?7.5:9;resetSettle();
+  });
   settleStart.addEventListener('click', ()=>{
     settleStart.style.display='none';
     settleNext.style.display='inline-block';
@@ -1452,12 +2079,307 @@
     if(settleIdx < settleSteps.length-1) showSettleStep(settleIdx+1);
   });
   settleRestart.addEventListener('click', ()=>{
-    settleRestart.style.display='none';
-    settleStart.style.display='inline-block';
-    settleIdx = 0;
-    settleText.textContent = settleSteps[0];
-    settleIndex.textContent = `Step 1 of ${settleSteps.length}`;
-    settleBarFill.style.width='0%';
+    resetSettle();
+  });
+  resetSettle();
+
+  // ---------- LET GO: UNSENT, UNSAVED WRITING ----------
+  const releaseTextarea=document.getElementById('releaseTextarea');
+  const releaseLetterBtn=document.getElementById('releaseLetterBtn');
+  const releaseSettleIntro=document.getElementById('releaseSettleIntro');
+  const releaseWritingForm=document.getElementById('releaseWritingForm');
+  const releaseWritingComplete=document.getElementById('releaseWritingComplete');
+  const releaseParticlesNew=document.getElementById('releaseParticlesNew');
+  releaseTextarea.addEventListener('input',()=>{releaseLetterBtn.disabled=!releaseTextarea.value.trim()});
+  function resetReleaseWriting(){
+    releaseTextarea.value='';releaseTextarea.classList.remove('releasing');releaseLetterBtn.disabled=true;
+    releaseSettleIntro.style.display='block';releaseWritingForm.style.display='none';releaseWritingComplete.style.display='none';releaseParticlesNew.innerHTML='';
+  }
+  document.getElementById('releaseBeginWriting').addEventListener('click',()=>{
+    releaseSettleIntro.style.display='none';releaseWritingForm.style.display='block';setTimeout(()=>releaseTextarea.focus(),50);
+  });
+  releaseLetterBtn.addEventListener('click',()=>{
+    const text=releaseTextarea.value.trim();if(!text)return;
+    const words=text.split(/\s+/).filter(Boolean).slice(0,26);
+    const card=document.getElementById('releaseWritingCard');
+    words.forEach((word,i)=>{
+      const span=document.createElement('span');span.className='release-word';span.textContent=word.replace(/[^\p{L}\p{N}'’-]/gu,'').slice(0,18);
+      span.style.left=(12+Math.random()*76)+'%';span.style.top=(28+Math.random()*42)+'%';
+      span.style.setProperty('--rx',(-70+Math.random()*140)+'px');span.style.setProperty('--ry',(-55-Math.random()*85)+'px');span.style.animationDelay=(i*.025)+'s';
+      releaseParticlesNew.appendChild(span);
+    });
+    releaseTextarea.classList.add('releasing');releaseLetterBtn.disabled=true;
+    setTimeout(()=>{releaseTextarea.value='';releaseSettleIntro.style.display='none';releaseWritingForm.style.display='none';releaseWritingComplete.style.display='block';buzz([14,55,14]);},850);
+    setTimeout(()=>{releaseParticlesNew.innerHTML=''},2400);
+  });
+  document.getElementById('releaseAgain').addEventListener('click',resetReleaseWriting);
+
+  // ---------- UNTANGLE: SHAME OR GUILT ----------
+  const repairPaths={
+    shame:[
+      {title:'Name the feeling, not yourself.',hint:'Try: “Shame is here.” Not: “I am shameful.”'},
+      {title:'A painful feeling is not a verdict.',hint:'You are more than the moment your mind is replaying.'},
+      {title:'Borrow a kinder voice.',hint:'What would you say to someone you care about in this exact situation?'},
+      {title:'Stay on your own side.',hint:'You can learn, make amends and grow without abandoning yourself.'}
+    ],
+    guilt:[
+      {title:'Name the action precisely.',hint:'Keep it specific. Avoid “I always” and “I never.”'},
+      {title:'Responsibility is not punishment.',hint:'Guilt can point toward your values. Endless self-attack does not make things right.'},
+      {title:'Choose one proportionate next step.',hint:'Apologise, correct, replace, clarify or change a behaviour. You do not have to send anything now.'},
+      {title:'Let the next action carry the lesson.',hint:'Make it small, specific and safe—then allow yourself to stop rehearsing the punishment.'}
+    ]
+  };
+  const repairIntro=document.getElementById('repairIntro');
+  const repairFlow=document.getElementById('repairFlow');
+  const repairKicker=document.getElementById('repairKicker');
+  const repairStep=document.getElementById('repairStep');
+  const repairHint=document.getElementById('repairHint');
+  const repairProgress=document.getElementById('repairProgress');
+  const repairNext=document.getElementById('repairNext');
+  let repairMode='';
+  let repairIndex=0;
+  let repairFinished=false;
+
+  function resetRepair(){
+    repairMode='';repairIndex=0;repairFinished=false;
+    repairIntro.style.display='block';repairFlow.style.display='none';repairProgress.innerHTML='';
+    repairNext.textContent='continue';repairStep.classList.remove('changing');repairHint.classList.remove('changing');
+  }
+
+  function renderRepairStep(immediate=false){
+    const steps=repairPaths[repairMode];
+    const applyCopy=()=>{
+      repairKicker.textContent=repairMode==='shame'?'shame · soften the verdict':'guilt · find the next step';
+      repairStep.textContent=steps[repairIndex].title;
+      repairHint.textContent=steps[repairIndex].hint;
+      [...repairProgress.children].forEach((dot,i)=>dot.classList.toggle('active',i<=repairIndex));
+      repairStep.classList.remove('changing');repairHint.classList.remove('changing');
+    };
+    if(immediate){applyCopy();return;}
+    repairStep.classList.add('changing');repairHint.classList.add('changing');
+    setTimeout(applyCopy,280);
+  }
+
+  function finishRepair(){
+    repairFinished=true;
+    repairStep.classList.add('changing');repairHint.classList.add('changing');
+    setTimeout(()=>{
+      repairKicker.textContent='a place to stop';
+      repairStep.textContent=repairMode==='shame'?'You stayed with yourself. That matters.':'One honest next step matters more than another hour of punishment.';
+      repairHint.textContent=repairMode==='shame'?'You can be accountable and still deserve your own care.':'Choose the next right action when you are steady enough. Nothing needs to be sent from this screen.';
+      [...repairProgress.children].forEach(dot=>dot.classList.add('active'));
+      repairNext.textContent='start again';
+      repairStep.classList.remove('changing');repairHint.classList.remove('changing');
+      buzz([12,45,12]);
+    },280);
+  }
+
+  document.querySelectorAll('[data-repair]').forEach(button=>button.addEventListener('click',()=>{
+    repairMode=button.dataset.repair;repairIndex=0;repairFinished=false;
+    repairIntro.style.display='none';repairFlow.style.display='flex';repairProgress.innerHTML='';
+    repairPaths[repairMode].forEach(()=>repairProgress.appendChild(document.createElement('i')));
+    repairNext.textContent='continue';renderRepairStep(true);
+  }));
+  repairNext.addEventListener('click',()=>{
+    if(repairFinished){resetRepair();return;}
+    if(repairIndex<repairPaths[repairMode].length-1){repairIndex++;renderRepairStep();}
+    else finishRepair();
+  });
+  document.getElementById('repairBack').addEventListener('click',resetRepair);
+  resetRepair();
+
+  // ---------- RIGHT NOW ----------
+  const nowLanding = document.getElementById('nowLanding');
+  const nowPrimaryState = document.getElementById('nowPrimaryState');
+  const nowRouteState = document.getElementById('nowRouteState');
+  const nowOpenRoutes = document.getElementById('nowOpenRoutes');
+  function showNowRoutes(open){
+    nowPrimaryState.style.display=open?'none':'block';
+    nowRouteState.classList.toggle('active',open);
+    nowOpenRoutes.setAttribute('aria-expanded',String(open));
+  }
+  const nowSessions = {
+    sigh: document.getElementById('now-sigh'),
+    anger: document.getElementById('now-anger'),
+    unhook: document.getElementById('now-unhook'),
+    reset: document.getElementById('now-reset'),
+  };
+  const nowPhrases = [
+    "this is a spike, not a forecast",
+    "you don't have to solve this right now",
+    "you're allowed to just wait this out",
+    "nothing here needs deciding this second"
+  ];
+  let nowTimers = [];
+  let nowReturnToRoutes = false;
+  function clearNowTimers(){ nowTimers.forEach(t=>{ clearTimeout(t); clearInterval(t); }); nowTimers = []; }
+
+  function stopNowSessions(reason='user'){
+    const returnToRoutes = reason !== 'nav' && nowReturnToRoutes;
+    clearNowTimers();
+    nowLanding.style.display = '';
+    showNowRoutes(returnToRoutes);
+    Object.values(nowSessions).forEach(s => s.classList.remove('active'));
+    nowReturnToRoutes = false;
+  }
+
+  function openNowSession(key){
+    nowLanding.style.display = 'none';
+    Object.values(nowSessions).forEach(s => s.classList.remove('active'));
+    nowSessions[key].classList.add('active');
+  }
+
+  // -- physiological sigh: double inhale, long exhale --
+  const nowOrb = document.getElementById('nowOrb');
+  const nowCue = document.getElementById('nowCue');
+  const nowCueSub = document.getElementById('nowCueSub');
+  const nowCount = document.getElementById('nowCount');
+  const nowPhrase = document.getElementById('nowPhrase');
+  let sighCycles = 0;
+
+  function runSighCycle(){
+    nowCue.textContent = 'inhale';
+    nowCueSub.textContent = 'short, through the nose';
+    nowOrb.style.transform = 'scale(1.08)';
+    const t1 = setTimeout(()=>{
+      nowCue.textContent = 'inhale again';
+      nowCueSub.textContent = 'a second small sip of air, on top';
+      nowOrb.style.transform = 'scale(1.16)';
+      buzz(15);
+      const t2 = setTimeout(()=>{
+        nowCue.textContent = 'exhale';
+        nowCueSub.textContent = 'long, slow, through the mouth';
+        nowOrb.style.transform = 'scale(0.9)';
+        const t3 = setTimeout(()=>{
+          sighCycles++;
+          nowCount.textContent = sighCycles + (sighCycles === 1 ? ' cycle' : ' cycles');
+          if(sighCycles % 2 === 0){
+            nowPhrase.style.opacity = 0;
+            const t4 = setTimeout(()=>{
+              nowPhrase.textContent = nowPhrases[(sighCycles/2 - 1) % nowPhrases.length];
+              nowPhrase.style.opacity = 1;
+            }, 300);
+            nowTimers.push(t4);
+          }
+          runSighCycle();
+        }, 8000);
+        nowTimers.push(t3);
+      }, 1200);
+      nowTimers.push(t2);
+    }, 1500);
+    nowTimers.push(t1);
+  }
+
+  function startSigh(){
+    clearNowTimers();
+    sighCycles = 0;
+    nowCount.textContent = '0 cycles';
+    nowPhrase.textContent = '';
+    openNowSession('sigh');
+    runSighCycle();
+    unlockAudioForIOS();
+  }
+  document.getElementById('nowStopSigh').addEventListener('click', ()=>stopNowSessions('user'));
+
+  // -- anger: clench and release --
+  const nowAngerOrb = document.getElementById('nowAngerOrb');
+  const nowAngerCue = document.getElementById('nowAngerCue');
+  const nowAngerCount = document.getElementById('nowAngerCount');
+  let angerRounds = 0;
+
+  function runAngerCycle(){
+    nowAngerCue.textContent = 'clench';
+    nowAngerOrb.style.transform = 'scale(0.9)';
+    const t1 = setTimeout(()=>{
+      nowAngerCue.textContent = 'hold';
+      const t2 = setTimeout(()=>{
+        nowAngerCue.textContent = 'release — let it drop';
+        nowAngerOrb.style.transform = 'scale(1.15)';
+        buzz([12,40,12]);
+        const t3 = setTimeout(()=>{
+          angerRounds++;
+          nowAngerCount.textContent = angerRounds + (angerRounds === 1 ? ' round' : ' rounds');
+          runAngerCycle();
+        }, 3000);
+        nowTimers.push(t3);
+      }, 5000);
+      nowTimers.push(t2);
+    }, 100);
+    nowTimers.push(t1);
+  }
+  document.getElementById('nowStopAnger').addEventListener('click', ()=>stopNowSessions('user'));
+
+  const unhookSteps=[
+    'Notice what your mind is doing. You do not have to argue with it.',
+    'Silently say: “I am noticing a difficult thought.”',
+    'Press both feet into the floor. Feel the pressure pushing back.',
+    'Find one thing you can see, one sound you can hear, and one sensation you can feel.',
+    'The thought can be here without deciding what you do next.'
+  ];
+  const quickResetSteps=[
+    'Feel both feet making contact with the floor.',
+    'Lift your shoulders gently. Let them drop as you breathe out.',
+    'Unclench your jaw. Let your tongue rest.',
+    'Look at three stable objects around you. Nothing else needs doing right now.'
+  ];
+  function runNowSequence(key,steps,copyEl,progressEl,followEl){
+    clearNowTimers();openNowSession(key);followEl.style.display='none';progressEl.innerHTML='';
+    steps.forEach(()=>progressEl.appendChild(document.createElement('i')));
+    let index=0;
+    function show(){
+      copyEl.classList.add('changing');
+      const swap=setTimeout(()=>{
+        copyEl.textContent=steps[index];copyEl.classList.remove('changing');
+        [...progressEl.children].forEach((d,i)=>d.classList.toggle('active',i===index));
+      },260);nowTimers.push(swap);
+      const advance=setTimeout(()=>{
+        index++;
+        if(index<steps.length)show();
+        else{copyEl.textContent=key==='unhook'?'You made a little room around the thought.':'You gave your system a moment to come down.';followEl.style.display='block';[...progressEl.children].forEach(d=>d.classList.add('active'));buzz([12,45,12]);}
+      },6200);nowTimers.push(advance);
+    }
+    copyEl.textContent=steps[0];[...progressEl.children].forEach((d,i)=>d.classList.toggle('active',i===0));
+    const first=setTimeout(()=>{index=1;if(index<steps.length)show()},6200);nowTimers.push(first);
+  }
+  const nowUnhookCopy=document.getElementById('nowUnhookCopy');
+  const nowUnhookProgress=document.getElementById('nowUnhookProgress');
+  const nowUnhookFollow=document.getElementById('nowUnhookFollow');
+  const nowResetCopy=document.getElementById('nowResetCopy');
+  const nowResetProgress=document.getElementById('nowResetProgress');
+  const nowResetFollow=document.getElementById('nowResetFollow');
+  document.getElementById('nowBigBtn').addEventListener('click',()=>{
+    nowReturnToRoutes=false;
+    runNowSequence('reset',quickResetSteps,nowResetCopy,nowResetProgress,nowResetFollow);
+  });
+  nowOpenRoutes.addEventListener('click',()=>showNowRoutes(true));
+  document.getElementById('nowCloseRoutes').addEventListener('click',()=>{nowReturnToRoutes=false;showNowRoutes(false)});
+  document.getElementById('nowStopUnhook').addEventListener('click',()=>stopNowSessions('user'));
+  document.getElementById('nowStopReset').addEventListener('click',()=>stopNowSessions('user'));
+
+  // -- tag router --
+  document.querySelectorAll('.now-tag-btn,.now-secondary-link').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const mode = btn.dataset.mode;
+      if(['anxious','angry','spiral'].includes(mode)) nowReturnToRoutes=true;
+      if(mode === 'anxious'){
+        startSigh();
+      } else if(mode === 'angry'){
+        clearNowTimers();
+        angerRounds = 0;
+        nowAngerCount.textContent = '';
+        openNowSession('anger');
+        runAngerCycle();
+        unlockAudioForIOS();
+      } else if(mode === 'spiral'){
+        runNowSequence('unhook',unhookSteps,nowUnhookCopy,nowUnhookProgress,nowUnhookFollow);
+      } else if(mode === 'reset'){
+        runNowSequence('reset',quickResetSteps,nowResetCopy,nowResetProgress,nowResetFollow);
+      } else if(mode === 'resentment'){
+        window.location.hash = 'letgo';
+      } else if(mode === 'untangle'){
+        window.location.hash = 'untangle';
+      }
+    });
   });
 </script>
 </body>
