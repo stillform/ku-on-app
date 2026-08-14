@@ -1,0 +1,36 @@
+{
+  "title": "5-4-3-2-1",
+  "description": "Come back to the room one sense at a time. Nothing needs to be typed or remembered.",
+  "optional_prompt": "type something if it helps",
+  "next_label": "I noticed them",
+  "reset_label": "Start again",
+  "finish_line_one": "You came back to the room.",
+  "finish_line_two": "That is enough for right now.",
+  "steps": [
+    {
+      "count": 5,
+      "label": "Things you can see",
+      "hint": "Look around slowly. Small, ordinary details count."
+    },
+    {
+      "count": 4,
+      "label": "Things you can feel",
+      "hint": "Notice clothing, the chair, or your feet against the floor."
+    },
+    {
+      "count": 3,
+      "label": "Things you can hear",
+      "hint": "Listen for sounds both close to you and farther away."
+    },
+    {
+      "count": 2,
+      "label": "Things you can smell",
+      "hint": "If nothing stands out, remember two familiar smells."
+    },
+    {
+      "count": 1,
+      "label": "Thing you can taste",
+      "hint": "Notice what is already there, or remember a familiar taste."
+    }
+  ]
+}
