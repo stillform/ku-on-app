@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>kū-on | a quiet place to ride it out</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,560&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,560&family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400&display=swap" rel="stylesheet">
 <style>
   :root{
     --deep:#0c1622;
@@ -21,12 +21,14 @@
     --sage-dim:rgba(169,193,145,0.18);
     --lavender:#c3b3dd;
     --lavender-dim:rgba(195,179,221,0.18);
-    --clay:#b8836a;
-    --clay-dim:rgba(184,131,106,0.18);
+    --clay:#c48770;
+    --clay-dim:rgba(196,135,112,0.18);
     --breath:#8fa8c1;
     --breath-dim:rgba(143,168,193,0.14);
-    --repair:#bda8b8;
-    --repair-dim:rgba(189,168,184,0.14);
+    --repair:#9199be;
+    --repair-dim:rgba(145,153,190,0.14);
+    --about:#c6b8a6;
+    --about-dim:rgba(198,184,166,0.14);
     --radius:18px;
     --mode-light:#ffe8c2;
     --mode-glow:#e8a559;
@@ -133,10 +135,10 @@
   body[data-view="now"] nav a.active{ background:var(--tide); color:#08201d; }
   body[data-view="ground"] nav a.active{ background:var(--sage); color:#0d1b08; }
   body[data-view="settle"] nav a.active{ background:var(--lavender); color:#1c1226; }
-  body[data-view="letgo"] nav a.active{ background:#c49a91; color:#241a1b; }
+  body[data-view="letgo"] nav a.active{ background:var(--clay); color:#241a1b; }
   body[data-view="untangle"] nav a.active{ background:var(--repair); color:#241a22; }
   body[data-view="breathe"] nav a.active{ background:var(--breath); color:#10202d; }
-  body[data-view="about"] nav a.active{ background:var(--muted); color:#10202d; }
+  body[data-view="about"] nav a.active{ background:var(--about); color:#19202a; }
 
   main{flex:1; position:relative; display:flex; align-items:center; justify-content:center; padding:20px 20px 142px;}
   .view{ width:100%; max-width:560px; display:none; }
@@ -500,7 +502,7 @@
   .breath-copy{ opacity:1; transform:translateY(0); transition:opacity .28s ease,transform .42s cubic-bezier(.22,.61,.36,1); }
   .breath-copy.phase-changing{ opacity:0; transform:translateY(4px); }
 
-  /* Box — one point continuously traces the four edges. */
+  /* Box: one point continuously traces the four edges. */
   .scene.mode-box .breath-copy{top:8%}
   .scene.mode-box .box-guide{ left:50%; top:var(--box-center-y); width:132px; height:132px; border-radius:8px; }
   .scene.mode-box .waves,.scene.mode-box .horizon-line{will-change:transform}
@@ -511,7 +513,7 @@
     transform:translate(-50%,-50%);
   }
 
-  /* Release A — silky ambient diffusion plus the original dissolving circle. */
+  /* Release A: silky ambient diffusion plus the original dissolving circle. */
   .release-ambient{ position:absolute; inset:-24%; z-index:1; pointer-events:none; overflow:hidden; opacity:0; transition:opacity .7s ease; }
   .scene.mode-release .release-ambient{ opacity:.74; }
   .release-silk{ position:absolute; inset:0; border-radius:44%; opacity:.46; filter:blur(54px) saturate(.86); will-change:transform,opacity,filter; transition:opacity 4s ease-in-out,filter 4s ease-in-out; }
@@ -538,7 +540,7 @@
   .release-mist-field.stage-hold .release-cloud{ transition:none; }
   .release-mist-field.stage-exhale .release-cloud{ opacity:0;transform:translate(-50%,-82%) scale(1.7);transition:transform 8s cubic-bezier(.4,0,.7,1),opacity 8s linear; }
 
-  /* Even — iridescent balanced light field with four sage guide points. */
+  /* Even: iridescent balanced light field with four sage guide points. */
   .even-light-field{ position:absolute;inset:-22%;z-index:1;pointer-events:none;overflow:hidden;opacity:0;transition:opacity .7s ease; }
   .scene.mode-even .even-light-field{ opacity:1; }
   .balance-light{position:absolute;top:10%;bottom:2%;width:70%;border-radius:48%;opacity:.2;filter:blur(48px) saturate(.9);will-change:transform,opacity,filter;transition:transform 5s cubic-bezier(.37,0,.25,1),opacity 5s ease-in-out,filter 5s ease-in-out}
@@ -637,7 +639,7 @@
   .release-writing-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
   .release-stop{font-size:11px;color:var(--muted);line-height:1.4;max-width:290px}
   .release-stop a{color:var(--clay)}
-  .release-letter-btn{background:#c49a91;color:#241a1b;border:0;border-radius:11px;padding:10px 19px;font:600 13px 'Inter',sans-serif;cursor:pointer}
+  .release-letter-btn{background:var(--clay);color:#241a1b;border:0;border-radius:11px;padding:10px 19px;font:600 13px 'Inter',sans-serif;cursor:pointer}
   .release-letter-btn:disabled{opacity:.35;cursor:not-allowed}
   .release-particles-new{position:absolute;inset:0;pointer-events:none;overflow:hidden}
   .release-word{position:absolute;color:rgba(244,224,218,.5);font-size:12px;animation:releaseWord 1.8s cubic-bezier(.22,.61,.36,1) forwards}
@@ -646,15 +648,15 @@
   .release-writing-complete strong{display:block;font-family:'Fraunces',serif;font-size:23px;font-weight:450;margin-bottom:9px}
   .release-writing-complete span{font-size:12px;color:var(--muted)}
 
-  /* Untangle — a short shame/guilt path that separates identity from action. */
+  /* Untangle: a short shame/guilt path that separates identity from action. */
   .repair-card{position:relative;overflow:hidden}
-  .repair-card::before{content:'';position:absolute;inset:-45% 18% 45%;background:radial-gradient(ellipse,rgba(189,168,184,.12),transparent 70%);filter:blur(20px);pointer-events:none}
+  .repair-card::before{content:'';position:absolute;inset:-45% 18% 45%;background:radial-gradient(ellipse,rgba(145,153,190,.14),transparent 70%);filter:blur(20px);pointer-events:none}
   .repair-intro,.repair-flow{position:relative;z-index:1}
   .repair-intro-copy{font-family:'Fraunces',serif;font-size:21px;line-height:1.45;max-width:390px;margin:4px auto 22px}
   .repair-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .repair-choice{min-height:94px;padding:15px;border-radius:14px;border:1px solid rgba(189,168,184,.24);background:var(--repair-dim);color:var(--foam);font:500 13px/1.45 'Inter',sans-serif;cursor:pointer;transition:border-color .25s ease,background .25s ease,transform .25s ease}
+  .repair-choice{min-height:94px;padding:15px;border-radius:14px;border:1px solid rgba(145,153,190,.26);background:var(--repair-dim);color:var(--foam);font:500 13px/1.45 'Inter',sans-serif;cursor:pointer;transition:border-color .25s ease,background .25s ease,transform .25s ease}
   .repair-choice small{display:block;margin-top:5px;color:var(--muted);font-size:10.5px;font-weight:400}
-  .repair-choice:hover,.repair-choice:focus-visible{border-color:rgba(189,168,184,.52);background:rgba(189,168,184,.2);outline:none;transform:translateY(-1px)}
+  .repair-choice:hover,.repair-choice:focus-visible{border-color:rgba(145,153,190,.58);background:rgba(145,153,190,.21);outline:none;transform:translateY(-1px)}
   .repair-caution{margin:18px auto 0;max-width:410px;color:var(--muted);font-size:11px;line-height:1.55}
   .repair-flow{display:none;min-height:290px;flex-direction:column;align-items:center;justify-content:center}
   .repair-kicker{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--repair);margin-bottom:13px}
@@ -671,85 +673,93 @@
   .repair-ground-link{text-align:center;margin-top:17px;color:var(--muted);font-size:11px;line-height:1.5}
   .repair-ground-link a{color:var(--repair);text-underline-offset:3px}
 
-  /* ---------- ABOUT PAGE - WIDER CONTAINER, MATCHES SITE STYLES ---------- */
-  .about-card {
-    background:rgba(255,255,255,0.03);
-    border:1px solid rgba(255,255,255,0.08);
-    border-radius:20px;
-    padding:36px 30px;
-    text-align:left;
-    /* Make it wider by removing the max-width constraint from parent */
-    width:100%;
-    max-width:100%;
-  }
-  .about-card .card-title {
-    font-family:'Fraunces', serif;
-    font-weight:450;
-    font-size:26px;
-    margin-bottom:4px;
-    text-align:center;
-    color:var(--foam);
-  }
-  .about-card .card-sub {
-    color:var(--muted);
-    font-size:14px;
-    margin-bottom:28px;
-    text-align:center;
-    line-height:1.5;
-    font-family:'Inter', sans-serif;
-  }
-  .about-card h2 {
-    font-family:'Fraunces', serif;
-    font-weight:450;
-    font-size:20px;
-    color:var(--amber);
-    margin-top:24px;
-    margin-bottom:8px;
-    letter-spacing:0.02em;
-  }
-  .about-card h2:first-of-type {
-    margin-top:0;
-  }
-  .about-card p {
-    font-family:'Inter', sans-serif;
-    font-size:14px;
-    line-height:1.6;
-    color:var(--foam);
-    margin-bottom:12px;
-  }
-  .about-card ul {
-    list-style:none;
-    padding:0;
-    margin:8px 0 16px 0;
-  }
-  .about-card ul li {
-    font-family:'Inter', sans-serif;
-    font-size:14px;
-    line-height:1.6;
-    color:var(--foam);
-    padding-left:20px;
-    position:relative;
-    margin-bottom:4px;
-  }
-  .about-card ul li::before {
-    content:"—";
-    color:var(--amber);
-    position:absolute;
-    left:0;
-  }
-  .about-card .divider {
-    border:0;
-    height:1px;
-    background:rgba(255,255,255,0.08);
-    margin:20px 0;
-  }
-  .about-card .closing-quote {
-    font-family:'Fraunces', serif;
-    font-size:18px;
-    text-align:center;
-    color:var(--amber);
-    margin-top:24px;
-    opacity:0.8;
+  /* ---------- ABOUT PAGE ---------- */
+  #view-about{max-width:1100px}
+  body[data-view="about"] main{align-items:flex-start}
+  .about-page{width:100%;color:var(--foam)}
+  .about-eyebrow{color:var(--about);font-size:10.5px;font-weight:500;letter-spacing:.17em;text-transform:uppercase}
+  .about-page h2{margin:11px 0 0;font-family:'Newsreader',serif;font-size:clamp(31px,5vw,49px);font-weight:400;letter-spacing:-.035em;line-height:1.08;color:var(--foam)}
+
+  .about-hero{position:relative;display:grid;grid-template-columns:1.12fr .88fr;min-height:510px;overflow:hidden;border:1px solid rgba(167,189,207,.15);border-radius:34px;background:linear-gradient(145deg,rgba(26,49,70,.98),rgba(15,32,49,.99))}
+  .about-hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;padding:68px 28px 68px 62px}
+  .about-hero h1{max-width:610px;margin:18px 0 22px;font-family:'Newsreader',serif;font-size:clamp(43px,7vw,72px);font-weight:400;letter-spacing:-.048em;line-height:1;color:var(--foam)}
+  .about-hero-copy>p{max-width:510px;margin:0;color:#c4d1db;font-size:clamp(15px,2vw,18px);line-height:1.7}
+  .about-hero-note{display:flex;align-items:center;gap:12px;margin-top:36px;color:#8fa5b8;font-size:12.5px}
+  .about-hero-note span{width:7px;height:7px;flex:0 0 auto;border-radius:50%;background:#d6a092;box-shadow:0 0 18px rgba(214,160,146,.55)}
+  .about-hero-field{position:relative;min-height:100%;overflow:hidden}
+  .about-haze,.about-haze::before,.about-haze::after{position:absolute;border-radius:50%;content:"";filter:blur(10px)}
+  .about-haze{width:380px;height:380px;top:50%;left:46%;transform:translate(-50%,-50%);background:radial-gradient(circle at 44% 43%,rgba(214,160,146,.18),transparent 27%),radial-gradient(circle,rgba(198,184,166,.2),rgba(75,117,140,.08) 52%,transparent 72%);box-shadow:inset 0 0 70px rgba(198,184,166,.08),0 0 95px rgba(103,152,160,.12);animation:aboutHazeBreathe 9s ease-in-out infinite}
+  .about-haze::before{width:210px;height:270px;top:18px;left:110px;background:radial-gradient(circle at 40% 35%,rgba(212,164,150,.2),transparent 68%);transform:rotate(28deg);animation:aboutHazeDriftA 18s ease-in-out infinite alternate}
+  .about-haze::after{width:190px;height:230px;right:85px;bottom:20px;background:radial-gradient(circle at 60% 45%,rgba(139,131,166,.14),transparent 70%);transform:rotate(-23deg);animation:aboutHazeDriftB 21s ease-in-out infinite alternate}
+  .about-ring{position:absolute;top:50%;left:46%;width:286px;height:286px;border:1px solid rgba(198,184,166,.22);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 48px rgba(198,184,166,.08);animation:aboutRingOrbit 18s linear infinite}
+  .about-ring::before,.about-ring::after{position:absolute;border-radius:50%;content:""}
+  .about-ring::before{inset:38px;border:1px solid rgba(143,168,193,.2);animation:aboutDiscOrbit 14s linear infinite}
+  .about-ring::after{inset:91px;border:1px solid rgba(198,184,166,.23);animation:aboutDiscBreathe 8s ease-in-out infinite}
+  .about-arc{position:absolute;top:50%;left:46%;width:326px;height:326px;border-top:2px solid rgba(214,160,146,.48);border-right:1px solid transparent;border-bottom:1px solid rgba(145,153,190,.28);border-left:1px solid transparent;border-radius:50%;filter:drop-shadow(0 0 11px rgba(214,160,146,.24));transform:translate(-50%,-50%);animation:aboutArcOrbit 13s linear infinite}
+  .about-ripple{position:absolute;top:50%;left:46%;width:150px;height:150px;border:1px solid rgba(198,184,166,.34);border-radius:50%;transform:translate(-50%,-50%);animation:aboutRipple 7.5s ease-out infinite}
+  .about-ripple.r2{animation-delay:2.5s}.about-ripple.r3{animation-delay:5s}
+  .about-satellite{position:absolute;top:50%;left:46%;width:286px;height:286px;transform:translate(-50%,-50%);animation:aboutSatellite 22s linear infinite}
+  .about-satellite::after{position:absolute;top:-3px;left:50%;width:6px;height:6px;border-radius:50%;background:var(--about);box-shadow:0 0 16px rgba(198,184,166,.66);content:""}
+  .about-dot{position:absolute;top:50%;left:46%;width:11px;height:11px;border-radius:50%;background:#d6a092;box-shadow:0 0 24px rgba(214,160,146,.58);transform:translate(-50%,-50%);animation:aboutDotBreathe 6s ease-in-out infinite}
+  @keyframes aboutHazeBreathe{0%,100%{opacity:.68;transform:translate(-50%,-50%) scale(.92) rotate(-7deg)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08) rotate(7deg)}}
+  @keyframes aboutHazeDriftA{0%{transform:translate(-8px,5px) rotate(24deg) scale(.96);opacity:.65}100%{transform:translate(12px,-10px) rotate(34deg) scale(1.06);opacity:1}}
+  @keyframes aboutHazeDriftB{0%{transform:translate(10px,-7px) rotate(-28deg) scale(1.04);opacity:.7}100%{transform:translate(-11px,12px) rotate(-18deg) scale(.95);opacity:1}}
+  @keyframes aboutRingOrbit{from{transform:translate(-50%,-50%) rotate(0deg) scale(.98)}50%{transform:translate(-50%,-50%) rotate(180deg) scale(1.035)}to{transform:translate(-50%,-50%) rotate(360deg) scale(.98)}}
+  @keyframes aboutDiscOrbit{from{transform:rotate(360deg)}to{transform:rotate(0deg)}}
+  @keyframes aboutArcOrbit{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(-360deg)}}
+  @keyframes aboutRipple{0%{opacity:0;transform:translate(-50%,-50%) scale(.45)}18%{opacity:.55}100%{opacity:0;transform:translate(-50%,-50%) scale(2.18)}}
+  @keyframes aboutSatellite{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+  @keyframes aboutDiscBreathe{0%,100%{opacity:.48;transform:scale(.985)}50%{opacity:.9;transform:scale(1.02)}}
+  @keyframes aboutDotBreathe{0%,100%{opacity:.78;transform:translate(-50%,-50%) scale(.92);box-shadow:0 0 18px rgba(214,160,146,.4)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08);box-shadow:0 0 30px rgba(214,160,146,.68)}}
+
+  .about-name{display:grid;grid-template-columns:minmax(220px,.72fr) minmax(0,1.28fr);gap:68px;align-items:center;padding:88px 52px;border-bottom:1px solid rgba(167,189,207,.15)}
+  .about-name-mark{display:flex;min-height:270px;padding:42px 26px;border:1px solid rgba(198,184,166,.2);border-radius:26px;background:radial-gradient(circle at 50% 46%,var(--about-dim),transparent 54%),#162b3f;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+  .about-name-mark strong{display:block;font-family:'Newsreader',serif;font-size:clamp(55px,9vw,86px);font-weight:400;letter-spacing:.08em;line-height:1;color:var(--foam)}
+  .about-name-mark span{display:block;margin-top:15px;color:var(--about);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase}
+  .about-name-copy>p{margin:20px 0 26px;color:#c4d1db;font-size:16px;line-height:1.75}
+  .about-character-notes{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:26px;padding:22px 0;border-top:1px solid rgba(167,189,207,.15);border-bottom:1px solid rgba(167,189,207,.15)}
+  .about-character{display:grid;grid-template-rows:auto auto 1fr;gap:7px;align-content:space-between;min-height:96px}
+  .about-character b{font-family:'Newsreader',serif;font-size:29px;font-weight:400;line-height:1;color:var(--foam)}
+  .about-character em{color:var(--about);font:500 13px/1.3 'Inter',sans-serif;font-style:normal;letter-spacing:.02em}
+  .about-character span{align-self:end;color:#8fa5b8;font-size:12.5px;line-height:1.55}
+
+  .about-origin{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:68px;padding:84px 52px 88px;border-bottom:1px solid rgba(167,189,207,.15)}
+  .about-origin-copy p{margin:0 0 21px;color:#c4d1db;font-size:16px;line-height:1.78}
+  .about-origin-copy p:last-child{margin-bottom:0}
+
+  .about-expect{padding:82px 52px 88px}
+  .about-expect-head{max-width:700px;margin-bottom:34px}
+  .about-expect-head p{max-width:560px;margin:18px 0 0;color:#8fa5b8;line-height:1.65}
+  .about-expect-list{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(167,189,207,.15);border-left:1px solid rgba(167,189,207,.15)}
+  .about-expect-row{display:grid;grid-template-columns:34px 1fr;gap:6px 14px;align-content:start;min-height:144px;padding:23px 25px;border-right:1px solid rgba(167,189,207,.15);border-bottom:1px solid rgba(167,189,207,.15)}
+  .about-expect-num{color:var(--about);font-family:'Newsreader',serif;font-size:16px}
+  .about-expect-row h3{margin:0;font-family:'Newsreader',serif;font-size:22px;font-weight:400;color:var(--foam)}
+  .about-expect-row p{grid-column:2;margin:4px 0 0;color:#8fa5b8;font-size:13px;line-height:1.58}
+
+  .about-closing{margin:0 24px 72px;padding:70px 28px;border-radius:28px;background:radial-gradient(circle at 50% 115%,rgba(198,184,166,.2),transparent 45%),linear-gradient(145deg,rgba(26,50,71,.96),rgba(15,33,50,.98));text-align:center}
+  .about-closing h2{max-width:680px;margin:13px auto 17px}
+  .about-closing p{max-width:520px;margin:0 auto;color:#8fa5b8;line-height:1.7}
+  .about-closing a{display:inline-flex;align-items:center;justify-content:center;min-height:46px;margin-top:28px;padding:0 22px;border-radius:999px;background:var(--about);color:#19202a;font-size:13px;font-weight:500;text-decoration:none}
+
+  @media(max-width:760px){
+    .about-hero{grid-template-columns:1fr;min-height:0;border-radius:28px}
+    .about-hero-copy{order:2;padding:28px 24px 46px}
+    .about-hero-field{min-height:260px}
+    .about-haze,.about-ring,.about-arc,.about-ripple,.about-satellite,.about-dot{left:50%}
+    .about-haze{width:280px;height:280px}
+    .about-ring{width:210px;height:210px}
+    .about-ring::before{inset:28px}.about-ring::after{inset:68px}
+    .about-arc{width:250px;height:250px}
+    .about-ripple{width:120px;height:120px}
+    .about-satellite{width:210px;height:210px}
+    .about-name{grid-template-columns:1fr;gap:28px;padding:62px 10px}
+    .about-name-mark{min-height:240px;padding:36px 22px}
+    .about-origin{grid-template-columns:1fr;gap:26px;padding:62px 10px}
+    .about-expect{padding:60px 10px 66px}
+    .about-expect-head{margin-bottom:32px}
+    .about-expect-list{grid-template-columns:1fr}
+    .about-expect-row{grid-template-columns:34px 1fr;gap:6px 13px;min-height:0;padding:22px 18px}
+    .about-closing{margin:0 0 54px;padding:54px 22px;border-radius:25px}
   }
 
   .card-title{
@@ -851,7 +861,7 @@
     cursor:pointer;
     transition:border-color .2s ease, background .2s ease;
   }
-  .now-tag-btn[data-mode="angry"]{ border-color:rgba(184,131,106,0.28); background:var(--clay-dim); }
+  .now-tag-btn[data-mode="angry"]{ border-color:rgba(196,135,112,0.3); background:var(--clay-dim); }
   .now-tag-btn:hover, .now-tag-btn:focus-visible{ border-color:rgba(255,255,255,0.25); background:rgba(255,255,255,0.07); outline:none; }
 
   .now-doorway{
@@ -869,7 +879,7 @@
     display:flex; align-items:center; justify-content:center;
     transition:transform 1s ease;
   }
-  .now-orb.anger{ background:radial-gradient(circle at 50% 38%, var(--clay-dim), transparent 75%); border-color:rgba(184,131,106,0.45); }
+  .now-orb.anger{ background:radial-gradient(circle at 50% 38%, var(--clay-dim), transparent 75%); border-color:rgba(196,135,112,0.46); }
   .now-cue{ font-family:'Fraunces',serif; font-size:18px; color:var(--foam); }
   .now-cue-sub{ margin-top:8px; font-size:12px; color:var(--muted); }
   .now-count{ margin-top:18px; font-size:11px; color:var(--muted); letter-spacing:0.05em; }
@@ -952,7 +962,7 @@
 
       <div class="now-session" id="now-anger">
         <div class="now-orb anger" id="nowAngerOrb"><div class="now-cue" id="nowAngerCue">clench</div></div>
-        <div class="now-cue-sub">fists, jaw, shoulders — as tight as you can</div>
+        <div class="now-cue-sub">fists, jaw, shoulders. As tight as you can.</div>
         <div class="now-count" id="nowAngerCount"></div>
         <div class="now-phrase">this is a spike, not a forecast</div>
         <div class="now-controls"><button class="now-ctrl-btn" id="nowStopAnger">enough for now</button></div>
@@ -1064,7 +1074,7 @@
         <div class="control-label">Rhythm</div>
         <div class="pattern-select" id="patternSelect">
           <button class="active" data-pattern="4-4-4-4" data-name="box">Box<small>steady · 4-4-4-4</small></button>
-          <button data-pattern="4-7-8-0" data-name="release">Release<small>let go · 4-7-8</small></button>
+          <button data-pattern="4-7-8-0" data-name="release">Release<small>ease · 4-7-8</small></button>
           <button data-pattern="5-0-5-0" data-name="even">Even<small>balance · 5-5</small></button>
         </div>
       </div>
@@ -1192,12 +1202,91 @@
 
   <!-- ABOUT -->
   <section class="view" id="view-about">
-    <div class="about-card" id="aboutContent">
-      <div class="card-title" id="aboutTitle">About kū-on</div>
-      <div class="card-sub" id="aboutDescription">A quiet place to ride it out</div>
-      <div id="aboutBody">
-        <p>Loading...</p>
-      </div>
+    <div class="about-page">
+      <section class="about-hero">
+        <div class="about-hero-copy">
+          <div class="about-eyebrow">About kū-on</div>
+          <h1>A little space between feeling and next.</h1>
+          <p>kū-on is a quiet set of tools for moments when something feels too loud. It can help you breathe, ground, release, or simply pause.</p>
+          <div class="about-hero-note"><span aria-hidden="true"></span>Nothing to maintain. Nothing to get right.</div>
+        </div>
+        <div class="about-hero-field" aria-hidden="true">
+          <div class="about-haze"></div>
+          <div class="about-arc"></div>
+          <div class="about-ring"></div>
+          <div class="about-ripple"></div>
+          <div class="about-ripple r2"></div>
+          <div class="about-ripple r3"></div>
+          <div class="about-satellite"></div>
+          <div class="about-dot"></div>
+        </div>
+      </section>
+
+      <section class="about-name">
+        <div class="about-name-mark" aria-label="空穏, pronounced kū-on">
+          <strong>空穏</strong>
+          <span>pronounced kū-on</span>
+        </div>
+        <div class="about-name-copy">
+          <div class="about-eyebrow">The name</div>
+          <h2>Open space, held gently.</h2>
+          <p>kū-on is a coined name inspired by two Japanese characters. Together, they express the feeling the project hopes to create: a mind with a little more openness and calm.</p>
+          <div class="about-character-notes">
+            <div class="about-character"><b>空</b><em>kū</em><span>Sky, space, or emptiness</span></div>
+            <div class="about-character"><b>穏</b><em>on</em><span>Calm, gentle, or peaceful</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-origin">
+        <div>
+          <div class="about-eyebrow">Why it exists</div>
+          <h2>Made for the moments before words.</h2>
+        </div>
+        <div class="about-origin-copy">
+          <p>I made kū-on for the version of myself who needed help before I could explain what was wrong, and for friends who have known that feeling too.</p>
+          <p>The aim is deliberately small: make the next few minutes feel more manageable. Not a programme to keep up with. Not a promise to fix everything.</p>
+        </div>
+      </section>
+
+      <section class="about-expect">
+        <div class="about-expect-head">
+          <div>
+            <div class="about-eyebrow">What you can expect</div>
+            <h2>A little guidance, never a demand.</h2>
+          </div>
+          <p>kū-on makes the first step clear and keeps everything after it optional.</p>
+        </div>
+        <div class="about-expect-list">
+          <article class="about-expect-row">
+            <span class="about-expect-num">01</span>
+            <h3>Start where you are</h3>
+            <p>Choose what feels loudest, or go directly to an exercise you already know. You do not need to name the feeling perfectly.</p>
+          </article>
+          <article class="about-expect-row">
+            <span class="about-expect-num">02</span>
+            <h3>One small step is enough</h3>
+            <p>Follow a single breath, body, grounding, or reflection exercise. Stay only as long as it feels useful.</p>
+          </article>
+          <article class="about-expect-row">
+            <span class="about-expect-num">03</span>
+            <h3>Private by default</h3>
+            <p>No account is required, and reflections written in Let go are not saved by kū-on.</p>
+          </article>
+          <article class="about-expect-row">
+            <span class="about-expect-num">04</span>
+            <h3>No performance</h3>
+            <p>No streaks, scores, or pressure language. A shorter session is not a failed session.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="about-closing">
+        <div class="about-eyebrow">For wherever you are</div>
+        <h2>You do not have to solve everything right now.</h2>
+        <p>Finding one small thing that makes the next moment easier is enough.</p>
+        <a href="#now">Start with what feels loudest&nbsp; ›</a>
+      </section>
     </div>
   </section>
 </main>
@@ -1251,114 +1340,8 @@
     navigateTo(view);
   });
 
-  // ---------- ABOUT PAGE: Load Markdown and Render ----------
-  async function renderAboutPage() {
-    const bodyEl = document.getElementById('aboutBody');
-    const titleEl = document.getElementById('aboutTitle');
-    const descEl = document.getElementById('aboutDescription');
-    
-    try {
-      const response = await fetch('content/about/_index.md');
-      if (!response.ok) throw new Error('Page not found');
-      const markdown = await response.text();
-      
-      const { frontmatter, content } = parseFrontmatter(markdown);
-      
-      if (frontmatter.title) titleEl.textContent = frontmatter.title;
-      if (frontmatter.description) descEl.textContent = frontmatter.description;
-      
-      bodyEl.innerHTML = renderMarkdown(content);
-    } catch (e) {
-      bodyEl.innerHTML = `
-        <p>Could not load About page content.</p>
-        <p style="color:var(--muted);font-size:13px;">Please make sure content/about/_index.md exists.</p>
-      `;
-      console.warn('About page load error:', e);
-    }
-  }
-
-  function parseFrontmatter(md) {
-    const parts = md.split('---');
-    if (parts.length < 3) {
-      return { frontmatter: {}, content: md };
-    }
-    const frontmatterText = parts[1].trim();
-    const content = parts.slice(2).join('---').trim();
-    
-    const frontmatter = {};
-    frontmatterText.split('\n').forEach(line => {
-      const match = line.match(/^([^:]+):\s*(.*)$/);
-      if (match) {
-        const key = match[1].trim();
-        let value = match[2].trim();
-        if (value === '|') return;
-        frontmatter[key] = value;
-      }
-    });
-    return { frontmatter, content };
-  }
-
-  function renderMarkdown(md) {
-    let html = md;
-    
-    // Headers: ## Header (with space)
-    html = html.replace(/^### (.*)$/gm, '<h3>$1</h3>');
-    html = html.replace(/^## (.*)$/gm, '<h2>$1</h2>');
-    html = html.replace(/^# (.*)$/gm, '<h1>$1</h1>');
-    
-    // Bold: **text**
-    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    
-    // Italic: *text*
-    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-    
-    // Lists: - item (with space after dash)
-    html = html.replace(/^- (.*)$/gm, '<li>$1</li>');
-    // Wrap consecutive list items in <ul>
-    html = html.replace(/(<li>.*<\/li>\s*)+/g, (match) => {
-      return '<ul>' + match.trim() + '</ul>';
-    });
-    
-    // Horizontal rules: --- on its own line
-    html = html.replace(/^---$/gm, '<hr class="divider">');
-    
-    // Paragraphs: split by blank lines, but keep headers and lists intact
-    const lines = html.split('\n');
-    let result = [];
-    let paragraphBuffer = [];
-    
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-      
-      if (line === '') {
-        if (paragraphBuffer.length > 0) {
-          result.push('<p>' + paragraphBuffer.join(' ') + '</p>');
-          paragraphBuffer = [];
-        }
-        continue;
-      }
-      
-      if (line.startsWith('<h') || line.startsWith('<ul') || line.startsWith('<hr')) {
-        if (paragraphBuffer.length > 0) {
-          result.push('<p>' + paragraphBuffer.join(' ') + '</p>');
-          paragraphBuffer = [];
-        }
-        result.push(line);
-        continue;
-      }
-      
-      paragraphBuffer.push(line);
-    }
-    
-    if (paragraphBuffer.length > 0) {
-      result.push('<p>' + paragraphBuffer.join(' ') + '</p>');
-    }
-    
-    html = result.join('\n');
-    html = html.replace(/<p><\/p>/g, '');
-    
-    return html;
-  }
+  // ---------- ABOUT PAGE ----------
+  function renderAboutPage() {}
 
   // ---------- BREATHE LOGIC ----------
   const patternSelect = document.getElementById('patternSelect');
@@ -2126,7 +2109,7 @@
       {title:'Name the action precisely.',hint:'Keep it specific. Avoid “I always” and “I never.”'},
       {title:'Responsibility is not punishment.',hint:'Guilt can point toward your values. Endless self-attack does not make things right.'},
       {title:'Choose one proportionate next step.',hint:'Apologise, correct, replace, clarify or change a behaviour. You do not have to send anything now.'},
-      {title:'Let the next action carry the lesson.',hint:'Make it small, specific and safe—then allow yourself to stop rehearsing the punishment.'}
+      {title:'Let the next action carry the lesson.',hint:'Make it small, specific and safe. Then allow yourself to stop rehearsing the punishment.'}
     ]
   };
   const repairIntro=document.getElementById('repairIntro');
@@ -2293,7 +2276,7 @@
     const t1 = setTimeout(()=>{
       nowAngerCue.textContent = 'hold';
       const t2 = setTimeout(()=>{
-        nowAngerCue.textContent = 'release — let it drop';
+        nowAngerCue.textContent = 'release. Let it drop';
         nowAngerOrb.style.transform = 'scale(1.15)';
         buzz([12,40,12]);
         const t3 = setTimeout(()=>{
