@@ -775,7 +775,8 @@
   .about-hero-promises span::before{display:inline-block;width:7px;height:7px;margin-right:9px;border:1px solid var(--about-sage);border-radius:50%;content:""}
 
   .about-section{padding:92px 52px;border-bottom:1px solid var(--about-line)}
-  .about-section.is-surface{background:var(--about-surface)}
+  .about-hero+.about-section{margin-top:26px}
+  .about-section.is-surface{overflow:hidden;border-radius:28px;background:var(--about-surface)}
   .about-intro-grid{display:grid;grid-template-columns:minmax(240px,.72fr) minmax(0,1.28fr);gap:72px}
   .about-body{max-width:680px;color:var(--about-muted);font-size:16px;line-height:1.72}
   .about-body p{margin:0 0 20px}.about-body p:last-child{margin-bottom:0}
@@ -808,7 +809,9 @@
   .about-character span{display:block;margin-top:12px;color:var(--about-muted)}
   .about-name-closing{margin-top:24px}
 
-  .about-closing{margin:0;padding:92px 28px 96px;border-radius:0;background:radial-gradient(circle at 50% 115%,rgba(169,197,183,.13),transparent 45%),var(--about-surface)}
+  .about-closing{margin:0;padding:92px 28px 96px;border-radius:28px;background:radial-gradient(circle at 50% 115%,rgba(169,197,183,.13),transparent 45%),var(--about-surface);text-align:center}
+  .about-closing .about-eyebrow,.about-closing h2,.about-closing p{margin-left:auto;margin-right:auto;text-align:center}
+  .about-closing h2{margin-top:13px;margin-bottom:17px}
   .about-closing p{color:var(--about-muted)}
   .about-closing a{border:1px solid var(--about-sage);background:var(--about-sage);color:#17201c;transition:background .25s ease,color .25s ease,transform .25s ease}
   .about-closing a:hover{background:transparent;color:var(--about-ink);transform:translateY(-1px)}
@@ -823,7 +826,9 @@
     .about-principle{min-height:0}
     .about-name-mark{padding:0}
     .about-character-notes{grid-template-columns:1fr}
-    .about-closing{margin:0;padding:72px 22px 78px;border-radius:0}
+    .about-hero+.about-section{margin-top:18px}
+    .about-section.is-surface,.about-closing{border-radius:24px}
+    .about-closing{margin:0;padding:72px 22px 78px}
   }
   @media(max-width:520px){.about-tool{grid-template-columns:30px minmax(0,1fr)}.about-tool p{grid-column:2}}
 
