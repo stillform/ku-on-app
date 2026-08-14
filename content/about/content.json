@@ -1,0 +1,94 @@
+{
+  "hero": {
+    "eyebrow": "About kū-on",
+    "heading": "A little quiet when you need it.",
+    "intro": "kū-on is a private set of short exercises for moments when anxiety, shame, anger, resentment, or overwhelm feels hard to hold. Breathe, ground, release tension, or take one small step through what is happening.",
+    "promises": [
+      "No account",
+      "Nothing to maintain",
+      "Nothing to get right"
+    ]
+  },
+  "tools": {
+    "eyebrow": "For the moment you’re in",
+    "heading": "Begin wherever you are.",
+    "intro": "If you know what might help, go straight there. If you do not, choose what feels loudest and kū-on will offer one small place to start.",
+    "emphasis": "Use one exercise or stay a little longer. Everything after the first step is optional.",
+    "items": [
+      {
+        "name": "Right now",
+        "description": "Choose what feels loudest and begin with a quick reset."
+      },
+      {
+        "name": "Breathe",
+        "description": "Follow a simple rhythm when your body is running fast."
+      },
+      {
+        "name": "Ground",
+        "description": "Bring your attention back to what is here around you."
+      },
+      {
+        "name": "Settle",
+        "description": "Release some of the tension your body is carrying."
+      },
+      {
+        "name": "Let go",
+        "description": "Put down what you are carrying in words that are never saved or sent."
+      },
+      {
+        "name": "Untangle",
+        "description": "Work gently through shame or guilt without turning yourself into the punishment."
+      }
+    ]
+  },
+  "origin": {
+    "eyebrow": "Why it exists",
+    "statement": "“I made kū-on for the moments when I needed help before I could explain what was wrong.”",
+    "label": "A personal project",
+    "copy": "I wanted something I could open immediately, use without preparation, and leave without turning it into another obligation. The aim is deliberately small: help make the next few minutes feel more manageable."
+  },
+  "expectations": {
+    "eyebrow": "What you can expect",
+    "heading": "Designed to ask very little of you.",
+    "items": [
+      {
+        "heading": "Open and begin",
+        "copy": "No account or setup is required. You do not need to name the feeling perfectly before you start."
+      },
+      {
+        "heading": "Private by default",
+        "copy": "What you enter is not saved, uploaded, or sent by kū-on. Your difficult moments remain yours."
+      },
+      {
+        "heading": "No performance",
+        "copy": "No scores, streaks, or pressure to continue. Stopping after one breath is still using the app as intended."
+      }
+    ]
+  },
+  "name_section": {
+    "displayed_name": "空穏",
+    "pronunciation": "kū-on · roughly “koo-on”",
+    "eyebrow": "The name",
+    "heading": "A name for openness and calm.",
+    "body": "kū-on is a coined name, written symbolically as 空穏. It is not an established Japanese word. The characters were chosen for the ideas they hold here.",
+    "characters": [
+      {
+        "character": "空",
+        "reading": "kū",
+        "meaning": "Sky, space, or emptiness"
+      },
+      {
+        "character": "穏",
+        "reading": "on",
+        "meaning": "Calm, gentle, or peaceful"
+      }
+    ],
+    "closing": "Together, they point to the feeling behind the project: a little more room around whatever is happening."
+  },
+  "closing": {
+    "eyebrow": "Take only what helps",
+    "heading": "You do not have to solve everything right now.",
+    "copy": "Use one exercise, stay for a few minutes, or leave whenever you want.",
+    "cta": "Start with what feels loudest ›"
+  }
+}

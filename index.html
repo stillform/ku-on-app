@@ -1428,6 +1428,7 @@
   window.addEventListener('load', () => {
     const view = window.location.hash.replace('#', '') || 'now';
     navigateTo(view);
+    loadCmsContent();
   });
 
   window.addEventListener('scroll', () => {
@@ -1452,6 +1453,193 @@
 
   // ---------- ABOUT PAGE ----------
   function renderAboutPage() {}
+
+  // ---------- PAGES CMS CONTENT ----------
+  const cmsPages = ['breathe', 'ground', 'settle', 'about'];
+
+  function validText(value) {
+    return typeof value === 'string' && value.trim().length > 0;
+  }
+
+  function setText(element, value) {
+    if (element && validText(value)) element.textContent = value;
+  }
+
+  function setTwoLineText(element, first, second) {
+    if (!element || !validText(first) || !validText(second)) return;
+    element.replaceChildren(document.createTextNode(first), document.createElement('br'), document.createTextNode(second));
+  }
+
+  function replaceStringList(target, source) {
+    if (!Array.isArray(source) || !source.length || !source.every(validText)) return false;
+    target.splice(0, target.length, ...source);
+    return true;
+  }
+
+  function setPatternCopy(name, label, description) {
+    const button = document.querySelector(`#patternSelect [data-name="${name}"]`);
+    if (!button) return;
+    if (validText(label) && button.firstChild) button.firstChild.nodeValue = label;
+    setText(button.querySelector('small'), description);
+  }
+
+  function setToggleCopy(button, label) {
+    if (!button || !validText(label)) return;
+    const icon = button.querySelector('.audio-icon');
+    if (!icon) return;
+    button.replaceChildren(icon, document.createTextNode(` ${label}`));
+  }
+
+  function applyBreatheContent(content) {
+    if (!content || typeof content !== 'object') return;
+    if (validText(content.ready_heading)) breatheReadyHeading = content.ready_heading;
+    replaceStringList(readyLines, content.ready_lines);
+    replaceStringList(closingLines, content.closing_lines);
+    setText(document.querySelector('#view-breathe .closing-hint'), content.closing_hint);
+    setText(document.querySelector('#view-breathe .breath-controls > .control-group .control-label'), content.rhythm_label);
+    setPatternCopy('box', content.box_label, content.box_description);
+    setPatternCopy('release', content.release_label, content.release_description);
+    setPatternCopy('even', content.even_label, content.even_description);
+    setText(sessionSettings.querySelector('summary'), content.settings_label);
+    setText(sessionSettings.querySelector('.control-label'), content.length_label);
+    setText(durationSelect.querySelector('[data-mins="1"]'), content.one_minute_label);
+    setText(durationSelect.querySelector('[data-mins="3"]'), content.three_minute_label);
+    setText(durationSelect.querySelector('[data-mins="5"]'), content.five_minute_label);
+    setToggleCopy(musicToggle, content.sound_label);
+    setToggleCopy(voiceToggle, content.voice_label);
+    if (validText(content.begin_label)) breatheButtonLabels.begin = content.begin_label;
+    if (validText(content.end_label)) breatheButtonLabels.end = content.end_label;
+    startBtn.textContent = running ? breatheButtonLabels.end : breatheButtonLabels.begin;
+    if (!running) resetToReadyVisuals();
+  }
+
+  function applyGroundContent(content) {
+    if (!content || typeof content !== 'object') return;
+    setText(document.querySelector('#view-ground > .card-title'), content.title);
+    setText(document.querySelector('#view-ground > .card-sub'), content.description);
+    setText(document.querySelector('#view-ground .ground-optional summary'), content.optional_prompt);
+    setText(document.getElementById('groundNext'), content.next_label);
+    setText(document.getElementById('groundReset'), content.reset_label);
+    setTwoLineText(groundFinish, content.finish_line_one, content.finish_line_two);
+    if (Array.isArray(content.steps) && content.steps.length === 5 && content.steps.every(step => Number.isFinite(step.count) && validText(step.label) && validText(step.hint))) {
+      senses.splice(0, senses.length, ...content.steps.map(step => ({ n: step.count, label: step.label, hint: step.hint })));
+      groundProgress.replaceChildren(...senses.map(() => document.createElement('i')));
+      showGroundStep(Math.min(groundIdx, senses.length - 1));
+    }
+  }
+
+  function applySettleContent(content) {
+    if (!content || typeof content !== 'object') return;
+    setText(document.querySelector('#view-settle > .card-title'), content.title);
+    setText(document.querySelector('#view-settle > .card-sub'), content.description);
+    setText(document.querySelector('[data-settle="quick"]'), content.quick_label);
+    setText(document.querySelector('[data-settle="full"]'), content.full_label);
+    replaceStringList(quickSettleSteps, content.quick_steps);
+    replaceStringList(fullSettleSteps, content.full_steps);
+    setTwoLineText(settleComplete, content.complete_line_one, content.complete_line_two);
+    setText(settleStart, content.start_label);
+    setText(settleNext, content.next_label);
+    setText(settleRestart, content.restart_label);
+    settleSteps = settleMode === 'quick' ? quickSettleSteps : fullSettleSteps;
+    resetSettle();
+  }
+
+  function applyAboutContent(content) {
+    if (!content || typeof content !== 'object') return;
+    const hero = document.querySelector('.about-hero');
+    setText(hero?.querySelector('.about-eyebrow'), content.hero?.eyebrow);
+    setText(hero?.querySelector('h1'), content.hero?.heading);
+    setText(hero?.querySelector('.about-hero-copy > p'), content.hero?.intro);
+    const promises = hero?.querySelectorAll('.about-hero-promises span') || [];
+    if (Array.isArray(content.hero?.promises)) {
+      content.hero.promises.forEach((value, index) => setText(promises[index], value));
+    }
+
+    const tools = document.querySelector('[aria-labelledby="about-tools-heading"]');
+    setText(tools?.querySelector('.about-eyebrow'), content.tools?.eyebrow);
+    setText(tools?.querySelector('h2'), content.tools?.heading);
+    const toolIntro = tools?.querySelectorAll('.about-body p') || [];
+    setText(toolIntro[0], content.tools?.intro);
+    setText(toolIntro[1]?.querySelector('strong'), content.tools?.emphasis);
+    const toolRows = tools?.querySelectorAll('.about-tool') || [];
+    if (Array.isArray(content.tools?.items)) {
+      content.tools.items.forEach((item, index) => {
+        setText(toolRows[index]?.querySelector('h3'), item.name);
+        setText(toolRows[index]?.querySelector('p'), item.description);
+      });
+    }
+
+    const origin = document.querySelector('[aria-labelledby="about-origin-heading"]');
+    setText(origin?.querySelector('.about-eyebrow'), content.origin?.eyebrow);
+    setText(origin?.querySelector('h2'), content.origin?.statement);
+    setText(origin?.querySelector('.about-origin-note strong'), content.origin?.label);
+    if (origin?.querySelector('.about-origin-note') && validText(content.origin?.copy)) {
+      const label = origin.querySelector('.about-origin-note strong');
+      origin.querySelector('.about-origin-note').replaceChildren(label, document.createTextNode(content.origin.copy));
+    }
+
+    const expectations = document.querySelector('[aria-labelledby="about-expect-heading"]');
+    setText(expectations?.querySelector('.about-eyebrow'), content.expectations?.eyebrow);
+    setText(expectations?.querySelector('h2'), content.expectations?.heading);
+    const principles = expectations?.querySelectorAll('.about-principle') || [];
+    if (Array.isArray(content.expectations?.items)) {
+      content.expectations.items.forEach((item, index) => {
+        setText(principles[index]?.querySelector('h3'), item.heading);
+        setText(principles[index]?.querySelector('p'), item.copy);
+      });
+    }
+
+    const nameSection = document.querySelector('[aria-labelledby="about-name-heading"]');
+    setText(nameSection?.querySelector('.about-name-mark strong'), content.name_section?.displayed_name);
+    setText(nameSection?.querySelector('.about-name-mark span'), content.name_section?.pronunciation);
+    setText(nameSection?.querySelector('.about-name-copy > .about-eyebrow'), content.name_section?.eyebrow);
+    setText(nameSection?.querySelector('h2'), content.name_section?.heading);
+    setText(nameSection?.querySelector('.about-name-copy > .about-body p'), content.name_section?.body);
+    const characters = nameSection?.querySelectorAll('.about-character') || [];
+    if (Array.isArray(content.name_section?.characters)) {
+      content.name_section.characters.forEach((item, index) => {
+        const character = characters[index];
+        if (character && validText(item.character) && validText(item.reading)) {
+          const reading = document.createElement('em');
+          reading.textContent = item.reading;
+          character.querySelector('b')?.replaceChildren(document.createTextNode(`${item.character} `), reading);
+        }
+        setText(character?.querySelector('span'), item.meaning);
+      });
+    }
+    setText(nameSection?.querySelector('.about-name-closing p'), content.name_section?.closing);
+
+    const closing = document.querySelector('.about-closing');
+    setText(closing?.querySelector('.about-eyebrow'), content.closing?.eyebrow);
+    setText(closing?.querySelector('h2'), content.closing?.heading);
+    setText(closing?.querySelector('p'), content.closing?.copy);
+    setText(closing?.querySelector('a'), content.closing?.cta);
+  }
+
+  const cmsContentHandlers = {
+    breathe: applyBreatheContent,
+    ground: applyGroundContent,
+    settle: applySettleContent,
+    about: applyAboutContent
+  };
+
+  async function loadCmsContent() {
+    if (window.location.protocol === 'file:') {
+      document.documentElement.dataset.cmsStatus = 'fallback';
+      return;
+    }
+
+    const results = await Promise.allSettled(cmsPages.map(async page => {
+      const response = await fetch(`content/${page}/content.json`, { cache: 'no-cache' });
+      if (!response.ok) throw new Error(`${page} content returned ${response.status}`);
+      cmsContentHandlers[page](await response.json());
+      return page;
+    }));
+
+    const failed = results.filter(result => result.status === 'rejected');
+    document.documentElement.dataset.cmsStatus = failed.length ? 'partial' : 'loaded';
+    failed.forEach(result => console.warn('Using built-in content fallback:', result.reason));
+  }
 
   // ---------- BREATHE LOGIC ----------
   const patternSelect = document.getElementById('patternSelect');
@@ -1525,6 +1713,8 @@
     'Small thing, real difference.',
     'Good. You can carry that with you.'
   ];
+  let breatheReadyHeading = 'Ready';
+  const breatheButtonLabels = { begin: 'Begin', end: 'End session' };
 
   function randomFrom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
@@ -1904,7 +2094,7 @@
       running = true;
       cycles = 0;
       sessionStartTime = Date.now();
-      startBtn.textContent = 'End session';
+      startBtn.textContent = breatheButtonLabels.end;
       toggleControlsDisabled(true);
       breathCopy.classList.remove('hidden');
       auroraContainer.classList.add('active');
@@ -1942,7 +2132,7 @@
       running = true;
       cycles = 0;
       sessionStartTime = Date.now();
-      startBtn.textContent = 'End session';
+      startBtn.textContent = breatheButtonLabels.end;
       toggleControlsDisabled(true);
       breathCopy.classList.remove('hidden');
       auroraContainer.classList.add('active');
@@ -1971,7 +2161,7 @@
     mistRing.style.opacity = 0;
     mistRing2.style.opacity = 0;
     toggleControlsDisabled(false);
-    startBtn.textContent = 'Begin';
+    startBtn.textContent = breatheButtonLabels.begin;
 
     const elapsedSec = sessionStartTime ? (Date.now() - sessionStartTime) / 1000 : 0;
 
@@ -1983,7 +2173,7 @@
   }
 
   function resetToReadyVisuals(){
-    setPhaseCopy('Ready',randomFrom(readyLines),true);
+    setPhaseCopy(breatheReadyHeading,randomFrom(readyLines),true);
     releaseAmbient.classList.remove('stage-inhale','stage-hold','stage-exhale');
     releaseMistField.classList.remove('active','stage-inhale','stage-hold','stage-exhale');
     releaseGlowNew.classList.remove('active');

@@ -1,0 +1,27 @@
+{
+  "title": "Settle",
+  "description": "Release some of what your body is carrying. Choose the amount of time you have.",
+  "quick_label": "Quick · 30 sec",
+  "full_label": "Full · 1 min",
+  "quick_steps": [
+    "Feel both feet making contact with the floor.",
+    "Lift your shoulders gently. Let them drop as you breathe out.",
+    "Unclench your jaw and soften the space between your eyebrows.",
+    "Let one exhale run a little longer. Nothing else needs doing right now."
+  ],
+  "full_steps": [
+    "Find a position where you don't have to hold yourself up. Let your shoulders drop.",
+    "Notice your feet on the ground. Press them down gently, then let go.",
+    "Clench your hands into fists for a moment. Then release, and feel the difference.",
+    "Roll your shoulders up toward your ears. Hold. Then let them fall.",
+    "Unclench your jaw. Let your tongue rest away from the roof of your mouth.",
+    "Soften your forehead and the space between your eyebrows.",
+    "Take one slow breath. Let the exhale be a little longer, without forcing it.",
+    "Notice you're still here, still breathing. That's enough for right now."
+  ],
+  "complete_line_one": "You gave your body a little less to hold.",
+  "complete_line_two": "That is real.",
+  "start_label": "Start",
+  "next_label": "Next",
+  "restart_label": "Restart"
+}

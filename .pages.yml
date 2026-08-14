@@ -1,0 +1,165 @@
+# Canonical Pages CMS configuration.
+
+media: images
+
+content:
+  - name: breathe
+    label: Breathe
+    type: file
+    path: content/breathe/content.json
+    format: json
+    operations: { delete: false }
+    fields:
+      - { name: ready_heading, label: Ready heading, type: string, required: true }
+      - { name: ready_lines, label: Ready messages, type: string, list: true, required: true }
+      - { name: closing_lines, label: Closing messages, type: string, list: true, required: true }
+      - { name: closing_hint, label: Closing hint, type: string, required: true }
+      - { name: rhythm_label, label: Rhythm label, type: string, required: true }
+      - { name: box_label, label: Box label, type: string, required: true }
+      - { name: box_description, label: Box description, type: string, required: true }
+      - { name: release_label, label: Release label, type: string, required: true }
+      - { name: release_description, label: Release description, type: string, required: true }
+      - { name: even_label, label: Even label, type: string, required: true }
+      - { name: even_description, label: Even description, type: string, required: true }
+      - { name: settings_label, label: Settings label, type: string, required: true }
+      - { name: length_label, label: Session length label, type: string, required: true }
+      - { name: one_minute_label, label: One minute option, type: string, required: true }
+      - { name: three_minute_label, label: Three minute option, type: string, required: true }
+      - { name: five_minute_label, label: Five minute option, type: string, required: true }
+      - { name: sound_label, label: Sound toggle, type: string, required: true }
+      - { name: voice_label, label: Voice toggle, type: string, required: true }
+      - { name: begin_label, label: Begin button, type: string, required: true }
+      - { name: end_label, label: End session button, type: string, required: true }
+
+  - name: ground
+    label: Ground
+    type: file
+    path: content/ground/content.json
+    format: json
+    operations: { delete: false }
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: description, label: Description, type: text, required: true }
+      - { name: optional_prompt, label: Optional input prompt, type: string, required: true }
+      - { name: next_label, label: Next button, type: string, required: true }
+      - { name: reset_label, label: Reset button, type: string, required: true }
+      - { name: finish_line_one, label: Completion line one, type: string, required: true }
+      - { name: finish_line_two, label: Completion line two, type: string, required: true }
+      - name: steps
+        label: Grounding steps
+        type: object
+        required: true
+        list:
+          min: 5
+          max: 5
+          collapsible: { collapsed: true, summary: "{count} · {label}" }
+        fields:
+          - { name: count, label: Count, type: number, required: true }
+          - { name: label, label: Label, type: string, required: true }
+          - { name: hint, label: Hint, type: text, required: true }
+
+  - name: settle
+    label: Settle
+    type: file
+    path: content/settle/content.json
+    format: json
+    operations: { delete: false }
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: description, label: Description, type: text, required: true }
+      - { name: quick_label, label: Quick option, type: string, required: true }
+      - { name: full_label, label: Full option, type: string, required: true }
+      - { name: quick_steps, label: Quick steps, type: string, list: true, required: true }
+      - { name: full_steps, label: Full steps, type: string, list: true, required: true }
+      - { name: complete_line_one, label: Completion line one, type: string, required: true }
+      - { name: complete_line_two, label: Completion line two, type: string, required: true }
+      - { name: start_label, label: Start button, type: string, required: true }
+      - { name: next_label, label: Next button, type: string, required: true }
+      - { name: restart_label, label: Restart button, type: string, required: true }
+
+  - name: about
+    label: About
+    type: file
+    path: content/about/content.json
+    format: json
+    operations: { delete: false }
+    fields:
+      - name: hero
+        label: Hero
+        type: object
+        fields:
+          - { name: eyebrow, label: Eyebrow, type: string, required: true }
+          - { name: heading, label: Heading, type: string, required: true }
+          - { name: intro, label: Introduction, type: text, required: true }
+          - { name: promises, label: Short promises, type: string, list: { min: 3, max: 3 }, required: true }
+      - name: tools
+        label: For the moment you're in
+        type: object
+        fields:
+          - { name: eyebrow, label: Eyebrow, type: string, required: true }
+          - { name: heading, label: Heading, type: string, required: true }
+          - { name: intro, label: Introduction, type: text, required: true }
+          - { name: emphasis, label: Emphasized line, type: text, required: true }
+          - name: items
+            label: Tools
+            type: object
+            list:
+              min: 6
+              max: 6
+              collapsible: { collapsed: true, summary: "{name}" }
+            fields:
+              - { name: name, label: Name, type: string, required: true }
+              - { name: description, label: Description, type: text, required: true }
+      - name: origin
+        label: Why it exists
+        type: object
+        fields:
+          - { name: eyebrow, label: Eyebrow, type: string, required: true }
+          - { name: statement, label: Primary statement, type: text, required: true }
+          - { name: label, label: Supporting label, type: string, required: true }
+          - { name: copy, label: Supporting copy, type: text, required: true }
+      - name: expectations
+        label: What you can expect
+        type: object
+        fields:
+          - { name: eyebrow, label: Eyebrow, type: string, required: true }
+          - { name: heading, label: Heading, type: string, required: true }
+          - name: items
+            label: Principles
+            type: object
+            list:
+              min: 3
+              max: 3
+              collapsible: { collapsed: true, summary: "{heading}" }
+            fields:
+              - { name: heading, label: Heading, type: string, required: true }
+              - { name: copy, label: Copy, type: text, required: true }
+      - name: name_section
+        label: The name
+        type: object
+        fields:
+          - { name: displayed_name, label: Displayed name, type: string, required: true }
+          - { name: pronunciation, label: Pronunciation, type: string, required: true }
+          - { name: eyebrow, label: Eyebrow, type: string, required: true }
+          - { name: heading, label: Heading, type: string, required: true }
+          - { name: body, label: Body, type: text, required: true }
+          - name: characters
+            label: Characters
+            type: object
+            list:
+              min: 2
+              max: 2
+              collapsible: { collapsed: true, summary: "{character} · {reading}" }
+            fields:
+              - { name: character, label: Character, type: string, required: true }
+              - { name: reading, label: Reading, type: string, required: true }
+              - { name: meaning, label: Meaning, type: string, required: true }
+          - { name: closing, label: Closing copy, type: text, required: true }
+      - name: closing
+        label: Closing call to action
+        type: object
+        fields:
+          - { name: eyebrow, label: Eyebrow, type: string, required: true }
+          - { name: heading, label: Heading, type: string, required: true }
+          - { name: copy, label: Copy, type: text, required: true }
+          - { name: cta, label: Button label, type: string, required: true }
