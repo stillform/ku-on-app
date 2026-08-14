@@ -1,0 +1,62 @@
+{
+  "title": "Untangle",
+  "description": "A short path for shame or guilt. You can take responsibility without turning yourself into the punishment.",
+  "intro": "Which thought feels closer right now?",
+  "shame_option": "Something is wrong with me",
+  "shame_option_hint": "start with shame",
+  "guilt_option": "I did something I regret",
+  "guilt_option_hint": "start with guilt",
+  "caution": "If guilt is being used to pressure, threaten or control you, pause before contacting anyone. Come back to your body first.",
+  "choose_again_label": "choose again",
+  "continue_label": "continue",
+  "start_again_label": "start again",
+  "ground_prefix": "If this is making you feel more flooded, stop here and",
+  "ground_link": "come back to Ground",
+  "shame": {
+    "kicker": "shame · soften the verdict",
+    "steps": [
+      {
+        "title": "Name the feeling, not yourself.",
+        "hint": "Try: “Shame is here.” Not: “I am shameful.”"
+      },
+      {
+        "title": "A painful feeling is not a verdict.",
+        "hint": "You are more than the moment your mind is replaying."
+      },
+      {
+        "title": "Borrow a kinder voice.",
+        "hint": "What would you say to someone you care about in this exact situation?"
+      },
+      {
+        "title": "Stay on your own side.",
+        "hint": "You can learn, make amends and grow without abandoning yourself."
+      }
+    ],
+    "complete_heading": "You stayed with yourself. That matters.",
+    "complete_hint": "You can be accountable and still deserve your own care."
+  },
+  "guilt": {
+    "kicker": "guilt · find the next step",
+    "steps": [
+      {
+        "title": "Name the action precisely.",
+        "hint": "Keep it specific. Avoid “I always” and “I never.”"
+      },
+      {
+        "title": "Responsibility is not punishment.",
+        "hint": "Guilt can point toward your values. Endless self-attack does not make things right."
+      },
+      {
+        "title": "Choose one proportionate next step.",
+        "hint": "Apologise, correct, replace, clarify or change a behaviour. You do not have to send anything now."
+      },
+      {
+        "title": "Let the next action carry the lesson.",
+        "hint": "Make it small, specific and safe. Then allow yourself to stop rehearsing the punishment."
+      }
+    ],
+    "complete_heading": "One honest next step matters more than another hour of punishment.",
+    "complete_hint": "Choose the next right action when you are steady enough. Nothing needs to be sent from this screen."
+  },
+  "finish_kicker": "a place to stop"
+}

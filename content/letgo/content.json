@@ -1,0 +1,17 @@
+{
+  "title": "Let go",
+  "description": "An unsent note for something you are still carrying. This is not forgiveness, and it does not excuse what happened.",
+  "privacy": "Nothing is saved, uploaded or sent.",
+  "settle_heading": "Come down one notch first.",
+  "settle_copy": "Feel your feet against the floor. Let your shoulders drop, then allow one slow exhale before you write.",
+  "begin_label": "I’m ready to write",
+  "prompt": "Say what happened, what you felt, and what you needed.",
+  "prompt_hint": "Try to describe rather than relive. You can stop at any moment.",
+  "placeholder": "What I needed you to understand was…",
+  "ground_prefix": "Feeling more activated?",
+  "ground_link": "Come back to Ground",
+  "release_label": "Set it down",
+  "complete_heading": "You set it down for now.",
+  "complete_copy": "It does not have to be solved tonight.",
+  "again_label": "Write another"
+}

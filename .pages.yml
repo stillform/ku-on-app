@@ -163,3 +163,143 @@ content:
           - { name: heading, label: Heading, type: string, required: true }
           - { name: copy, label: Copy, type: text, required: true }
           - { name: cta, label: Button label, type: string, required: true }
+
+  - name: now
+    label: Right now
+    type: file
+    path: content/now/content.json
+    format: json
+    operations: { delete: false }
+    fields:
+      - { name: mark, label: Section label, type: string, required: true }
+      - { name: primary_button, label: Primary button, type: string, required: true }
+      - { name: primary_hint, label: Primary hint, type: string, required: true }
+      - { name: route_toggle, label: Choice menu button, type: string, required: true }
+      - { name: route_back, label: Back button, type: string, required: true }
+      - { name: route_heading, label: Choice menu heading, type: string, required: true }
+      - { name: route_intro_line_one, label: Choice introduction line one, type: string, required: true }
+      - { name: route_intro_line_two, label: Choice introduction line two, type: string, required: true }
+      - { name: anxious_option, label: Panic option, type: string, required: true }
+      - { name: spiral_option, label: Looping thoughts option, type: string, required: true }
+      - { name: anger_option, label: Anger option, type: string, required: true }
+      - { name: heavier_label, label: Heavier feelings label, type: string, required: true }
+      - { name: shame_option, label: Shame or guilt option, type: string, required: true }
+      - { name: resentment_option, label: Resentment option, type: string, required: true }
+      - { name: stop_label, label: Stop buttons, type: string, required: true }
+      - name: sigh
+        label: Panic reset
+        type: object
+        fields:
+          - { name: inhale, label: Inhale cue, type: string, required: true }
+          - { name: inhale_hint, label: Inhale guidance, type: string, required: true }
+          - { name: second_inhale, label: Second inhale cue, type: string, required: true }
+          - { name: second_inhale_hint, label: Second inhale guidance, type: string, required: true }
+          - { name: exhale, label: Exhale cue, type: string, required: true }
+          - { name: exhale_hint, label: Exhale guidance, type: string, required: true }
+          - { name: phrases, label: Reassuring phrases, type: string, list: true, required: true }
+      - name: anger
+        label: Anger reset
+        type: object
+        fields:
+          - { name: clench, label: Clench cue, type: string, required: true }
+          - { name: hold, label: Hold cue, type: string, required: true }
+          - { name: release, label: Release cue, type: string, required: true }
+          - { name: hint, label: Guidance, type: text, required: true }
+          - { name: phrase, label: Reassuring phrase, type: string, required: true }
+      - name: unhook
+        label: Looping thoughts reset
+        type: object
+        fields:
+          - { name: kicker, label: Section label, type: string, required: true }
+          - { name: steps, label: Steps, type: string, list: true, required: true }
+          - { name: complete, label: Completion message, type: text, required: true }
+          - { name: follow_prefix, label: Follow-up prompt, type: string, required: true }
+          - { name: follow_link, label: Follow-up link, type: string, required: true }
+      - name: reset
+        label: Quick reset
+        type: object
+        fields:
+          - { name: kicker, label: Section label, type: string, required: true }
+          - { name: steps, label: Steps, type: string, list: true, required: true }
+          - { name: complete, label: Completion message, type: text, required: true }
+          - { name: follow_prefix, label: Follow-up prompt, type: string, required: true }
+          - { name: breathe_link, label: Breathe link, type: string, required: true }
+          - { name: connector, label: Link connector, type: string, required: true }
+          - { name: ground_link, label: Ground link, type: string, required: true }
+
+  - name: letgo
+    label: Let go
+    type: file
+    path: content/letgo/content.json
+    format: json
+    operations: { delete: false }
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: description, label: Description, type: text, required: true }
+      - { name: privacy, label: Privacy statement, type: string, required: true }
+      - { name: settle_heading, label: Preparation heading, type: string, required: true }
+      - { name: settle_copy, label: Preparation copy, type: text, required: true }
+      - { name: begin_label, label: Begin writing button, type: string, required: true }
+      - { name: prompt, label: Writing prompt, type: text, required: true }
+      - { name: prompt_hint, label: Writing prompt hint, type: text, required: true }
+      - { name: placeholder, label: Text area placeholder, type: text, required: true }
+      - { name: ground_prefix, label: Grounding prompt, type: string, required: true }
+      - { name: ground_link, label: Grounding link, type: string, required: true }
+      - { name: release_label, label: Release button, type: string, required: true }
+      - { name: complete_heading, label: Completion heading, type: string, required: true }
+      - { name: complete_copy, label: Completion copy, type: text, required: true }
+      - { name: again_label, label: Write again button, type: string, required: true }
+
+  - name: untangle
+    label: Untangle
+    type: file
+    path: content/untangle/content.json
+    format: json
+    operations: { delete: false }
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: description, label: Description, type: text, required: true }
+      - { name: intro, label: Opening question, type: text, required: true }
+      - { name: shame_option, label: Shame option, type: string, required: true }
+      - { name: shame_option_hint, label: Shame option hint, type: string, required: true }
+      - { name: guilt_option, label: Guilt option, type: string, required: true }
+      - { name: guilt_option_hint, label: Guilt option hint, type: string, required: true }
+      - { name: caution, label: Safety note, type: text, required: true }
+      - { name: choose_again_label, label: Choose again button, type: string, required: true }
+      - { name: continue_label, label: Continue button, type: string, required: true }
+      - { name: start_again_label, label: Start again button, type: string, required: true }
+      - { name: ground_prefix, label: Grounding prompt, type: string, required: true }
+      - { name: ground_link, label: Grounding link, type: string, required: true }
+      - { name: finish_kicker, label: Completion label, type: string, required: true }
+      - name: shame
+        label: Shame path
+        type: object
+        fields:
+          - { name: kicker, label: Path label, type: string, required: true }
+          - name: steps
+            label: Steps
+            type: object
+            list:
+              min: 1
+              collapsible: { collapsed: true, summary: "{title}" }
+            fields:
+              - { name: title, label: Step, type: string, required: true }
+              - { name: hint, label: Guidance, type: text, required: true }
+          - { name: complete_heading, label: Completion heading, type: text, required: true }
+          - { name: complete_hint, label: Completion guidance, type: text, required: true }
+      - name: guilt
+        label: Guilt path
+        type: object
+        fields:
+          - { name: kicker, label: Path label, type: string, required: true }
+          - name: steps
+            label: Steps
+            type: object
+            list:
+              min: 1
+              collapsible: { collapsed: true, summary: "{title}" }
+            fields:
+              - { name: title, label: Step, type: string, required: true }
+              - { name: hint, label: Guidance, type: text, required: true }
+          - { name: complete_heading, label: Completion heading, type: text, required: true }
+          - { name: complete_hint, label: Completion guidance, type: text, required: true }
