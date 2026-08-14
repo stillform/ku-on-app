@@ -1430,10 +1430,69 @@
   let musicOn = true;
   let voiceOn = true;
   let audioCtx = null;
-  let masterGain = null, waveGain = null, waveFilter = null, noiseSource = null, padGains = [];
-  let narrationVoice = null;
-  let voiceReady = false;
+  let masterGain = null, ambientGain = null, ambientSource = null;
+  let ambientStopTimer = null;
+  let currentNarration = null;
   const silentUnlock = document.getElementById('silentUnlock');
+  const ambientAudio = new Audio('assets/audio/ambient/kuon-distant-tide-loop-web-72s.mp3');
+  ambientAudio.preload = 'auto';
+  ambientAudio.loop = true;
+  ambientAudio.playsInline = true;
+
+  const narrationClips = {
+    box: {
+      0: ['box-inhale-01.mp3','box-inhale-02.mp3'],
+      1: ['box-hold-one-01.mp3','box-hold-one-02.mp3'],
+      2: ['box-exhale-01.mp3','box-exhale-02.mp3'],
+      3: ['box-hold-two-01.mp3','box-hold-two-02.mp3']
+    },
+    release: {
+      0: ['release-inhale-01.mp3','release-inhale-02.mp3'],
+      1: ['release-hold-one-01.mp3','release-hold-one-02.mp3'],
+      2: ['release-exhale-01.mp3','release-exhale-02.mp3']
+    },
+    even: {
+      0: ['even-inhale-01.mp3','even-inhale-02.mp3'],
+      2: ['even-exhale-01.mp3','even-exhale-02.mp3']
+    }
+  };
+  const narrationBasePath = 'assets/audio/narration/';
+  const narrationAudio = new Map();
+
+  function preloadNarration(){
+    Object.values(narrationClips).forEach(patternPhases=>{
+      Object.values(patternPhases).flat().forEach(filename=>{
+        const src = narrationBasePath + filename;
+        if(narrationAudio.has(src)) return;
+        const audio = new Audio(src);
+        audio.preload = 'auto';
+        audio.playsInline = true;
+        audio.volume = 0.82;
+        narrationAudio.set(src,audio);
+        audio.load();
+      });
+    });
+  }
+
+  function setAmbientDuck(ducked){
+    if(!audioCtx || !ambientGain) return;
+    const now = audioCtx.currentTime;
+    const target = musicOn ? (ducked ? 0.42 : 1) : 0;
+    ambientGain.gain.cancelScheduledValues(now);
+    ambientGain.gain.setValueAtTime(ambientGain.gain.value,now);
+    ambientGain.gain.linearRampToValueAtTime(target,now + (ducked ? 0.18 : 0.55));
+  }
+
+  function stopNarration(restoreAmbient=true){
+    if(currentNarration){
+      currentNarration.onended = null;
+      currentNarration.onerror = null;
+      currentNarration.pause();
+      try{ currentNarration.currentTime = 0; }catch(e){}
+      currentNarration = null;
+    }
+    if(restoreAmbient) setAmbientDuck(false);
+  }
 
   function unlockAudioForIOS(){
     if(!silentUnlock) return;
@@ -1449,16 +1508,18 @@
     musicOn = !musicOn;
     musicToggle.classList.toggle('active', musicOn);
     musicToggle.setAttribute('aria-pressed', musicOn);
-    if(masterGain){
-      masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-      masterGain.gain.linearRampToValueAtTime(musicOn ? 1 : 0, audioCtx.currentTime + 0.4);
+    if(ambientGain){
+      const now = audioCtx.currentTime;
+      ambientGain.gain.cancelScheduledValues(now);
+      ambientGain.gain.setValueAtTime(ambientGain.gain.value,now);
+      ambientGain.gain.linearRampToValueAtTime(musicOn ? (currentNarration ? 0.42 : 1) : 0, now + 0.4);
     }
   });
   voiceToggle.addEventListener('click', ()=>{
     voiceOn = !voiceOn;
     voiceToggle.classList.toggle('active', voiceOn);
     voiceToggle.setAttribute('aria-pressed', voiceOn);
-    if(!voiceOn && 'speechSynthesis' in window) speechSynthesis.cancel();
+    if(!voiceOn) stopNarration();
   });
 
   patternSelect.addEventListener('click', (e)=>{
@@ -1582,31 +1643,7 @@
     }
     setPhase(seconds, index);
 
-    try {
-      if(audioCtx && waveGain) {
-        const now = audioCtx.currentTime;
-        const dur = Math.max(seconds, 0.8);
-        const targets = [
-          { wave: 0.40, filt: 250, pad: 0.6 },
-          { wave: 0.40, filt: 250, pad: 0.6 },
-          { wave: 0.12, filt: 120, pad: 0.3 },
-          { wave: 0.12, filt: 120, pad: 0.3 },
-        ];
-        const t = targets[index];
-        waveGain.gain.cancelScheduledValues(now);
-        waveGain.gain.linearRampToValueAtTime(t.wave, now + dur);
-        waveFilter.frequency.cancelScheduledValues(now);
-        waveFilter.frequency.linearRampToValueAtTime(t.filt, now + dur);
-        padGains.forEach(g => {
-          g.gain.cancelScheduledValues(now);
-          g.gain.linearRampToValueAtTime(t.pad * (0.015 - padGains.indexOf(g) * 0.002), now + dur);
-        });
-      }
-    } catch(e) {
-      console.warn('Audio ramp error:', e);
-    }
-
-    if(seconds > 0) speak(index);
+    if(seconds > 0) playNarrationCue(index);
     if(index === 0) buzz(18);
     if(index === 2) buzz([12,40,12]);
 
@@ -1627,65 +1664,32 @@
     }, wait*1000);
   }
 
-  const narrationPhrases = {
-    box: [
-      ['Breathe in...', 'In, nice and slow...'],
-      ['Hold gently...', 'Stay here...'],
-      ['Breathe out...', 'Out, slowly...'],
-      ['Rest here...', 'Hold softly...']
-    ],
-    release: [
-      ['Draw it in gently...', 'Breathe in...'],
-      ['Hold, without strain...', 'Stay soft...'],
-      ['And let it all go...', 'Release, slowly...'],
-      []
-    ],
-    even: [
-      ['Breathe in, evenly...', 'In, nice and slow...'],
-      [],
-      ['Breathe out, evenly...', 'Out, nice and slow...'],
-      []
-    ]
-  };
+  function playNarrationCue(phaseIndex){
+    if(!voiceOn) return;
+    const variants = narrationClips[patternName]?.[phaseIndex] || [];
+    if(!variants.length) return;
+    const filename = variants[cycles % variants.length];
+    const audio = narrationAudio.get(narrationBasePath + filename);
+    if(!audio) return;
 
-  function pickVoice(){
-    if(!('speechSynthesis' in window)) return;
-    const voices = speechSynthesis.getVoices();
-    if(!voices.length) return;
-    let v = voices.find(v => /natural|online|premium|enhanced/i.test(v.name) && v.lang.startsWith('en'));
-    if(!v){
-      const preferred = ['Samantha','Victoria','Karen','Moira','Tessa','Google UK English Female','Google US English Female','Ellen','Zira'];
-      for (const name of preferred) {
-        const found = voices.find(v => v.name && v.name.includes(name));
-        if (found) { v = found; break; }
-      }
-    }
-    if(!v){
-      v = voices.find(v => /female|woman|girl/i.test(v.name) && v.lang.startsWith('en'))
-        || voices.find(v => v.lang.startsWith('en'))
-        || voices[0];
-    }
-    if(v){ narrationVoice = v; voiceReady = true; }
-  }
-
-  function speak(phaseIndex){
-    if(!voiceOn || !('speechSynthesis' in window)) return;
-    const phrases = narrationPhrases[patternName]?.[phaseIndex] || [];
-    if(!phrases.length) return;
-    const text = randomFrom(phrases);
-    try {
-      speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.rate = 0.80 + Math.random()*0.08;
-      utter.pitch = 0.96 + Math.random()*0.08;
-      utter.volume = 0.85;
-      if(voiceReady && narrationVoice) utter.voice = narrationVoice;
-      setTimeout(() => {
-        speechSynthesis.speak(utter);
-      }, 80);
-    } catch(e) {
-      console.warn('Speech error:', e);
-    }
+    stopNarration(false);
+    currentNarration = audio;
+    audio.currentTime = 0;
+    audio.onended = ()=>{
+      if(currentNarration === audio) currentNarration = null;
+      setAmbientDuck(false);
+    };
+    audio.onerror = ()=>{
+      if(currentNarration === audio) currentNarration = null;
+      setAmbientDuck(false);
+      console.warn('Narration clip could not be played:',filename);
+    };
+    setAmbientDuck(true);
+    const playPromise = audio.play();
+    if(playPromise) playPromise.catch(()=>{
+      if(currentNarration === audio) currentNarration = null;
+      setAmbientDuck(false);
+    });
   }
 
   function playChime(){
@@ -1715,18 +1719,32 @@
   }
 
   function fadeAmbientOut(){
-    if(!audioCtx) return;
+    if(!audioCtx || !ambientGain) return;
     try {
       const now = audioCtx.currentTime;
-      if(waveGain) {
-        waveGain.gain.cancelScheduledValues(now);
-        waveGain.gain.linearRampToValueAtTime(0, now + 1.5);
-      }
-      padGains.forEach(g => {
-        g.gain.cancelScheduledValues(now);
-        g.gain.linearRampToValueAtTime(0, now + 1.5);
-      });
+      ambientGain.gain.cancelScheduledValues(now);
+      ambientGain.gain.setValueAtTime(ambientGain.gain.value,now);
+      ambientGain.gain.linearRampToValueAtTime(0,now + 1.5);
+      clearTimeout(ambientStopTimer);
+      ambientStopTimer = setTimeout(()=>{
+        if(running) return;
+        ambientAudio.pause();
+        try{ ambientAudio.currentTime = 0; }catch(e){}
+      },1600);
     } catch(e) {}
+  }
+
+  function startAmbientLoop(){
+    if(!audioCtx || !ambientGain) return;
+    clearTimeout(ambientStopTimer);
+    const now = audioCtx.currentTime;
+    ambientGain.gain.cancelScheduledValues(now);
+    ambientGain.gain.setValueAtTime(ambientGain.gain.value,now);
+    ambientGain.gain.linearRampToValueAtTime(musicOn ? 1 : 0,now + 0.8);
+    const playPromise = ambientAudio.play();
+    if(playPromise) playPromise.catch(err=>{
+      console.warn('Ambient loop could not be played:',err);
+    });
   }
 
   function startBreathing(){
@@ -1737,77 +1755,26 @@
         console.log('AudioContext created. State:', audioCtx.state);
         
         masterGain = audioCtx.createGain();
-        masterGain.gain.value = musicOn ? 1 : 0;
+        masterGain.gain.value = 1;
         masterGain.connect(audioCtx.destination);
 
-        const bufferSize = audioCtx.sampleRate * 8;
-        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-        const data = noiseBuffer.getChannelData(0);
-        for(let i=0;i<bufferSize;i++){
-          let r1 = Math.random() * 2 - 1;
-          let r2 = Math.sin(i / 200) * 0.3 + Math.sin(i / 400) * 0.2;
-          let r3 = Math.sin(i / 800) * 0.15 + Math.cos(i / 1200) * 0.1;
-          let r = (r1 * 0.6 + r2 * 0.3 + r3 * 0.1) * 0.5;
-          data[i] = r;
-        }
-        noiseSource = audioCtx.createBufferSource();
-        noiseSource.buffer = noiseBuffer;
-        noiseSource.loop = true;
+        ambientGain = audioCtx.createGain();
+        ambientGain.gain.value = 0;
+        ambientGain.connect(audioCtx.destination);
+        ambientSource = audioCtx.createMediaElementSource(ambientAudio);
+        ambientSource.connect(ambientGain);
 
-        waveFilter = audioCtx.createBiquadFilter();
-        waveFilter.type = 'bandpass';
-        waveFilter.frequency.value = 180;
-        waveFilter.Q.value = 0.4;
-
-        const reverbFilter = audioCtx.createBiquadFilter();
-        reverbFilter.type = 'lowpass';
-        reverbFilter.frequency.value = 800;
-
-        waveGain = audioCtx.createGain();
-        waveGain.gain.value = 0.0;
-
-        noiseSource.connect(waveFilter);
-        waveFilter.connect(reverbFilter);
-        reverbFilter.connect(waveGain);
-        waveGain.connect(masterGain);
-        noiseSource.start();
-
-        padGains = [];
-        const baseFreqs = [110, 137, 165, 206, 220, 275];
-        baseFreqs.forEach((freq, i)=>{
-          const osc = audioCtx.createOscillator();
-          osc.type = 'sine';
-          osc.frequency.value = freq;
-          const oscGain = audioCtx.createGain();
-          const vol = 0.015 - i * 0.002;
-          oscGain.gain.value = Math.max(vol, 0.003);
-          osc.connect(oscGain);
-          oscGain.connect(masterGain);
-          osc.start();
-          padGains.push(oscGain);
-        });
-
-        if('speechSynthesis' in window) {
-          pickVoice();
-          if(!voiceReady) {
-            speechSynthesis.onvoiceschanged = () => pickVoice();
-          }
-        }
       }
 
       if(audioCtx && audioCtx.state === 'suspended') {
         audioCtx.resume().then(() => {
           console.log('✅ AudioContext resumed');
-          if(waveGain) {
-            waveGain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-            waveGain.gain.linearRampToValueAtTime(0.25, audioCtx.currentTime + 0.5);
-          }
+          startAmbientLoop();
         }).catch(err => {
           console.warn('⚠️ Resume failed:', err);
         });
-      } else if(audioCtx && waveGain) {
-        waveGain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-        waveGain.gain.linearRampToValueAtTime(0.25, audioCtx.currentTime + 0.5);
+      } else {
+        startAmbientLoop();
       }
 
       closingOverlay.classList.remove('active');
@@ -1868,7 +1835,7 @@
     running = false;
     clearTimeout(timer);
     fadeAmbientOut();
-    if('speechSynthesis' in window) speechSynthesis.cancel();
+    stopNarration(false);
     auroraContainer.classList.remove('active');
     auroraHaze.classList.remove('active');
     breathScene.classList.remove('active-session');
@@ -1946,6 +1913,7 @@
       console.error('Button handler error:', e);
     }
   });
+  preloadNarration();
   resetToReadyVisuals();
 
   // No streaks or history: kū-on is for the moment, not for maintaining a score.
