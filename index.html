@@ -30,10 +30,48 @@
     --about:#c6b8a6;
     --about-dim:rgba(198,184,166,0.14);
     --radius:18px;
+    --page-deep:#0c1622;
+    --page-mid:#16283b;
+    --page-shore:#22394f;
     --mode-light:#ffe8c2;
     --mode-glow:#e8a559;
     --mode-accent:#e8a559;
     --mode-deep:#b8712f;
+  }
+  html[data-view="now"]{
+    --page-deep:#0b171a;
+    --page-mid:#142a2d;
+    --page-shore:#234044;
+  }
+  html[data-view="breathe"]{
+    --page-deep:#0c1622;
+    --page-mid:#16283b;
+    --page-shore:#22394f;
+  }
+  html[data-view="ground"]{
+    --page-deep:#101810;
+    --page-mid:#1d2b20;
+    --page-shore:#334437;
+  }
+  html[data-view="settle"]{
+    --page-deep:#16121b;
+    --page-mid:#292132;
+    --page-shore:#40344b;
+  }
+  html[data-view="letgo"]{
+    --page-deep:#191312;
+    --page-mid:#2e211e;
+    --page-shore:#48322c;
+  }
+  html[data-view="untangle"]{
+    --page-deep:#11131e;
+    --page-mid:#222537;
+    --page-shore:#373c55;
+  }
+  html[data-view="about"]{
+    --page-deep:#111612;
+    --page-mid:#1a241f;
+    --page-shore:#2a3931;
   }
   .scene.mode-box{
     --mode-light:#e3e7fa;
@@ -55,17 +93,18 @@
     --mode-deep:#2e3324;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  html{min-height:100%;background:var(--deep);overscroll-behavior-y:none}
+  html{min-height:100%;background:var(--page-deep);overscroll-behavior-y:none;transition:background-color .45s ease}
   body{
     font-family:'Inter', sans-serif;
-    background: radial-gradient(ellipse at 50% 120%, var(--shore) 0%, var(--mid) 45%, var(--deep) 100%);
-    background-color:var(--deep);
+    background:radial-gradient(ellipse at 50% 120%,var(--page-shore) 0%,var(--page-mid) 45%,var(--page-deep) 100%);
+    background-color:var(--page-deep);
     color:var(--foam);
     min-height:100vh;
     min-height:100dvh;
     overflow-x:hidden;
     display:flex;
     flex-direction:column;
+    transition:background .45s ease,background-color .45s ease;
   }
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
@@ -1403,6 +1442,7 @@
     });
     currentView = view;
     document.body.dataset.view = view;
+    document.documentElement.dataset.view = view;
     resetAboutChrome();
     if (view !== 'breathe' && running) endSession('nav');
     if (view !== 'now' && typeof stopNowSessions === 'function') stopNowSessions('nav');
