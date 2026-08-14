@@ -27,12 +27,12 @@ kū-on is a personal project for emotional self-support. It is not a substitute 
 
 - `index.html` contains the current application.
 - `.pages.yml` defines the current Pages CMS editing interface.
-- `content/*/content.json` contains editable copy for Breathe, Ground, Settle, and About.
+- `content/*/content.json` contains editable copy for all seven app sections.
 - The older `_index.md` files are retained as recovery references but are no longer loaded by the app.
 - `.github/workflows/deploy.yml` publishes `main` to GitHub Pages.
 
 ## Editing content
 
-Open the repository in [Pages CMS](https://pagescms.org/), choose one of the four configured pages, edit its fields, and save. Pages CMS commits the matching JSON file to `main`; the existing GitHub Pages workflow then republishes the site.
+Open the repository in [Pages CMS](https://pagescms.org/), choose an app section, edit its fields, and save. Pages CMS commits the matching JSON file to `main`; the existing GitHub Pages workflow then republishes the site.
 
 The app keeps its current built-in copy as a fallback. If an editable content file is missing or invalid, the page still renders instead of going blank.

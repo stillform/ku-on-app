@@ -1455,7 +1455,7 @@
   function renderAboutPage() {}
 
   // ---------- PAGES CMS CONTENT ----------
-  const cmsPages = ['breathe', 'ground', 'settle', 'about'];
+  const cmsPages = ['breathe', 'ground', 'settle', 'about', 'now', 'letgo', 'untangle'];
 
   function validText(value) {
     return typeof value === 'string' && value.trim().length > 0;
@@ -1468,6 +1468,20 @@
   function setTwoLineText(element, first, second) {
     if (!element || !validText(first) || !validText(second)) return;
     element.replaceChildren(document.createTextNode(first), document.createElement('br'), document.createTextNode(second));
+  }
+
+  function setLinkedText(element, prefix, links, suffix = '') {
+    if (!element || !validText(prefix) || !Array.isArray(links) || !links.length) return;
+    const anchors = [...element.querySelectorAll('a')];
+    if (anchors.length !== links.length || !links.every(link => validText(link.label))) return;
+    const nodes = [document.createTextNode(`${prefix} `)];
+    links.forEach((link, index) => {
+      anchors[index].textContent = link.label;
+      nodes.push(anchors[index]);
+      if (validText(link.after)) nodes.push(document.createTextNode(` ${link.after} `));
+    });
+    if (suffix) nodes.push(document.createTextNode(suffix));
+    element.replaceChildren(...nodes);
   }
 
   function replaceStringList(target, source) {
@@ -1616,11 +1630,119 @@
     setText(closing?.querySelector('a'), content.closing?.cta);
   }
 
+  function applyNowContent(content) {
+    if (!content || typeof content !== 'object') return;
+    setText(document.querySelector('#view-now .now-mark'), content.mark);
+    setText(document.getElementById('nowBigBtn'), content.primary_button);
+    setText(document.querySelector('#nowPrimaryState .now-sub'), content.primary_hint);
+    setText(document.querySelector('#nowOpenRoutes span:first-child'), content.route_toggle);
+    setText(document.getElementById('nowCloseRoutes'), content.route_back);
+    setText(document.querySelector('#nowRouteState .now-route-title'), content.route_heading);
+    setTwoLineText(document.querySelector('#nowRouteState .now-route-sub'), content.route_intro_line_one, content.route_intro_line_two);
+    setText(document.querySelector('.now-tag-btn[data-mode="anxious"]'), content.anxious_option);
+    setText(document.querySelector('.now-tag-btn[data-mode="spiral"]'), content.spiral_option);
+    setText(document.querySelector('.now-tag-btn[data-mode="angry"]'), content.anger_option);
+    setText(document.querySelector('.now-heavy-links > span'), content.heavier_label);
+    setText(document.querySelector('.now-secondary-link[data-mode="untangle"]'), content.shame_option);
+    setText(document.querySelector('.now-secondary-link[data-mode="resentment"]'), content.resentment_option);
+    document.querySelectorAll('#view-now .now-ctrl-btn').forEach(button => setText(button, content.stop_label));
+
+    if (validText(content.sigh?.inhale)) nowDynamicCopy.sigh.inhale = content.sigh.inhale;
+    if (validText(content.sigh?.inhale_hint)) nowDynamicCopy.sigh.inhaleHint = content.sigh.inhale_hint;
+    if (validText(content.sigh?.second_inhale)) nowDynamicCopy.sigh.secondInhale = content.sigh.second_inhale;
+    if (validText(content.sigh?.second_inhale_hint)) nowDynamicCopy.sigh.secondInhaleHint = content.sigh.second_inhale_hint;
+    if (validText(content.sigh?.exhale)) nowDynamicCopy.sigh.exhale = content.sigh.exhale;
+    if (validText(content.sigh?.exhale_hint)) nowDynamicCopy.sigh.exhaleHint = content.sigh.exhale_hint;
+    replaceStringList(nowPhrases, content.sigh?.phrases);
+
+    if (validText(content.anger?.clench)) nowDynamicCopy.anger.clench = content.anger.clench;
+    if (validText(content.anger?.hold)) nowDynamicCopy.anger.hold = content.anger.hold;
+    if (validText(content.anger?.release)) nowDynamicCopy.anger.release = content.anger.release;
+    setText(document.querySelector('#now-anger .now-cue-sub'), content.anger?.hint);
+    setText(document.querySelector('#now-anger .now-phrase'), content.anger?.phrase);
+
+    setText(document.querySelector('#now-unhook .now-step-kicker'), content.unhook?.kicker);
+    replaceStringList(unhookSteps, content.unhook?.steps);
+    if (validText(content.unhook?.complete)) nowDynamicCopy.unhookComplete = content.unhook.complete;
+    setLinkedText(nowUnhookFollow, content.unhook?.follow_prefix, [{ label: content.unhook?.follow_link }]);
+
+    setText(document.querySelector('#now-reset .now-step-kicker'), content.reset?.kicker);
+    replaceStringList(quickResetSteps, content.reset?.steps);
+    if (validText(content.reset?.complete)) nowDynamicCopy.resetComplete = content.reset.complete;
+    setLinkedText(nowResetFollow, content.reset?.follow_prefix, [
+      { label: content.reset?.breathe_link, after: content.reset?.connector },
+      { label: content.reset?.ground_link }
+    ], '.');
+
+    if (!Object.values(nowSessions).some(session => session.classList.contains('active'))) {
+      nowUnhookCopy.textContent = unhookSteps[0];
+      nowResetCopy.textContent = quickResetSteps[0];
+    }
+  }
+
+  function applyLetGoContent(content) {
+    if (!content || typeof content !== 'object') return;
+    setText(document.querySelector('#view-letgo > .card-title'), content.title);
+    setText(document.querySelector('#view-letgo > .card-sub'), content.description);
+    setText(document.querySelector('#view-letgo .release-privacy'), content.privacy);
+    setText(releaseSettleIntro.querySelector('strong'), content.settle_heading);
+    setText(releaseSettleIntro.querySelector('p'), content.settle_copy);
+    setText(document.getElementById('releaseBeginWriting'), content.begin_label);
+    const prompt = document.querySelector('#releaseWritingForm .release-prompt');
+    if (prompt && validText(content.prompt) && prompt.firstChild) prompt.firstChild.nodeValue = content.prompt;
+    setText(prompt?.querySelector('small'), content.prompt_hint);
+    if (validText(content.placeholder)) releaseTextarea.placeholder = content.placeholder;
+    setLinkedText(document.querySelector('#releaseWritingForm .release-stop'), content.ground_prefix, [{ label: content.ground_link }], '.');
+    setText(releaseLetterBtn, content.release_label);
+    setText(releaseWritingComplete.querySelector('strong'), content.complete_heading);
+    setText(releaseWritingComplete.querySelector('span'), content.complete_copy);
+    setText(document.getElementById('releaseAgain'), content.again_label);
+  }
+
+  function setRepairChoice(mode, label, hint) {
+    const button = document.querySelector(`.repair-choice[data-repair="${mode}"]`);
+    if (!button) return;
+    if (validText(label) && button.firstChild) button.firstChild.nodeValue = label;
+    setText(button.querySelector('small'), hint);
+  }
+
+  function replaceRepairSteps(target, source) {
+    if (!Array.isArray(source) || !source.length || !source.every(step => validText(step.title) && validText(step.hint))) return;
+    target.splice(0, target.length, ...source.map(step => ({ title: step.title, hint: step.hint })));
+  }
+
+  function applyUntangleContent(content) {
+    if (!content || typeof content !== 'object') return;
+    setText(document.querySelector('#view-untangle > .card-title'), content.title);
+    setText(document.querySelector('#view-untangle > .card-sub'), content.description);
+    setText(document.querySelector('#repairIntro .repair-intro-copy'), content.intro);
+    setRepairChoice('shame', content.shame_option, content.shame_option_hint);
+    setRepairChoice('guilt', content.guilt_option, content.guilt_option_hint);
+    setText(document.querySelector('#repairIntro .repair-caution'), content.caution);
+    setText(document.getElementById('repairBack'), content.choose_again_label);
+    setLinkedText(document.querySelector('#view-untangle .repair-ground-link'), content.ground_prefix, [{ label: content.ground_link }], '.');
+    if (validText(content.continue_label)) repairCopy.continueLabel = content.continue_label;
+    if (validText(content.start_again_label)) repairCopy.startAgainLabel = content.start_again_label;
+    if (validText(content.finish_kicker)) repairCopy.finishKicker = content.finish_kicker;
+    if (validText(content.shame?.kicker)) repairCopy.shameKicker = content.shame.kicker;
+    if (validText(content.guilt?.kicker)) repairCopy.guiltKicker = content.guilt.kicker;
+    if (validText(content.shame?.complete_heading)) repairCopy.shameCompleteHeading = content.shame.complete_heading;
+    if (validText(content.shame?.complete_hint)) repairCopy.shameCompleteHint = content.shame.complete_hint;
+    if (validText(content.guilt?.complete_heading)) repairCopy.guiltCompleteHeading = content.guilt.complete_heading;
+    if (validText(content.guilt?.complete_hint)) repairCopy.guiltCompleteHint = content.guilt.complete_hint;
+    replaceRepairSteps(repairPaths.shame, content.shame?.steps);
+    replaceRepairSteps(repairPaths.guilt, content.guilt?.steps);
+    if (!repairMode) resetRepair();
+  }
+
   const cmsContentHandlers = {
     breathe: applyBreatheContent,
     ground: applyGroundContent,
     settle: applySettleContent,
-    about: applyAboutContent
+    about: applyAboutContent,
+    now: applyNowContent,
+    letgo: applyLetGoContent,
+    untangle: applyUntangleContent
   };
 
   async function loadCmsContent() {
@@ -2392,6 +2514,17 @@
       {title:'Let the next action carry the lesson.',hint:'Make it small, specific and safe. Then allow yourself to stop rehearsing the punishment.'}
     ]
   };
+  const repairCopy={
+    continueLabel:'continue',
+    startAgainLabel:'start again',
+    finishKicker:'a place to stop',
+    shameKicker:'shame · soften the verdict',
+    guiltKicker:'guilt · find the next step',
+    shameCompleteHeading:'You stayed with yourself. That matters.',
+    shameCompleteHint:'You can be accountable and still deserve your own care.',
+    guiltCompleteHeading:'One honest next step matters more than another hour of punishment.',
+    guiltCompleteHint:'Choose the next right action when you are steady enough. Nothing needs to be sent from this screen.'
+  };
   const repairIntro=document.getElementById('repairIntro');
   const repairFlow=document.getElementById('repairFlow');
   const repairKicker=document.getElementById('repairKicker');
@@ -2406,13 +2539,13 @@
   function resetRepair(){
     repairMode='';repairIndex=0;repairFinished=false;
     repairIntro.style.display='block';repairFlow.style.display='none';repairProgress.innerHTML='';
-    repairNext.textContent='continue';repairStep.classList.remove('changing');repairHint.classList.remove('changing');
+    repairNext.textContent=repairCopy.continueLabel;repairStep.classList.remove('changing');repairHint.classList.remove('changing');
   }
 
   function renderRepairStep(immediate=false){
     const steps=repairPaths[repairMode];
     const applyCopy=()=>{
-      repairKicker.textContent=repairMode==='shame'?'shame · soften the verdict':'guilt · find the next step';
+      repairKicker.textContent=repairMode==='shame'?repairCopy.shameKicker:repairCopy.guiltKicker;
       repairStep.textContent=steps[repairIndex].title;
       repairHint.textContent=steps[repairIndex].hint;
       [...repairProgress.children].forEach((dot,i)=>dot.classList.toggle('active',i<=repairIndex));
@@ -2427,11 +2560,11 @@
     repairFinished=true;
     repairStep.classList.add('changing');repairHint.classList.add('changing');
     setTimeout(()=>{
-      repairKicker.textContent='a place to stop';
-      repairStep.textContent=repairMode==='shame'?'You stayed with yourself. That matters.':'One honest next step matters more than another hour of punishment.';
-      repairHint.textContent=repairMode==='shame'?'You can be accountable and still deserve your own care.':'Choose the next right action when you are steady enough. Nothing needs to be sent from this screen.';
+      repairKicker.textContent=repairCopy.finishKicker;
+      repairStep.textContent=repairMode==='shame'?repairCopy.shameCompleteHeading:repairCopy.guiltCompleteHeading;
+      repairHint.textContent=repairMode==='shame'?repairCopy.shameCompleteHint:repairCopy.guiltCompleteHint;
       [...repairProgress.children].forEach(dot=>dot.classList.add('active'));
-      repairNext.textContent='start again';
+      repairNext.textContent=repairCopy.startAgainLabel;
       repairStep.classList.remove('changing');repairHint.classList.remove('changing');
       buzz([12,45,12]);
     },280);
@@ -2441,7 +2574,7 @@
     repairMode=button.dataset.repair;repairIndex=0;repairFinished=false;
     repairIntro.style.display='none';repairFlow.style.display='flex';repairProgress.innerHTML='';
     repairPaths[repairMode].forEach(()=>repairProgress.appendChild(document.createElement('i')));
-    repairNext.textContent='continue';renderRepairStep(true);
+    repairNext.textContent=repairCopy.continueLabel;renderRepairStep(true);
   }));
   repairNext.addEventListener('click',()=>{
     if(repairFinished){resetRepair();return;}
@@ -2473,6 +2606,19 @@
     "you're allowed to just wait this out",
     "nothing here needs deciding this second"
   ];
+  const nowDynamicCopy={
+    sigh:{
+      inhale:'inhale',
+      inhaleHint:'short, through the nose',
+      secondInhale:'inhale again',
+      secondInhaleHint:'a second small sip of air, on top',
+      exhale:'exhale',
+      exhaleHint:'long, slow, through the mouth'
+    },
+    anger:{clench:'clench',hold:'hold',release:'release. Let it drop'},
+    unhookComplete:'You made a little room around the thought.',
+    resetComplete:'You gave your system a moment to come down.'
+  };
   let nowTimers = [];
   let nowReturnToRoutes = false;
   function clearNowTimers(){ nowTimers.forEach(t=>{ clearTimeout(t); clearInterval(t); }); nowTimers = []; }
@@ -2501,17 +2647,17 @@
   let sighCycles = 0;
 
   function runSighCycle(){
-    nowCue.textContent = 'inhale';
-    nowCueSub.textContent = 'short, through the nose';
+    nowCue.textContent = nowDynamicCopy.sigh.inhale;
+    nowCueSub.textContent = nowDynamicCopy.sigh.inhaleHint;
     nowOrb.style.transform = 'scale(1.08)';
     const t1 = setTimeout(()=>{
-      nowCue.textContent = 'inhale again';
-      nowCueSub.textContent = 'a second small sip of air, on top';
+      nowCue.textContent = nowDynamicCopy.sigh.secondInhale;
+      nowCueSub.textContent = nowDynamicCopy.sigh.secondInhaleHint;
       nowOrb.style.transform = 'scale(1.16)';
       buzz(15);
       const t2 = setTimeout(()=>{
-        nowCue.textContent = 'exhale';
-        nowCueSub.textContent = 'long, slow, through the mouth';
+        nowCue.textContent = nowDynamicCopy.sigh.exhale;
+        nowCueSub.textContent = nowDynamicCopy.sigh.exhaleHint;
         nowOrb.style.transform = 'scale(0.9)';
         const t3 = setTimeout(()=>{
           sighCycles++;
@@ -2551,12 +2697,12 @@
   let angerRounds = 0;
 
   function runAngerCycle(){
-    nowAngerCue.textContent = 'clench';
+    nowAngerCue.textContent = nowDynamicCopy.anger.clench;
     nowAngerOrb.style.transform = 'scale(0.9)';
     const t1 = setTimeout(()=>{
-      nowAngerCue.textContent = 'hold';
+      nowAngerCue.textContent = nowDynamicCopy.anger.hold;
       const t2 = setTimeout(()=>{
-        nowAngerCue.textContent = 'release. Let it drop';
+        nowAngerCue.textContent = nowDynamicCopy.anger.release;
         nowAngerOrb.style.transform = 'scale(1.15)';
         buzz([12,40,12]);
         const t3 = setTimeout(()=>{
@@ -2598,7 +2744,7 @@
       const advance=setTimeout(()=>{
         index++;
         if(index<steps.length)show();
-        else{copyEl.textContent=key==='unhook'?'You made a little room around the thought.':'You gave your system a moment to come down.';followEl.style.display='block';[...progressEl.children].forEach(d=>d.classList.add('active'));buzz([12,45,12]);}
+        else{copyEl.textContent=key==='unhook'?nowDynamicCopy.unhookComplete:nowDynamicCopy.resetComplete;followEl.style.display='block';[...progressEl.children].forEach(d=>d.classList.add('active'));buzz([12,45,12]);}
       },6200);nowTimers.push(advance);
     }
     copyEl.textContent=steps[0];[...progressEl.children].forEach((d,i)=>d.classList.toggle('active',i===0));

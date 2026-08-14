@@ -1,0 +1,65 @@
+{
+  "mark": "Right now",
+  "primary_button": "Help me now",
+  "primary_hint": "start a quick reset",
+  "route_toggle": "I know what’s loudest",
+  "route_back": "‹ back to quick reset",
+  "route_heading": "What’s loudest?",
+  "route_intro_line_one": "Choose the closest thing.",
+  "route_intro_line_two": "It does not have to be exact.",
+  "anxious_option": "My body is panicking",
+  "spiral_option": "My thoughts are looping",
+  "anger_option": "Anger is surging",
+  "heavier_label": "Something heavier?",
+  "shame_option": "Shame or guilt",
+  "resentment_option": "Resentment",
+  "stop_label": "enough for now",
+  "sigh": {
+    "inhale": "inhale",
+    "inhale_hint": "short, through the nose",
+    "second_inhale": "inhale again",
+    "second_inhale_hint": "a second small sip of air, on top",
+    "exhale": "exhale",
+    "exhale_hint": "long, slow, through the mouth",
+    "phrases": [
+      "this is a spike, not a forecast",
+      "you don't have to solve this right now",
+      "you're allowed to just wait this out",
+      "nothing here needs deciding this second"
+    ]
+  },
+  "anger": {
+    "clench": "clench",
+    "hold": "hold",
+    "release": "release. Let it drop",
+    "hint": "fists, jaw, shoulders. As tight as you can.",
+    "phrase": "this is a spike, not a forecast"
+  },
+  "unhook": {
+    "kicker": "thoughts looping",
+    "steps": [
+      "Notice what your mind is doing. You do not have to argue with it.",
+      "Silently say: “I am noticing a difficult thought.”",
+      "Press both feet into the floor. Feel the pressure pushing back.",
+      "Find one thing you can see, one sound you can hear, and one sensation you can feel.",
+      "The thought can be here without deciding what you do next."
+    ],
+    "complete": "You made a little room around the thought.",
+    "follow_prefix": "Want more time?",
+    "follow_link": "Keep grounding →"
+  },
+  "reset": {
+    "kicker": "quick reset",
+    "steps": [
+      "Feel both feet making contact with the floor.",
+      "Lift your shoulders gently. Let them drop as you breathe out.",
+      "Unclench your jaw. Let your tongue rest.",
+      "Look at three stable objects around you. Nothing else needs doing right now."
+    ],
+    "complete": "You gave your system a moment to come down.",
+    "follow_prefix": "Want another step?",
+    "breathe_link": "Breathe",
+    "connector": "or",
+    "ground_link": "Ground"
+  }
+}
