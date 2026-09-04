@@ -4,7 +4,7 @@ A quiet, fast-acting collection of grounding and regulation exercises for diffic
 
 ## Live prototype
 
-[Open kū-on](https://xanadauchaos.github.io/ku-on-app/)
+[Open kū-on](https://stillform.github.io/ku-on-app/)
 
 ## What it includes
 
