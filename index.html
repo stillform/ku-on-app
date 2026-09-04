@@ -987,8 +987,10 @@
   .ghost-btn:hover{ color:var(--foam); border-color:rgba(255,255,255,0.3); }
 
   footer{position:fixed;left:calc(16px + var(--safe-left));right:calc(16px + var(--safe-right));bottom:calc(8px + var(--safe-bottom));z-index:25;display:flex;align-items:center;justify-content:center;min-height:22px;max-width:1000px;margin-inline:auto;text-align:center;padding:0;font-size:10.5px;line-height:1.35;color:rgba(139,160,182,.66);pointer-events:none;text-shadow:0 1px 8px rgba(5,12,19,.9);opacity:1;visibility:visible;transform:translateY(0);transition:opacity .24s ease,transform .3s ease,visibility 0s linear 0s}
-  body.about-chrome-hidden nav{opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,calc(100% + 90px));transition:opacity .24s ease,transform .3s ease,visibility 0s linear .3s}
-  body.about-chrome-hidden footer{opacity:0;visibility:hidden;transform:translateY(calc(100% + 30px));transition:opacity .2s ease,transform .28s ease,visibility 0s linear .28s}
+  body.about-chrome-hidden nav,
+  body.breathe-settings-open nav{opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,calc(100% + 90px));transition:opacity .24s ease,transform .3s ease,visibility 0s linear .3s}
+  body.about-chrome-hidden footer,
+  body.breathe-settings-open footer{opacity:0;visibility:hidden;transform:translateY(calc(100% + 30px));transition:opacity .2s ease,transform .28s ease,visibility 0s linear .28s}
 
   /* ---------- RIGHT NOW ---------- */
   .now-stage{
@@ -1536,6 +1538,7 @@
     document.documentElement.dataset.view = view;
     themeColorMeta.content = viewThemeColors[view] || viewThemeColors.now;
     resetAboutChrome();
+    syncBreatheSettingsChrome();
     if (view !== 'breathe' && running) endSession('nav');
     if (view !== 'now' && typeof stopNowSessions === 'function') stopNowSessions('nav');
     if (view !== 'letgo' && typeof resetReleaseWriting === 'function') resetReleaseWriting();
@@ -1903,7 +1906,18 @@
   const streakLine = document.getElementById('streakLine');
   const auroraContainer = document.getElementById('auroraContainer');
 
+  function syncBreatheSettingsChrome() {
+    const hidden = currentView === 'breathe' && sessionSettings.open && window.innerWidth <= 480;
+    document.body.classList.toggle('breathe-settings-open', hidden);
+    if (currentView !== 'about') {
+      siteNav.inert = hidden;
+      siteNav.setAttribute('aria-hidden', String(hidden));
+      siteFooter.setAttribute('aria-hidden', String(hidden));
+    }
+  }
+
   sessionSettings.addEventListener('toggle', () => {
+    syncBreatheSettingsChrome();
     if (!sessionSettings.open || (window.innerWidth > 480 && window.innerHeight > 900)) return;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     requestAnimationFrame(() => {
@@ -1913,6 +1927,7 @@
       });
     });
   });
+  window.addEventListener('resize', syncBreatheSettingsChrome);
   const auroraHaze = document.getElementById('auroraHaze');
   const breathScene = document.getElementById('breathScene');
   const breathView = document.getElementById('view-breathe');
