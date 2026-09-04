@@ -45,6 +45,12 @@
     --mode-glow:#e8a559;
     --mode-accent:#e8a559;
     --mode-deep:#b8712f;
+    --safe-top:env(safe-area-inset-top,0px);
+    --safe-right:env(safe-area-inset-right,0px);
+    --safe-bottom:env(safe-area-inset-bottom,0px);
+    --safe-left:env(safe-area-inset-left,0px);
+    --footer-space:38px;
+    --nav-space:104px;
   }
   html[data-view="now"]{
     --page-deep:#0b171a;
@@ -108,6 +114,7 @@
     background-color:var(--page-deep);
     color:var(--foam);
     min-height:100vh;
+    min-height:100svh;
     min-height:100dvh;
     overflow-x:hidden;
     display:flex;
@@ -120,7 +127,7 @@
 
   header{
     display:flex; align-items:center; justify-content:space-between;
-    padding:calc(22px + env(safe-area-inset-top,0px)) clamp(18px,4vw,44px) 10px;
+    padding:calc(18px + var(--safe-top)) calc(clamp(18px,4vw,44px) + var(--safe-right)) 10px calc(clamp(18px,4vw,44px) + var(--safe-left));
     z-index:10;
     flex-wrap:wrap;
     gap:10px;
@@ -150,7 +157,7 @@
   }
   header{ justify-content:center; padding-bottom:4px; }
   nav{
-    position:fixed; left:50%; bottom:calc(48px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%);
+    position:fixed; left:50%; bottom:calc(var(--footer-space) + var(--safe-bottom)); transform:translateX(-50%);
     z-index:30;
     display:flex; gap:4px;
     background:rgba(10,16,22,0.72);
@@ -159,7 +166,7 @@
     border:1px solid rgba(255,255,255,0.09);
     border-radius:999px; padding:5px;
     flex-wrap:nowrap;
-    max-width:94vw;
+    max-width:calc(100vw - var(--safe-left) - var(--safe-right) - 24px);
     overflow-x:auto;
     box-shadow:0 10px 34px rgba(0,0,0,0.35);
     opacity:1;
@@ -192,7 +199,7 @@
   body[data-view="breathe"] nav a.active{ background:var(--breath); color:#10202d; }
   body[data-view="about"] nav a.active{ background:var(--about); color:#19202a; }
 
-  main{flex:1; position:relative; display:flex; align-items:center; justify-content:center; padding:20px 20px calc(142px + env(safe-area-inset-bottom,0px));}
+  main{flex:1; position:relative; display:flex; align-items:center; justify-content:center; padding:20px calc(20px + var(--safe-right)) calc(var(--nav-space) + 38px + var(--safe-bottom)) calc(20px + var(--safe-left));}
   .view{ width:100%; max-width:560px; display:none; }
   .view.active{ display:block; animation:fadeIn .6s ease; }
   @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
@@ -507,6 +514,7 @@
   .pattern-select button.active, .duration-select button.active{ border-color:var(--breath); color:var(--breath); background:var(--breath-dim); }
   .pattern-select button:disabled, .duration-select button:disabled{ opacity:0.35; cursor:not-allowed; }
   .start-row{ display:flex; justify-content:center; margin-top:4px; }
+  .session-settings[open] + .start-row{padding-bottom:24px;scroll-margin-bottom:calc(var(--nav-space) + var(--safe-bottom))}
   .start-btn{
     font-family:'Inter',sans-serif; font-weight:600; font-size:14px;
     background:var(--breath); color:#10202d; border:none;
@@ -526,12 +534,35 @@
   }
   .audio-level-row{ display:grid; grid-template-columns:minmax(0,1fr) minmax(130px,1.4fr); align-items:center; gap:15px; }
   .audio-level-heading{ display:flex; align-items:center; gap:7px; min-width:0; }
-  .audio-icon{ color:var(--breath); font-size:13px; opacity:0.9; }
+  .audio-icon{ width:8px; height:8px; flex:0 0 auto; border:1px solid var(--breath); border-radius:50%; background:rgba(143,168,193,.16); box-shadow:0 0 7px rgba(143,168,193,.22); }
   .audio-level-label{ color:var(--foam); font-size:12.5px; font-weight:500; }
   .audio-level-value{ margin-left:auto; color:var(--muted); font-size:10.5px; letter-spacing:0.04em; }
   .audio-range{
-    width:100%; height:24px; margin:0; cursor:pointer; accent-color:var(--breath);
+    --range-progress:50%;
+    -webkit-appearance:none; appearance:none;
+    width:100%; height:28px; margin:0; padding:0; cursor:pointer;
+    background:transparent; touch-action:pan-y;
   }
+  .audio-range::-webkit-slider-runnable-track{
+    height:6px; border-radius:999px; border:1px solid rgba(143,168,193,.28);
+    background:linear-gradient(90deg,var(--breath) 0 var(--range-progress),rgba(143,168,193,.16) var(--range-progress) 100%);
+  }
+  .audio-range::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none; width:18px; height:18px; margin-top:-7px;
+    border:3px solid #20364b; border-radius:50%; background:var(--breath);
+    box-shadow:0 1px 5px rgba(0,0,0,.38),0 0 0 1px rgba(220,234,244,.22);
+  }
+  .audio-range::-moz-range-track{
+    height:4px; border:1px solid rgba(143,168,193,.28); border-radius:999px;
+    background:rgba(143,168,193,.16);
+  }
+  .audio-range::-moz-range-progress{height:6px;border-radius:999px;background:var(--breath)}
+  .audio-range::-moz-range-thumb{
+    width:12px; height:12px; border:3px solid #20364b; border-radius:50%;
+    background:var(--breath); box-shadow:0 1px 5px rgba(0,0,0,.38);
+  }
+  .audio-range:hover::-webkit-slider-thumb{background:#a8bfd5}
+  .audio-range:hover::-moz-range-thumb{background:#a8bfd5}
   .audio-range:focus-visible{ outline:2px solid var(--breath); outline-offset:4px; border-radius:999px; }
   .audio-preference-note{ color:var(--muted); font-size:10.5px; line-height:1.45; text-align:center; }
 
@@ -955,7 +986,7 @@
   }
   .ghost-btn:hover{ color:var(--foam); border-color:rgba(255,255,255,0.3); }
 
-  footer{position:fixed;left:16px;right:16px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:25;text-align:center;padding:0;font-size:10.5px;line-height:1.35;color:rgba(139,160,182,.66);pointer-events:none;text-shadow:0 1px 8px rgba(5,12,19,.9);opacity:1;visibility:visible;transform:translateY(0);transition:opacity .24s ease,transform .3s ease,visibility 0s linear 0s}
+  footer{position:fixed;left:calc(16px + var(--safe-left));right:calc(16px + var(--safe-right));bottom:calc(8px + var(--safe-bottom));z-index:25;display:flex;align-items:center;justify-content:center;min-height:22px;max-width:1000px;margin-inline:auto;text-align:center;padding:0;font-size:10.5px;line-height:1.35;color:rgba(139,160,182,.66);pointer-events:none;text-shadow:0 1px 8px rgba(5,12,19,.9);opacity:1;visibility:visible;transform:translateY(0);transition:opacity .24s ease,transform .3s ease,visibility 0s linear 0s}
   body.about-chrome-hidden nav{opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,calc(100% + 90px));transition:opacity .24s ease,transform .3s ease,visibility 0s linear .3s}
   body.about-chrome-hidden footer{opacity:0;visibility:hidden;transform:translateY(calc(100% + 30px));transition:opacity .2s ease,transform .28s ease,visibility 0s linear .28s}
 
@@ -1044,16 +1075,21 @@
   }
   .now-ctrl-btn:hover{ color:var(--foam); border-color:rgba(255,255,255,0.3); }
   @media (max-width:480px){
+    :root{--footer-space:48px;--nav-space:112px}
     .scene.mode-box{--box-center-y:60%}
     .scene.mode-box .breath-copy{top:7%}
     #view-breathe .scene{height:clamp(270px,42dvh,310px)}
-    nav{bottom:calc(56px + env(safe-area-inset-bottom,0px))}
-    main{padding-bottom:calc(158px + env(safe-area-inset-bottom,0px))}
-    footer{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:9.5px;line-height:1.3}
+    header{padding-top:calc(14px + var(--safe-top))}
+    main{padding-bottom:calc(var(--nav-space) + 46px + var(--safe-bottom))}
+    footer{font-size:9.5px;line-height:1.3}
     .session-settings[open] .duration-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
     .session-settings[open] .duration-select button{min-width:0;padding:9px 5px;line-height:1.25;text-wrap:balance}
-    .session-settings[open] + .start-row{padding-bottom:18px}
+    .session-settings[open] + .start-row{padding-bottom:40px;scroll-margin-bottom:calc(var(--nav-space) + var(--safe-bottom))}
     .audio-level-row{grid-template-columns:1fr;gap:5px}
+  }
+  @media (display-mode:standalone){
+    header{padding-top:calc(14px + var(--safe-top))}
+    main{min-height:calc(100dvh - var(--safe-top))}
   }
 </style>
 </head>
@@ -1248,12 +1284,12 @@
           </div>
           <div class="audio-controls" role="group" aria-label="Audio mixer">
             <label class="audio-level-row" for="musicLevel">
-              <span class="audio-level-heading"><span class="audio-icon" aria-hidden="true">◌</span><span class="audio-level-label" id="musicLabelText">Ocean</span><output class="audio-level-value" id="musicLevelValue" for="musicLevel">Balanced</output></span>
-              <input class="audio-range" id="musicLevel" type="range" min="0" max="100" step="1" value="78" aria-label="Ocean volume">
+              <span class="audio-level-heading"><span class="audio-icon" aria-hidden="true"></span><span class="audio-level-label" id="musicLabelText">Ocean</span><output class="audio-level-value" id="musicLevelValue" for="musicLevel">Balanced</output></span>
+              <input class="audio-range" id="musicLevel" type="range" min="0" max="100" step="1" value="78" aria-label="Ocean volume" style="--range-progress:78%">
             </label>
             <label class="audio-level-row" for="voiceLevel">
-              <span class="audio-level-heading"><span class="audio-icon" aria-hidden="true">◦</span><span class="audio-level-label" id="voiceLabelText">Voice</span><output class="audio-level-value" id="voiceLevelValue" for="voiceLevel">Balanced</output></span>
-              <input class="audio-range" id="voiceLevel" type="range" min="0" max="100" step="1" value="82" aria-label="Voice volume">
+              <span class="audio-level-heading"><span class="audio-icon" aria-hidden="true"></span><span class="audio-level-label" id="voiceLabelText">Voice</span><output class="audio-level-value" id="voiceLevelValue" for="voiceLevel">Balanced</output></span>
+              <input class="audio-range" id="voiceLevel" type="range" min="0" max="100" step="1" value="82" aria-label="Voice volume" style="--range-progress:82%">
             </label>
           </div>
           <p class="audio-preference-note" id="audioPreferenceNote">Volume choices stay on this device.</p>
@@ -1456,6 +1492,11 @@
   const views = document.querySelectorAll('.view');
   const siteNav = document.querySelector('nav');
   const siteFooter = document.querySelector('footer');
+  const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+  const viewThemeColors = {
+    now:'#0b171a', breathe:'#0c1622', ground:'#101810', settle:'#16121b',
+    letgo:'#191312', untangle:'#11131e', about:'#111612'
+  };
   let currentView = 'now';
   let aboutScrollAnchor = window.scrollY;
   let aboutChromeHidden = false;
@@ -1488,6 +1529,7 @@
     currentView = view;
     document.body.dataset.view = view;
     document.documentElement.dataset.view = view;
+    themeColorMeta.content = viewThemeColors[view] || viewThemeColors.now;
     resetAboutChrome();
     if (view !== 'breathe' && running) endSession('nav');
     if (view !== 'now' && typeof stopNowSessions === 'function') stopNowSessions('nav');
@@ -1857,7 +1899,7 @@
   const auroraContainer = document.getElementById('auroraContainer');
 
   sessionSettings.addEventListener('toggle', () => {
-    if (!sessionSettings.open || window.innerWidth > 480) return;
+    if (!sessionSettings.open || (window.innerWidth > 480 && window.innerHeight > 900)) return;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     requestAnimationFrame(() => {
       startBtn.scrollIntoView({
@@ -2023,6 +2065,8 @@
 
     musicLevelValue.textContent = describeAudioLevel(musicVolume);
     voiceLevelValue.textContent = describeAudioLevel(voiceVolume);
+    musicLevelControl.style.setProperty('--range-progress',`${Math.round(musicVolume * 100)}%`);
+    voiceLevelControl.style.setProperty('--range-progress',`${Math.round(voiceVolume * 100)}%`);
     musicLevelControl.setAttribute('aria-valuetext',describeAudioLevel(musicVolume));
     voiceLevelControl.setAttribute('aria-valuetext',describeAudioLevel(voiceVolume));
     narrationAudio.forEach(audio=>{ audio.volume = voiceVolume; });

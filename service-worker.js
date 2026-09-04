@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'kuon-offline-v1';
+const CACHE_VERSION = 'kuon-offline-v2';
 
 const PRECACHE_URLS = [
   './',
