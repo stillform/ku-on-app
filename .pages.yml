@@ -28,6 +28,7 @@ content:
       - { name: five_minute_label, label: Five minute option, type: string, required: true }
       - { name: sound_label, label: Sound toggle, type: string, required: true }
       - { name: voice_label, label: Voice toggle, type: string, required: true }
+      - { name: audio_note, label: Audio preference note, type: string, required: true }
       - { name: begin_label, label: Begin button, type: string, required: true }
       - { name: end_label, label: End session button, type: string, required: true }
 

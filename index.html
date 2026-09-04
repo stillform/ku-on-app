@@ -519,17 +519,21 @@
   .cycle-count{ font-size:12.5px; color:var(--muted); text-align:center; margin-top:16px; }
   .streak-line{ font-size:12.5px; color:var(--amber); text-align:center; margin-top:4px; opacity:0.9; min-height:16px; }
 
-  .audio-controls{ display:flex; justify-content:center; gap:10px; margin-top:14px; }
-  .audio-toggle{
-    display:flex; align-items:center; gap:7px;
-    font-family:'Inter',sans-serif; font-size:12.5px; font-weight:500;
-    color:var(--muted); background:rgba(255,255,255,0.03);
-    border:1px solid rgba(255,255,255,0.1); border-radius:999px;
-    padding:8px 16px; cursor:pointer; transition:all .25s ease;
+  .audio-controls{
+    display:grid; gap:14px; margin-top:2px; padding:14px;
+    border:1px solid rgba(255,255,255,0.075); border-radius:13px;
+    background:rgba(255,255,255,0.025);
   }
-  .audio-toggle .audio-icon{ font-size:13px; filter:grayscale(1) opacity(0.6); transition:filter .25s ease; }
-  .audio-toggle.active{ color:var(--foam); border-color:rgba(143,168,193,0.42); background:rgba(143,168,193,0.07); }
-  .audio-toggle:not(.active){ text-decoration:line-through; text-decoration-color:rgba(139,160,182,0.5); }
+  .audio-level-row{ display:grid; grid-template-columns:minmax(0,1fr) minmax(130px,1.4fr); align-items:center; gap:15px; }
+  .audio-level-heading{ display:flex; align-items:center; gap:7px; min-width:0; }
+  .audio-icon{ color:var(--breath); font-size:13px; opacity:0.9; }
+  .audio-level-label{ color:var(--foam); font-size:12.5px; font-weight:500; }
+  .audio-level-value{ margin-left:auto; color:var(--muted); font-size:10.5px; letter-spacing:0.04em; }
+  .audio-range{
+    width:100%; height:24px; margin:0; cursor:pointer; accent-color:var(--breath);
+  }
+  .audio-range:focus-visible{ outline:2px solid var(--breath); outline-offset:4px; border-radius:999px; }
+  .audio-preference-note{ color:var(--muted); font-size:10.5px; line-height:1.45; text-align:center; }
 
   /* ---------- FINAL BREATHE VISUAL SYSTEM ---------- */
   .scene.mode-box .aurora-container,
@@ -1049,6 +1053,7 @@
     .session-settings[open] .duration-select{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
     .session-settings[open] .duration-select button{min-width:0;padding:9px 5px;line-height:1.25;text-wrap:balance}
     .session-settings[open] + .start-row{padding-bottom:18px}
+    .audio-level-row{grid-template-columns:1fr;gap:5px}
   }
 </style>
 </head>
@@ -1241,10 +1246,17 @@
               <button data-mins="5">5 min · stay longer</button>
             </div>
           </div>
-          <div class="audio-controls">
-            <button class="audio-toggle active" id="musicToggle" aria-pressed="true"><span class="audio-icon">◌</span> Sound</button>
-            <button class="audio-toggle active" id="voiceToggle" aria-pressed="true"><span class="audio-icon">◦</span> Voice</button>
+          <div class="audio-controls" role="group" aria-label="Audio mixer">
+            <label class="audio-level-row" for="musicLevel">
+              <span class="audio-level-heading"><span class="audio-icon" aria-hidden="true">◌</span><span class="audio-level-label" id="musicLabelText">Ocean</span><output class="audio-level-value" id="musicLevelValue" for="musicLevel">Balanced</output></span>
+              <input class="audio-range" id="musicLevel" type="range" min="0" max="100" step="1" value="78" aria-label="Ocean volume">
+            </label>
+            <label class="audio-level-row" for="voiceLevel">
+              <span class="audio-level-heading"><span class="audio-icon" aria-hidden="true">◦</span><span class="audio-level-label" id="voiceLabelText">Voice</span><output class="audio-level-value" id="voiceLevelValue" for="voiceLevel">Balanced</output></span>
+              <input class="audio-range" id="voiceLevel" type="range" min="0" max="100" step="1" value="82" aria-label="Voice volume">
+            </label>
           </div>
+          <p class="audio-preference-note" id="audioPreferenceNote">Volume choices stay on this device.</p>
         </div>
       </details>
       <div class="start-row">
@@ -1570,13 +1582,6 @@
     setText(button.querySelector('small'), description);
   }
 
-  function setToggleCopy(button, label) {
-    if (!button || !validText(label)) return;
-    const icon = button.querySelector('.audio-icon');
-    if (!icon) return;
-    button.replaceChildren(icon, document.createTextNode(` ${label}`));
-  }
-
   function applyBreatheContent(content) {
     if (!content || typeof content !== 'object') return;
     if (validText(content.ready_heading)) breatheReadyHeading = content.ready_heading;
@@ -1592,8 +1597,9 @@
     setText(durationSelect.querySelector('[data-mins="1"]'), content.one_minute_label);
     setText(durationSelect.querySelector('[data-mins="3"]'), content.three_minute_label);
     setText(durationSelect.querySelector('[data-mins="5"]'), content.five_minute_label);
-    setToggleCopy(musicToggle, content.sound_label);
-    setToggleCopy(voiceToggle, content.voice_label);
+    setText(musicLabelText, content.sound_label);
+    setText(voiceLabelText, content.voice_label);
+    setText(audioPreferenceNote, content.audio_note);
     if (validText(content.begin_label)) breatheButtonLabels.begin = content.begin_label;
     if (validText(content.end_label)) breatheButtonLabels.end = content.end_label;
     startBtn.textContent = running ? breatheButtonLabels.end : breatheButtonLabels.begin;
@@ -1932,14 +1938,29 @@
   }
 
   // ---------- AUDIO VARIABLES ----------
-  const musicToggle = document.getElementById('musicToggle');
-  const voiceToggle = document.getElementById('voiceToggle');
-  let musicOn = true;
-  let voiceOn = true;
+  const musicLevelControl = document.getElementById('musicLevel');
+  const voiceLevelControl = document.getElementById('voiceLevel');
+  const musicLabelText = document.getElementById('musicLabelText');
+  const voiceLabelText = document.getElementById('voiceLabelText');
+  const musicLevelValue = document.getElementById('musicLevelValue');
+  const voiceLevelValue = document.getElementById('voiceLevelValue');
+  const audioPreferenceNote = document.getElementById('audioPreferenceNote');
+  const audioPreferenceKey = 'kuon.audio-preferences.v1';
+  let musicVolume = 0.78;
+  let voiceVolume = 0.82;
+  try {
+    const storedAudioPreferences = JSON.parse(localStorage.getItem(audioPreferenceKey));
+    if(Number.isFinite(storedAudioPreferences?.ocean)) musicVolume = Math.max(0,Math.min(1,storedAudioPreferences.ocean));
+    if(Number.isFinite(storedAudioPreferences?.voice)) voiceVolume = Math.max(0,Math.min(1,storedAudioPreferences.voice));
+  } catch(e) {}
+  let musicOn = musicVolume > 0;
+  let voiceOn = voiceVolume > 0;
   let audioCtx = null;
   let masterGain = null, ambientGain = null, ambientSource = null;
   let ambientStopTimer = null;
+  let ambientNeedsRandomStart = true;
   let currentNarration = null;
+  let narrationCueTimer = null;
   const silentUnlock = document.getElementById('silentUnlock');
   const ambientAudio = new Audio('assets/audio/ambient/kuon-natural-shore-loop-web-108s.mp3');
   ambientAudio.preload = 'auto';
@@ -1974,23 +1995,61 @@
         const audio = new Audio(src);
         audio.preload = 'auto';
         audio.playsInline = true;
-        audio.volume = 0.82;
+        audio.volume = voiceVolume;
         narrationAudio.set(src,audio);
         audio.load();
       });
     });
   }
 
+  function describeAudioLevel(value){
+    if(value === 0) return 'Off';
+    if(value < 0.46) return 'Soft';
+    if(value < 0.86) return 'Balanced';
+    return 'Full';
+  }
+
+  function saveAudioPreferences(){
+    try {
+      localStorage.setItem(audioPreferenceKey,JSON.stringify({ocean:musicVolume,voice:voiceVolume}));
+    } catch(e) {}
+  }
+
+  function updateAudioMix({persist=true}={}){
+    musicVolume = Number(musicLevelControl.value) / 100;
+    voiceVolume = Number(voiceLevelControl.value) / 100;
+    musicOn = musicVolume > 0;
+    voiceOn = voiceVolume > 0;
+
+    musicLevelValue.textContent = describeAudioLevel(musicVolume);
+    voiceLevelValue.textContent = describeAudioLevel(voiceVolume);
+    musicLevelControl.setAttribute('aria-valuetext',describeAudioLevel(musicVolume));
+    voiceLevelControl.setAttribute('aria-valuetext',describeAudioLevel(voiceVolume));
+    narrationAudio.forEach(audio=>{ audio.volume = voiceVolume; });
+
+    if(ambientGain && audioCtx){
+      const now = audioCtx.currentTime;
+      const target = currentNarration ? musicVolume * 0.3 : musicVolume;
+      ambientGain.gain.cancelScheduledValues(now);
+      ambientGain.gain.setValueAtTime(ambientGain.gain.value,now);
+      ambientGain.gain.linearRampToValueAtTime(target,now + 0.32);
+    }
+    if(!voiceOn) stopNarration();
+    if(persist) saveAudioPreferences();
+  }
+
   function setAmbientDuck(ducked){
     if(!audioCtx || !ambientGain) return;
     const now = audioCtx.currentTime;
-    const target = musicOn ? (ducked ? 0.42 : 1) : 0;
+    const target = musicOn ? musicVolume * (ducked ? 0.3 : 1) : 0;
     ambientGain.gain.cancelScheduledValues(now);
     ambientGain.gain.setValueAtTime(ambientGain.gain.value,now);
-    ambientGain.gain.linearRampToValueAtTime(target,now + (ducked ? 0.18 : 0.55));
+    ambientGain.gain.linearRampToValueAtTime(target,now + (ducked ? 0.22 : 0.7));
   }
 
   function stopNarration(restoreAmbient=true){
+    clearTimeout(narrationCueTimer);
+    narrationCueTimer = null;
     if(currentNarration){
       currentNarration.onended = null;
       currentNarration.onerror = null;
@@ -2011,23 +2070,11 @@
     try{ if(navigator.vibrate) navigator.vibrate(pattern); }catch(e){}
   }
 
-  musicToggle.addEventListener('click', ()=>{
-    musicOn = !musicOn;
-    musicToggle.classList.toggle('active', musicOn);
-    musicToggle.setAttribute('aria-pressed', musicOn);
-    if(ambientGain){
-      const now = audioCtx.currentTime;
-      ambientGain.gain.cancelScheduledValues(now);
-      ambientGain.gain.setValueAtTime(ambientGain.gain.value,now);
-      ambientGain.gain.linearRampToValueAtTime(musicOn ? (currentNarration ? 0.42 : 1) : 0, now + 0.4);
-    }
-  });
-  voiceToggle.addEventListener('click', ()=>{
-    voiceOn = !voiceOn;
-    voiceToggle.classList.toggle('active', voiceOn);
-    voiceToggle.setAttribute('aria-pressed', voiceOn);
-    if(!voiceOn) stopNarration();
-  });
+  musicLevelControl.value = String(Math.round(musicVolume * 100));
+  voiceLevelControl.value = String(Math.round(voiceVolume * 100));
+  musicLevelControl.addEventListener('input',()=>updateAudioMix());
+  voiceLevelControl.addEventListener('input',()=>updateAudioMix());
+  updateAudioMix({persist:false});
 
   patternSelect.addEventListener('click', (e)=>{
     if(e.target.tagName !== 'BUTTON' || e.target.disabled) return;
@@ -2150,7 +2197,13 @@
     }
     setPhase(seconds, index);
 
-    if(seconds > 0) playNarrationCue(index);
+    clearTimeout(narrationCueTimer);
+    if(seconds > 0 && voiceOn){
+      narrationCueTimer = setTimeout(()=>{
+        narrationCueTimer = null;
+        playNarrationCue(index);
+      },240);
+    }
     if(index === 0) buzz(18);
     if(index === 2) buzz([12,40,12]);
 
@@ -2236,7 +2289,7 @@
       ambientStopTimer = setTimeout(()=>{
         if(running) return;
         ambientAudio.pause();
-        try{ ambientAudio.currentTime = 0; }catch(e){}
+        ambientNeedsRandomStart = true;
       },1600);
     } catch(e) {}
   }
@@ -2247,7 +2300,17 @@
     const now = audioCtx.currentTime;
     ambientGain.gain.cancelScheduledValues(now);
     ambientGain.gain.setValueAtTime(ambientGain.gain.value,now);
-    ambientGain.gain.linearRampToValueAtTime(musicOn ? 1 : 0,now + 0.8);
+    ambientGain.gain.linearRampToValueAtTime(musicOn ? musicVolume : 0,now + 0.8);
+    if(ambientNeedsRandomStart){
+      const chooseStart = ()=>{
+        if(Number.isFinite(ambientAudio.duration) && ambientAudio.duration > 18){
+          try{ ambientAudio.currentTime = 6 + Math.random() * (ambientAudio.duration - 12); }catch(e){}
+          ambientNeedsRandomStart = false;
+        }
+      };
+      if(ambientAudio.readyState >= 1) chooseStart();
+      else ambientAudio.addEventListener('loadedmetadata',chooseStart,{once:true});
+    }
     const playPromise = ambientAudio.play();
     if(playPromise) playPromise.catch(err=>{
       console.warn('Ambient loop could not be played:',err);

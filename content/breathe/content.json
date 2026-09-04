@@ -27,8 +27,9 @@
   "one_minute_label": "1 min · quick reset",
   "three_minute_label": "3 min · settle in",
   "five_minute_label": "5 min · stay longer",
-  "sound_label": "Sound",
+  "sound_label": "Ocean",
   "voice_label": "Voice",
+  "audio_note": "Volume choices stay on this device.",
   "begin_label": "Begin",
   "end_label": "End session"
 }
